@@ -1,5 +1,5 @@
 import { Vector2 } from './math.js';
-import { buildCircleContainedPolygon, sat } from './geom.js';
+import { CollisionInfo, buildCircleContainedPolygon, sat } from './geom.js';
 import { DebugPolygon } from './geom_debug.js';
 import { Render } from './protocols.js';
 
@@ -14,7 +14,7 @@ canvas.height = canvasParent.offsetHeight;
 const context = canvas.getContext('2d');
 
 const polygons = [];
-for (let i  = 0; i < 10; ++i) {
+for (let i  = 0; i < 2; ++i) {
   const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
   const radius = 50.0 + Math.random() * 100;
   const verts = Math.round(3 + Math.random() * 5);
@@ -42,12 +42,15 @@ function mouseUpHandler(e) {
   moving = false;
 }
 
+let collisions = [];
+
 function mouseMoveHandler(e) {
   const mouseMovementX = e.movementX;
   const mouseMovementY = e.movementY;
   const direction = new Vector2(mouseMovementX, mouseMovementY);
   
   if (moving && activePolygon) {
+    collisions = [];
     decoratedPolygons.forEach( p => p.collide = false);
   
     movePolygon(activePolygon, direction);
@@ -57,9 +60,11 @@ function mouseMoveHandler(e) {
       for (let j = i+1; j < decoratedPolygons.length; ++j) {
         const p2 = decoratedPolygons[j];
 
-        if (! sat(p1.p, p2.p)) {
+        const {found, separatingEdge, magnitude} = sat(p1.p, p2.p);
+        if (! found) {
           p1.collide = true;
           p2.collide = true;
+          collisions.push(new CollisionInfo(separatingEdge, magnitude));
         }
       }
     }
@@ -77,6 +82,7 @@ function loop(ts) {
 
   context.clearRect(0, 0, canvas.width, canvas.height);
   decoratedPolygons.forEach(p => Render.render(p, context, {debug: true}));
+  collisions.forEach(p => Render.render(p, context));
 
   redraw && requestAnimationFrame(loop);
 }

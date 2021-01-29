@@ -1,4 +1,4 @@
-import { Vector2 } from './math.js'
+import { Span, Vector2 } from './math.js'
 
 const Vertex = Vector2;
 
@@ -14,6 +14,7 @@ class Edge {
 }
 
 class Polygon {
+  // constructor([Vertex]) -> Polygon
   constructor(vertices) {
     this.vertices = vertices;
 
@@ -24,26 +25,35 @@ class Polygon {
     }, [lastVert, []]);
     this.edges = edges;
   }
+
+  // computeProjectionSpan(Polygon, Vector2) -> Span
+  computeProjectionSpan(normal) {
+    return this.vertices.reduce((span, v) => span.update(v.dot(normal)), new Span(Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY));
+  }
 }
 
 const sat = (a, b) => {
-  const normals = [...(a.edges.map(e => e.normal)), ...(b.edges.map(e => e.normal))];
-  return normals.find(n => {
-    const [amin, amax] = a.vertices.reduce(([vmin, vmax], v) => {
-      const proj = v.dot(n);
-      return [Math.min(vmin, proj), Math.max(vmax, proj)];
-    }, [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]);
-    
-    const [bmin, bmax] = b.vertices.reduce(([vmin, vmax], v) => {
-      const proj = v.dot(n);
-      return [Math.min(vmin, proj), Math.max(vmax, proj)];
-    }, [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]);
-
-    if (amin > bmax || bmin > amax) {
+  const edges = [...(a.edges), ...(b.edges)];
+  let minMag = Number.POSITIVE_INFINITY;
+  let minEdge = null;
+  const separatingEdge = edges.find(edge => {
+    const n = edge.normal;
+    const spanA = a.computeProjectionSpan(n);
+    const spanB = b.computeProjectionSpan(n);
+    if (spanA.doesOverlap(spanB)) {
+      const overlap = spanA.overlap(spanB);
+      if (overlap < minMag) {
+        minMag = overlap;
+        minEdge = edge;
+      }
+      return false;
+    }
+    else {
       return true;
     }
-    return false;
   });
+
+  return {found: !!separatingEdge, separatingEdge: minEdge, magnitude: minMag}
 };
 
 const buildVertexFromAngleAndRadius = (angle, radius) => {
@@ -61,4 +71,12 @@ const buildCircleContainedPolygon = (center, radius, vertexCount) => {
   return new Polygon(vertices);
 }
 
-export { Polygon, Edge, Vertex, buildCircleContainedPolygon, sat };
+class CollisionInfo {
+  // constructor(Edge, Number) -> CollisionInfo
+  constructor(edge, magnitude) {
+    this.edge = edge
+    this.magnitude = magnitude
+  }
+}
+
+export { CollisionInfo, Edge, Polygon, Vertex, buildCircleContainedPolygon, sat };

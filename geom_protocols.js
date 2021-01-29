@@ -1,5 +1,5 @@
 import { defimpl } from './functional.js';
-import { Edge, Polygon, Vertex } from './geom.js';
+import { CollisionInfo, Edge, Polygon, Vertex } from './geom.js';
 import { Render } from './protocols.js';
 import * as GfxTools from './gfx.js';
 
@@ -30,4 +30,12 @@ defimpl(Render, Polygon, 'render', (p, ctxt, {debug = false, color = 'white', ..
       Render.render(e, ctxt, opts);
     })
   }
+});
+
+defimpl(Render, CollisionInfo, 'render', (ci, ctxt, opts) => {
+  const {magnitude, edge: {a, b, normal}} = ci;
+
+  const d = b.sub(a);
+  const m = d.scale(0.5).add(a);
+  GfxTools.drawVector(ctxt, m, m.add(normal.scale(magnitude)), 'green');
 });
