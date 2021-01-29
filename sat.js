@@ -1,8 +1,10 @@
 import { Vector2 } from './math.js';
-import { buildCircleContainedPolygon, Polygon } from './geom.js';
+import { buildCircleContainedPolygon, sat } from './geom.js';
+import { DebugPolygon } from './geom_debug.js';
 import { Render } from './protocols.js';
 
 import './geom_protocols.js';
+import './geom_debug_protocols.js';
 
 const canvas = document.getElementById('game');
 const canvasParent = canvas.parentElement;
@@ -15,9 +17,10 @@ const polygons = [];
 for (let i  = 0; i < 10; ++i) {
   const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
   const radius = 50.0 + Math.random() * 100;
-  const verts = Math.round(3 + Math.random() * 3);
+  const verts = Math.round(3 + Math.random() * 5);
   polygons.push(buildCircleContainedPolygon(pos, radius, verts));
 }
+const decoratedPolygons = polygons.map((p, idx) => new DebugPolygon(p, idx));
 
 const findPolygon = (position) => polygons.find(p => p.vertices.find(v => Math.abs(position.sub(v).length()) < 5)); // MOOOAHAAHHAHHA
 
@@ -43,9 +46,24 @@ function mouseMoveHandler(e) {
   const mouseMovementX = e.movementX;
   const mouseMovementY = e.movementY;
   const direction = new Vector2(mouseMovementX, mouseMovementY);
-
+  
   if (moving && activePolygon) {
+    decoratedPolygons.forEach( p => p.collide = false);
+  
     movePolygon(activePolygon, direction);
+
+    for (let i = 0; i < decoratedPolygons.length; ++i) {
+      const p1 = decoratedPolygons[i];
+      for (let j = i+1; j < decoratedPolygons.length; ++j) {
+        const p2 = decoratedPolygons[j];
+
+        if (! sat(p1.p, p2.p)) {
+          p1.collide = true;
+          p2.collide = true;
+        }
+      }
+    }
+
     requestAnimationFrame(loop);
   }
 }
@@ -58,7 +76,7 @@ function loop(ts) {
   prevTs = ts;
 
   context.clearRect(0, 0, canvas.width, canvas.height);
-  polygons.forEach(p => Render.render(p, context, {debug: true}));
+  decoratedPolygons.forEach(p => Render.render(p, context, {debug: true}));
 
   redraw && requestAnimationFrame(loop);
 }

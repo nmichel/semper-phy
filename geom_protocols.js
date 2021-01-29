@@ -20,8 +20,8 @@ defimpl(Render, Edge, 'render', (e, ctxt, opts) => {
   GfxTools.drawVector(ctxt, m.sub(d.scale(0.4)).add(offset), m.add(d.scale(0.4)).add(offset), 'yellow');
 });
 
-defimpl(Render, Polygon, 'render', (p, ctxt, {debug, ...opts} = {debug: false}) => {
-  GfxTools.drawPolygon(ctxt, p, 'white');
+defimpl(Render, Polygon, 'render', (p, ctxt, {debug = false, color = 'white', ...opts}) => {
+  GfxTools.drawPolygon(ctxt, p, color);
 
   if (debug) {
     p.vertices.forEach(v => Render.render(v, ctxt, opts));
