@@ -1,6 +1,11 @@
 import { Vector2 } from './math.js';
 
-const drawLine = (ctxt, a, b, color) => {
+const setupLineStyle = (ctxt, {lineDash = []}) => {
+  ctxt.setLineDash(lineDash);
+};
+
+const drawLine = (ctxt, a, b, color, opts = {}) => {
+  setupLineStyle(ctxt, opts);
   ctxt.strokeStyle = color;
   ctxt.beginPath();
   ctxt.moveTo(a.x, a.y)
@@ -8,7 +13,7 @@ const drawLine = (ctxt, a, b, color) => {
   ctxt.stroke();
 }
 
-const drawVector = (ctxt, a, b, color) => {
+const drawVector = (ctxt, a, b, color, opts = {}) => {
   const d = b.sub(a);
   d.normalizeSelf();
   d.scaleSelf(5);
@@ -17,6 +22,7 @@ const drawVector = (ctxt, a, b, color) => {
 
   ctxt.strokeStyle = color;
 
+  setupLineStyle(ctxt, opts);
   ctxt.beginPath();
   ctxt.moveTo(a.x, a.y)
   ctxt.lineTo(b.x, b.y);
@@ -32,16 +38,26 @@ const drawVector = (ctxt, a, b, color) => {
 
 }
 
-const drawDisc = (ctxt, x, y, radius, color) => {
+const drawDisc = (ctxt, x, y, radius, color, opts = {}) => {
+  setupLineStyle(ctxt, opts);
   ctxt.beginPath();
   ctxt.fillStyle=color;
   ctxt.arc(x, y, radius, 0, 2 * Math.PI);
   ctxt.fill();
 }
 
-const drawPolygon = (ctxt, polygon, color) => {
+const drawCircle = (ctxt, x, y, radius, color, opts = {}) => {
+  setupLineStyle(ctxt, opts);
+  ctxt.beginPath();
+  ctxt.strokeStyle=color;
+  ctxt.arc(x, y, radius, 0, 2 * Math.PI);
+  ctxt.stroke();
+}
+
+const drawPolygon = (ctxt, polygon, color, opts = {}) => {
   const vertices = polygon.vertices;
   const v0 = vertices[0];
+  setupLineStyle(ctxt, opts);
   ctxt.strokeStyle = color;
   ctxt.beginPath();
   ctxt.moveTo(v0.x, v0.y)
@@ -54,8 +70,9 @@ const drawPolygon = (ctxt, polygon, color) => {
 }
 
 export {
-  drawLine,
+  drawCircle,
   drawDisc,
+  drawLine,
   drawPolygon,
   drawVector
 };
