@@ -1,4 +1,5 @@
 import { RayCaster, Render } from './protocols.js';
+import { RayIntersection } from './ray.js';
 import { Circle } from './circle.js';
 import { defimpl } from './functional.js';
 import * as GfxTools from './gfx.js';
@@ -17,10 +18,16 @@ defimpl(RayCaster, Circle, 'cast', (circle, ray) => {
 
   const result = [];
   if (t0 > 0) {
-    result.push(ray.getPointAtCoef(t0));
+    const point = ray.getPointAtCoef(t0);
+    const normal = point.normalize();
+    const col = new RayIntersection(point, normal, t0);
+    result.push(col);
   }
   if (t1 > 0) {
-    result.push(ray.getPointAtCoef(t1));
+    const point = ray.getPointAtCoef(t1);
+    const normal = point.normalize();
+    const col = new RayIntersection(point, normal, t1);
+    result.push(col);
   }
   return result;
 });

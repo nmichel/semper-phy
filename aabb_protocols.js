@@ -32,11 +32,18 @@ defimpl(RayCaster, AABB, 'cast', (aabb, ray) => {
     // TODO handle special case where tmax-tmin < epsilon (one interesection)
     const result = [];
     if (tmin > 0) {
-      result.push(ray.getPointAtCoef(tmin));
+      const point = ray.getPointAtCoef(tmin);
+      const normal = aabb.findNormal(point);
+      const col = new RayIntersection(point, normal, tmin);
+      result.push(col);
     }
     if (tmax > 0) {
-      result.push(ray.getPointAtCoef(tmax));
+      const point = ray.getPointAtCoef(tmax);
+      const normal = aabb.findNormal(point);
+      const col = new RayIntersection(point, normal, tmax);
+      result.push(col);
     }
+  
     return result;
   }
 });

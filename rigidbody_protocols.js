@@ -9,5 +9,5 @@ defimpl(Render, RigidBody, 'render', (rigidbody, ctxt, opts) => {
 
 defimpl(RayCaster, RigidBody, 'cast', (rigidbody, ray) => {
   const localRay = Transformer.toLocal(ray, rigidbody.frame);
-  return RayCaster.cast(rigidbody.shape, localRay).map(c => rigidbody.frame.positionToWorld(c));
+  return RayCaster.cast(rigidbody.shape, localRay).map(c => Transformer.toWorld(c, rigidbody.frame));
 });

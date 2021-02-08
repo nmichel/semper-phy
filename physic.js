@@ -22,7 +22,7 @@ canvas.height = canvasParent.offsetHeight;
 const context = canvas.getContext('2d');
 
 const bodies = [];
-for (let i  = 0; i < 10; ++i) {
+for (let i  = 0; i < 30; ++i) {
   const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
   const width = 10.0 + Math.random() * 100;
   const height = 10.0 + Math.random() * 100;
@@ -36,6 +36,8 @@ for (let i  = 0; i < 30; ++i) {
   const angle = Math.random() * 90;
   bodies.push(new RigidBody(angle, pos, new Circle(radius)));
 }
+
+// bodies.push(new RigidBody(95, new Vector2(800, 300), new AABB(100, 60)));
 
 let prevTs = performance.now();
 let a = new Vector2(400, 600);
@@ -51,12 +53,12 @@ function loop(ts) {
   const ray = Ray.buildRayFromPoints(a, b);
   const collisions = bodies.reduce((collisions, body) => [...collisions, ...ray.cast(body)], []);
   collisions.forEach(c => {
-    GfxTools.drawDisc(context, c.x, c.y, 5, 'red');
+    Render.render(c, context);
   });
 
   Render.render(ray, context);
 
-  requestAnimationFrame(loop);
+//  requestAnimationFrame(loop);
 }
 
 requestAnimationFrame(loop);
