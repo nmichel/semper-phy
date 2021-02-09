@@ -3,7 +3,8 @@ import { RayCaster, Render, Transformer } from './protocols.js';
 import { RigidBody } from './rigidbody.js';
 
 defimpl(Render, RigidBody, 'render', (rigidbody, ctxt, opts) => {
-  Render.render(rigidbody.shape, ctxt, {opts, frame: rigidbody.frame});
+  const worldShape = Transformer.toWorld(rigidbody.shape, rigidbody.frame);
+  Render.render(worldShape, ctxt, opts);
   Render.render(rigidbody.frame, ctxt, opts);
 });
 

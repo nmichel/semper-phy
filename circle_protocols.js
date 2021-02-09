@@ -1,4 +1,4 @@
-import { RayCaster, Render } from './protocols.js';
+import { RayCaster, Render, Transformer } from './protocols.js';
 import { RayIntersection } from './ray.js';
 import { Circle } from './circle.js';
 import { defimpl } from './functional.js';
@@ -32,7 +32,11 @@ defimpl(RayCaster, Circle, 'cast', (circle, ray) => {
   return result;
 });
 
-defimpl(Render, Circle, 'render', (circle, ctxt, {frame}) => {
-  const {x, y} = frame.positionToWorld(new Vector2(0, 0));
+defimpl(Render, Circle, 'render', (circle, ctxt) => {
+  const {x, y} = circle.position;
   GfxTools.drawCircle(ctxt, x, y, circle.radius, 'white');
+});
+
+defimpl(Transformer, Circle, 'toWorld', (circle, frame) => {
+  return new Circle(circle.radius, frame.positionToWorld(circle.position));
 });

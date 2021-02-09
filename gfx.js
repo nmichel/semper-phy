@@ -54,8 +54,7 @@ const drawCircle = (ctxt, x, y, radius, color, opts = {}) => {
   ctxt.stroke();
 }
 
-const drawPolygon = (ctxt, polygon, color, opts = {}) => {
-  const vertices = polygon.vertices;
+const drawPolygon = (ctxt, vertices, color, opts = {}) => {
   const v0 = vertices[0];
   setupLineStyle(ctxt, opts);
   ctxt.strokeStyle = color;

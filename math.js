@@ -50,6 +50,10 @@ class Vector2 {
     return this.x * x + this.y * y;
   }
 
+  crossCoef({x, y}) {
+    return this.x * y - x * this.y;
+  }
+
   length() {
     return Math.sqrt(this.dot(this));
   }
@@ -160,4 +164,25 @@ class Span {
   }
 }
 
-export { Matrix3, Span, Vector2, clamp };
+// segmentIntersection(Vector2, Vector2, Vector2, Vector2) -> null | [Number, Number]
+// explanation : https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/565282#565282
+// borrowed : https://github.com/pgkelley4/line-segments-intersect/blob/master/js/line-segments-intersect.js
+function segmentIntersection(p, p2, q, q2) {
+  const r = p2.sub(p);
+  const s = q2.sub(q);
+
+	var uNumerator = q.sub(p).crossCoef(r);
+	var denominator = r.crossCoef(s);
+
+	if (denominator == 0) {
+		// lines are parallel or colinear
+		return null;
+	}
+
+	var u = uNumerator / denominator;
+	var t = q.sub(p).crossCoef(s) / denominator;
+
+	return [t, u];
+}
+
+export { Matrix3, Span, Vector2, clamp, segmentIntersection };

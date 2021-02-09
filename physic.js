@@ -1,11 +1,12 @@
 import { AABB } from './aabb.js';
 import { Circle } from './circle.js';
+import { buildCircleContainedPolygon } from './geom.js';
 import { Ray } from './ray.js';
-import { Render } from './protocols.js';
+import * as protocols from './protocols.js';
 import { RigidBody } from './rigidbody.js';
 import { Vector2 } from './math.js';
 
-import * as GfxTools from './gfx.js';
+const { Render } = protocols;
 
 import './aabb_protocols.js';
 import './circle_protocols.js';
@@ -22,7 +23,7 @@ canvas.height = canvasParent.offsetHeight;
 const context = canvas.getContext('2d');
 
 const bodies = [];
-for (let i  = 0; i < 30; ++i) {
+for (let i  = 0; i < 10; ++i) {
   const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
   const width = 10.0 + Math.random() * 100;
   const height = 10.0 + Math.random() * 100;
@@ -30,11 +31,19 @@ for (let i  = 0; i < 30; ++i) {
   bodies.push(new RigidBody(angle, pos, new AABB(width, height)));
 }
 
-for (let i  = 0; i < 30; ++i) {
+for (let i  = 0; i < 10; ++i) {
   const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
   const radius = 10.0 + Math.random() * 50;
   const angle = Math.random() * 90;
   bodies.push(new RigidBody(angle, pos, new Circle(radius)));
+}
+
+for (let i  = 0; i < 10; ++i) {
+  const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
+  const angle = Math.random() * 90;
+  const radius = 50.0 + Math.random() * 100;
+  const verts = Math.round(3 + Math.random() * 5);
+  bodies.push(new RigidBody(angle, pos, buildCircleContainedPolygon(new Vector2(0, 0), radius, verts)));
 }
 
 // bodies.push(new RigidBody(95, new Vector2(800, 300), new AABB(100, 60)));
@@ -48,7 +57,7 @@ function loop(ts) {
   prevTs = ts;
 
   context.clearRect(0, 0, canvas.width, canvas.height);
-  bodies.forEach(body => Render.render(body, context, {debug: true}));
+  bodies.forEach(body => Render.render(body, context, {debug: false}));
 
   const ray = Ray.buildRayFromPoints(a, b);
   const collisions = bodies.reduce((collisions, body) => [...collisions, ...ray.cast(body)], []);
@@ -66,3 +75,5 @@ requestAnimationFrame(loop);
 // canvas.addEventListener("mousedown", mouseDownHandler, false);
 // canvas.addEventListener("mouseup", mouseUpHandler, false);
 // canvas.addEventListener("mousemove", mouseMoveHandler, false);
+
+window.protocols = protocols;

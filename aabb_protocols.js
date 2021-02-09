@@ -1,7 +1,7 @@
 import { defimpl } from './functional.js';
 import { AABB } from './aabb.js';
 import { Polygon } from './geom.js';
-import { RayCaster, Render } from './protocols.js';
+import { RayCaster, Transformer } from './protocols.js';
 import { RayIntersection } from './ray.js';
 import { Vector2 } from './math.js';
 
@@ -48,14 +48,12 @@ defimpl(RayCaster, AABB, 'cast', (aabb, ray) => {
   }
 });
 
-defimpl(Render, AABB, 'render', (aabb, ctxt, opts) => {
-  const { frame } = opts;
+defimpl(Transformer, AABB, 'toWorld', (aabb, frame) => {
   const {x, y} = aabb.halfSize;
-  const polygon = new Polygon([
+  return new Polygon([
     frame.positionToWorld(new Vector2(x, y)),
     frame.positionToWorld(new Vector2(-x, y)),
     frame.positionToWorld(new Vector2(-x, -y)),
     frame.positionToWorld(new Vector2(x, -y))
   ]);
-  Render.render(polygon, ctxt, opts);
 });

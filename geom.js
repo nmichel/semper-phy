@@ -8,7 +8,7 @@ class Edge {
     this.b = b;
 
     const {x, y} = b.sub(a);
-    this.normal = new Vector2(-y, x);
+    this.normal = new Vector2(y, -x);
     this.normal.normalizeSelf();
   }
 }
