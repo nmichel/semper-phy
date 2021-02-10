@@ -1,7 +1,7 @@
 import { defimpl } from './functional.js';
 import { AABB } from './aabb.js';
 import { Polygon } from './geom.js';
-import { RayCaster, Transformer } from './protocols.js';
+import { PointCaster, RayCaster, Transformer } from './protocols.js';
 import { RayIntersection } from './ray.js';
 import { Vector2 } from './math.js';
 
@@ -56,4 +56,9 @@ defimpl(Transformer, AABB, 'toWorld', (aabb, frame) => {
     frame.positionToWorld(new Vector2(-x, -y)),
     frame.positionToWorld(new Vector2(x, -y))
   ]);
+});
+
+defimpl(PointCaster, AABB, 'contains', (aabb, point) => {
+  const absPoint = point.abs();
+  return aabb.halfSize.x >= absPoint.x && aabb.halfSize.y >= absPoint.y;
 });

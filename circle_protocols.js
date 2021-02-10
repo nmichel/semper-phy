@@ -1,4 +1,4 @@
-import { RayCaster, Render, Transformer } from './protocols.js';
+import { PointCaster, RayCaster, Render, Transformer } from './protocols.js';
 import { RayIntersection } from './ray.js';
 import { Circle } from './circle.js';
 import { defimpl } from './functional.js';
@@ -39,4 +39,9 @@ defimpl(Render, Circle, 'render', (circle, ctxt) => {
 
 defimpl(Transformer, Circle, 'toWorld', (circle, frame) => {
   return new Circle(circle.radius, frame.positionToWorld(circle.position));
+});
+
+defimpl(PointCaster, Circle, 'contains', (circle, point) => {
+  const dist = circle.position.sub(point).length();
+  return dist <= circle.radius;
 });

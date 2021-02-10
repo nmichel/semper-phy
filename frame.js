@@ -4,8 +4,15 @@ class Frame {
   constructor(rotation = 0.0, position = new Vector2()) {
     this.rotation = rotation;
     this.position = position;
-    this.l2w = Matrix3.newRotation(rotation).mul(Matrix3.newTranslation(position));
-    this.w2l = Matrix3.newTranslation(position.scale(-1.0)).mul(Matrix3.newRotation(-rotation));
+    this.l2w = null;
+    this.w2l = null;
+
+    this.recomputeMatrices();
+  }
+
+  setPosition(position) {
+    this.position = position;
+    this.recomputeMatrices();
   }
 
   directionToWorld(v) {
@@ -22,6 +29,11 @@ class Frame {
 
   positionToLocal(v) {
     return this.w2l.transformPosition(v);
+  }
+
+  recomputeMatrices() {
+    this.l2w = Matrix3.newRotation(this.rotation).mul(Matrix3.newTranslation(this.position));
+    this.w2l = Matrix3.newTranslation(this.position.scale(-1.0)).mul(Matrix3.newRotation(-this.rotation));
   }
 }
 

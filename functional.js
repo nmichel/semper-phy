@@ -15,11 +15,11 @@ const defprotocol = (protocolName, funs) => {
       const klass = obj.__proto__.constructor.name;
       const protImpl = impls[klass];
       if (!protImpl) {
-        throw new Error(`No implementation of protocol ${protImpl.name} for class ${klass}`);
+        throw new Error(`No implementation of protocol ${prot.name} for class ${klass}`);
       }
       const fn = protImpl[name];
       if (!fn) {
-        throw new Error(`Cannot find impl of ${protImpl.name}.${name} for class ${klass}`);
+        throw new Error(`Cannot find impl of ${prot.name}.${name} for class ${klass}`);
       }
 
       return fn(obj, ...args);

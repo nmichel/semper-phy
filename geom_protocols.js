@@ -1,7 +1,7 @@
 import { defimpl } from './functional.js';
 import { CollisionInfo, Edge, Polygon, Vertex } from './geom.js';
 import { RayIntersection } from './ray.js';
-import { RayCaster, Render, Transformer } from './protocols.js';
+import { PointCaster, RayCaster, Render, Transformer } from './protocols.js';
 import { segmentIntersection } from './math.js';
 import * as GfxTools from './gfx.js';
 
@@ -53,6 +53,10 @@ defimpl(RayCaster, Polygon, 'cast', (polygon, ray) => {
     }
     return acc;
   }, []);
+});
+
+defimpl(PointCaster, Polygon, 'contains', (polygon, point) => {
+  return !polygon.edges.find(({ a, b }) => Math.sign(b.sub(a).crossCoef(point.sub(a))) < 0);
 });
 
 defimpl(Render, CollisionInfo, 'render', (ci, ctxt, opts) => {

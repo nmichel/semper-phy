@@ -79,6 +79,10 @@ class Vector2 {
 
     return new Vector2(center.x + rX, center.y + rY);
   }
+
+  abs() {
+    return new Vector2(Math.abs(this.x), Math.abs(this.y));
+  }
 }
 
 class Matrix3 {

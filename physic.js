@@ -6,7 +6,7 @@ import * as protocols from './protocols.js';
 import { RigidBody } from './rigidbody.js';
 import { Vector2 } from './math.js';
 
-const { Render } = protocols;
+const { PointCaster, Render } = protocols;
 
 import './aabb_protocols.js';
 import './circle_protocols.js';
@@ -47,6 +47,7 @@ for (let i  = 0; i < 10; ++i) {
 }
 
 // bodies.push(new RigidBody(95, new Vector2(800, 300), new AABB(100, 60)));
+// bodies.push(new RigidBody(95, new Vector2(800, 300), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5)));
 
 let prevTs = performance.now();
 let a = new Vector2(400, 600);
@@ -67,13 +68,34 @@ function loop(ts) {
 
   Render.render(ray, context);
 
-//  requestAnimationFrame(loop);
+  requestAnimationFrame(loop);
 }
 
 requestAnimationFrame(loop);
 
-// canvas.addEventListener("mousedown", mouseDownHandler, false);
-// canvas.addEventListener("mouseup", mouseUpHandler, false);
-// canvas.addEventListener("mousemove", mouseMoveHandler, false);
+let body = null;
+
+function mouseDownHandler(e) {
+  const rect = canvas.getBoundingClientRect();
+  const position = new Vector2(e.clientX - rect.left, e.clientY - rect.top);
+  body = bodies.find(b => PointCaster.contains(b, position));
+}
+
+function mouseUpHandler(e) {
+  body = null;
+}
+
+function mouseMoveHandler(e) {
+  if (body) {
+    const mouseMovementX = e.movementX;
+    const mouseMovementY = e.movementY;
+    const direction = new Vector2(mouseMovementX, mouseMovementY);
+    body.frame.setPosition(body.frame.position.add(direction));
+  }
+}
+
+canvas.addEventListener("mousedown", mouseDownHandler, false);
+canvas.addEventListener("mouseup", mouseUpHandler, false);
+canvas.addEventListener("mousemove", mouseMoveHandler, false);
 
 window.protocols = protocols;
