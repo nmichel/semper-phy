@@ -14,7 +14,7 @@ defimpl(Transformer, Ray, 'toLocal', (ray, frame) => {
 });
 
 defimpl(Render, RayIntersection, 'render', (collision, ctxt, opts) => {
-  GfxTools.drawVector(ctxt, collision.point, collision.point.add(collision.normal.scale(20)), 'blue');
+  GfxTools.drawVector(ctxt, collision.point, collision.point.add(collision.normal.scale(30)), 'blue');
   GfxTools.drawDisc(ctxt, collision.point.x, collision.point.y, 3, 'orange');
 });
 

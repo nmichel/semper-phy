@@ -16,7 +16,7 @@ defimpl(Render, Edge, 'render', (edge, ctxt, opts) => {
   const m = d.scale(0.5).add(a);
   const offset = normal.scale(20.0);
   
-  GfxTools.drawVector(ctxt, m, m.add(normal.scale(20.0)), 'red');
+  GfxTools.drawVector(ctxt, m, m.add(normal.scale(15.0)), 'red');
   GfxTools.drawVector(ctxt, m.sub(d.scale(0.4)).add(offset), m.add(d.scale(0.4)).add(offset), 'yellow');
 });
 

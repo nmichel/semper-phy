@@ -53,12 +53,14 @@ let prevTs = performance.now();
 let a = new Vector2(400, 600);
 let b = new Vector2(1000, 200);
 
+let movingBody = null;
+
 function loop(ts) {
   const deltaMs = ts - prevTs;
   prevTs = ts;
 
   context.clearRect(0, 0, canvas.width, canvas.height);
-  bodies.forEach(body => Render.render(body, context, {debug: false}));
+  bodies.forEach(body => Render.render(body, context, {debug: body == movingBody}));
 
   const ray = Ray.buildRayFromPoints(a, b);
   const collisions = bodies.reduce((collisions, body) => [...collisions, ...ray.cast(body)], []);
@@ -73,24 +75,22 @@ function loop(ts) {
 
 requestAnimationFrame(loop);
 
-let body = null;
-
 function mouseDownHandler(e) {
   const rect = canvas.getBoundingClientRect();
   const position = new Vector2(e.clientX - rect.left, e.clientY - rect.top);
-  body = bodies.find(b => PointCaster.contains(b, position));
+  movingBody = bodies.find(b => PointCaster.contains(b, position));
 }
 
 function mouseUpHandler(e) {
-  body = null;
+  movingBody = null;
 }
 
 function mouseMoveHandler(e) {
-  if (body) {
+  if (movingBody) {
     const mouseMovementX = e.movementX;
     const mouseMovementY = e.movementY;
     const direction = new Vector2(mouseMovementX, mouseMovementY);
-    body.frame.setPosition(body.frame.position.add(direction));
+    movingBody.frame.setPosition(movingBody.frame.position.add(direction));
   }
 }
 
