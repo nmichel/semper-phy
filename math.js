@@ -163,8 +163,9 @@ class Span {
   // overlap(this: Span, s: Span) -> Number
   // require: doesOverlap(this, s) === true
   overlap(s) {
-    const [oMin, oMax] = s.containsPoint(this.vmin) ? [this.vmin, s.vmax] : [s.vmin, this.vmax];
-    return oMax - oMin;
+    return Math.min(s.vmax - this.vmin, this.vmax - s.vmin)
+    // const [oMin, oMax] = s.containsPoint(this.vmin) ? [this.vmin, s.vmax] : [s.vmin, this.vmax];
+    // return oMax - oMin;
   }
 }
 

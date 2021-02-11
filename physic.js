@@ -1,12 +1,12 @@
 import { AABB } from './aabb.js';
 import { Circle } from './circle.js';
-import { buildCircleContainedPolygon } from './geom.js';
+import { CollisionInfo, buildCircleContainedPolygon, sat } from './geom.js';
 import { Ray } from './ray.js';
 import * as protocols from './protocols.js';
 import { RigidBody } from './rigidbody.js';
 import { Vector2 } from './math.js';
 
-const { PointCaster, Render } = protocols;
+const { PointCaster, Render, Transformer } = protocols;
 
 import './aabb_protocols.js';
 import './circle_protocols.js';
@@ -23,20 +23,20 @@ canvas.height = canvasParent.offsetHeight;
 const context = canvas.getContext('2d');
 
 const bodies = [];
-for (let i  = 0; i < 10; ++i) {
-  const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
-  const width = 10.0 + Math.random() * 100;
-  const height = 10.0 + Math.random() * 100;
-  const angle = Math.random() * 90;
-  bodies.push(new RigidBody(angle, pos, new AABB(width, height)));
-}
+// for (let i  = 0; i < 10; ++i) {
+//   const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
+//   const width = 10.0 + Math.random() * 100;
+//   const height = 10.0 + Math.random() * 100;
+//   const angle = Math.random() * 90;
+//   bodies.push(new RigidBody(angle, pos, new AABB(width, height)));
+// }
 
-for (let i  = 0; i < 10; ++i) {
-  const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
-  const radius = 10.0 + Math.random() * 50;
-  const angle = Math.random() * 90;
-  bodies.push(new RigidBody(angle, pos, new Circle(radius)));
-}
+// for (let i  = 0; i < 10; ++i) {
+//   const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
+//   const radius = 10.0 + Math.random() * 50;
+//   const angle = Math.random() * 90;
+//   bodies.push(new RigidBody(angle, pos, new Circle(radius)));
+// }
 
 for (let i  = 0; i < 10; ++i) {
   const pos = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
@@ -67,6 +67,44 @@ function loop(ts) {
   collisions.forEach(c => {
     Render.render(c, context);
   });
+
+  let satCollisions = [];
+
+  if (movingBody) {
+    const movingBodyShapeInWorld = Transformer.toWorld(movingBody.shape, movingBody.frame);
+      bodies.forEach(body => {
+        if (movingBody == body) {
+          return;
+        }
+        const worldShape = Transformer.toWorld(body.shape, body.frame);
+        const {found, separatingEdge, magnitude} = sat(movingBodyShapeInWorld, worldShape);
+        if (! found) {
+          satCollisions.push(new CollisionInfo(separatingEdge, magnitude));
+
+          const c = separatingEdge.normal;
+          const movingToOther = body.frame.position.sub(movingBody.frame.position);
+          let correctFactor =  Math.sign(movingToOther.dot(c));
+          const pushVector = c.scale(correctFactor).scale(magnitude);
+          body.frame.setPosition(body.frame.position.add(pushVector));
+        }
+      })
+    }
+
+  // const instances = bodies.map(body => Transformer.toWorld(body.shape, body.frame));
+  // let satCollisions = [];
+  // for (let i = 0; i < instances.length; ++i) {
+  //   const p1 = instances[i];
+  //   for (let j = i+1; j < instances.length; ++j) {
+  //     const p2 = instances[j];
+
+  //     const {found, separatingEdge, magnitude} = sat(p1, p2);
+  //     if (! found) {
+  //       satCollisions.push(new CollisionInfo(separatingEdge, magnitude));
+  //     }
+  //   }
+  // }
+
+  satCollisions.forEach(p => Render.render(p, context));
 
   Render.render(ray, context);
 
