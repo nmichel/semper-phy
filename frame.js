@@ -15,6 +15,11 @@ class Frame {
     this.recomputeMatrices();
   }
 
+  setRotation(rotation) {
+    this.rotation = rotation;
+    this.recomputeMatrices();
+  }
+
   directionToWorld(v) {
     return this.l2w.transformDirection(v);
   }

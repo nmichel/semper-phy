@@ -73,9 +73,10 @@ const buildCircleContainedPolygon = (center, radius, vertexCount) => {
 
 class CollisionInfo {
   // constructor(Edge, Number) -> CollisionInfo
-  constructor(edge, magnitude) {
+  constructor(edge, magnitude, bearer) {
     this.edge = edge
     this.magnitude = magnitude
+    this.bearer = bearer
   }
 }
 
