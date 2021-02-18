@@ -32,30 +32,6 @@ class Polygon {
   }
 }
 
-const sat = (a, b) => {
-  const edges = [...(a.edges), ...(b.edges)];
-  let minMag = Number.POSITIVE_INFINITY;
-  let minEdge = null;
-  const separatingEdge = edges.find(edge => {
-    const n = edge.normal;
-    const spanA = a.computeProjectionSpan(n);
-    const spanB = b.computeProjectionSpan(n);
-    if (spanA.doesOverlap(spanB)) {
-      const overlap = spanA.overlap(spanB);
-      if (overlap < minMag) {
-        minMag = overlap;
-        minEdge = edge;
-      }
-      return false;
-    }
-    else {
-      return true;
-    }
-  });
-
-  return {found: !!separatingEdge, separatingEdge: minEdge, magnitude: minMag}
-};
-
 const buildVertexFromAngleAndRadius = (angle, radius) => {
   return new Vector2(Math.cos(angle) * radius, Math.sin(angle) * radius);
 }
@@ -73,10 +49,9 @@ const buildCircleContainedPolygon = (center, radius, vertexCount) => {
 
 class CollisionInfo {
   // constructor(Edge, Number) -> CollisionInfo
-  constructor(edge, magnitude, bearer) {
+  constructor(edge, magnitude) {
     this.edge = edge
     this.magnitude = magnitude
-    this.bearer = bearer
   }
 }
 

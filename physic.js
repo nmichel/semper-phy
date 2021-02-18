@@ -2,11 +2,9 @@ import { AABB } from './aabb.js';
 import { Circle } from './circle.js';
 import { CollisionInfo, buildCircleContainedPolygon, Polygon } from './geom.js';
 import { Ray } from './ray.js';
-import * as protocols from './protocols.js';
+import { Collider, PointCaster, Render, Transformer } from './protocols.js';
 import { RigidBody } from './rigidbody.js';
 import { Vector2 } from './math.js';
-
-const { PointCaster, Render, Transformer } = protocols;
 
 import './aabb_protocols.js';
 import './circle_protocols.js';
@@ -63,9 +61,10 @@ for (let j  = 0; j < 5; ++j) {
     const angle = Math.random() * 90;
     const radius = 30.0 + Math.random() * 40;
     const verts = Math.round(3 + Math.random() * 5);
-//   const linearSpeed = new Vector2(Math.random() * 30 - 15, Math.random() * 30 - 15);
+    const linearSpeed = new Vector2(Math.random() * 70 - 35, Math.random() * 70 - 35);
     const angularSpeed = Math.random() * 36;
     bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), buildCircleContainedPolygon(new Vector2(0, 0), radius, verts), new Vector2(0, - Math.sign(i - 2) * 50), angularSpeed, 1));
+    // bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), buildCircleContainedPolygon(new Vector2(0, 0), radius, verts), linearSpeed, angularSpeed, 1));
   }
 }
 
@@ -97,10 +96,11 @@ function loop(ts) {
       }
 
       const b = bodies[j];
-      const { found, separatingEdge, magnitude, bearer } = sat(a, b);
+      const worldShapeA = Transformer.toWorld(a.shape, a.frame);
+      const worldShapeB = Transformer.toWorld(b.shape, b.frame);
+      const { found, separatingEdge, magnitude } = Collider.collide(worldShapeA, worldShapeB);
       if (! found) {
-        const collision = new CollisionInfo(separatingEdge, magnitude, bearer);
-        console.log('collision', collision);
+        const collision = new CollisionInfo(separatingEdge, magnitude);
         satCollisions.push({ collision, a, b });
       }
     }
@@ -119,38 +119,8 @@ function loop(ts) {
 
 requestAnimationFrame(loop);
 
-const sat = (a, b) => {
-  const worldShapeA = Transformer.toWorld(a.shape, a.frame);
-  const worldShapeB = Transformer.toWorld(b.shape, b.frame);
-  const edges = [...(worldShapeA.edges.map(e => [e, a])), ...(worldShapeB.edges.map(e => [e, b]))];
-  let minMag = Number.POSITIVE_INFINITY;
-  let minEdge = null;
-  let minBody= null;
-  const separatingEdge = edges.find(([edge, body]) => {
-    const n = edge.normal;
-    const spanA = worldShapeA.computeProjectionSpan(n);
-    const spanB = worldShapeB.computeProjectionSpan(n);
-    if (spanA.doesOverlap(spanB)) {
-      const overlap = spanA.overlap(spanB);
-      if (overlap < minMag) {
-        minMag = overlap;
-        minEdge = edge;
-        minBody = body;
-      }
-      return false;
-    }
-    else {
-      return true;
-    }
-  });
-
-  return {found: !!separatingEdge, separatingEdge: minEdge, magnitude: minMag, bearer: minBody}
-};
-
-function applyImpulse(aa, bb, collision)
-{
+function applyImpulse(a, b, collision) {
   const { edge: { normal }, magnitude, bearer } = collision;
-  const [a, b] = bearer == aa ? [aa, bb] : [bb, aa];
   const invMassA = a.mass > 0 ? 1.0 / a.mass : 0;
   const invMassB = b.mass > 0 ? 1.0 / b.mass : 0;
   const invMassSum = invMassA + invMassB;
@@ -204,5 +174,3 @@ function mouseMoveHandler(e) {
 canvas.addEventListener("mousedown", mouseDownHandler, false);
 canvas.addEventListener("mouseup", mouseUpHandler, false);
 canvas.addEventListener("mousemove", mouseMoveHandler, false);
-
-window.protocols = protocols;

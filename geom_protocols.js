@@ -1,7 +1,7 @@
 import { defimpl } from './functional.js';
 import { CollisionInfo, Edge, Polygon, Vertex } from './geom.js';
 import { RayIntersection } from './ray.js';
-import { PointCaster, RayCaster, Render, Transformer } from './protocols.js';
+import { Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols.js';
 import { segmentIntersection } from './math.js';
 import * as GfxTools from './gfx.js';
 
@@ -57,6 +57,32 @@ defimpl(RayCaster, Polygon, 'cast', (polygon, ray) => {
 
 defimpl(PointCaster, Polygon, 'contains', (polygon, point) => {
   return !polygon.edges.find(({ a, b }) => Math.sign(b.sub(a).crossCoef(point.sub(a))) < 0);
+});
+
+defimpl(Collider, Polygon, 'collide', (polygon, shape) => PolygonCollider.collide(shape, polygon));
+
+defimpl(PolygonCollider, Polygon, 'collide', (a, b) => {
+  const edges = [...a.edges, ...b.edges];
+  let minMag = Number.POSITIVE_INFINITY;
+  let minEdge = null;
+  const separatingEdge = edges.find((edge) => {
+    const n = edge.normal;
+    const spanA = a.computeProjectionSpan(n);
+    const spanB = b.computeProjectionSpan(n);
+    if (spanA.doesOverlap(spanB)) {
+      const overlap = spanA.overlap(spanB);
+      if (overlap < minMag) {
+        minMag = overlap;
+        minEdge = edge;
+      }
+      return false;
+    }
+    else {
+      return true;
+    }
+  });
+
+  return {found: !!separatingEdge, separatingEdge: minEdge, magnitude: minMag};
 });
 
 defimpl(Render, CollisionInfo, 'render', (ci, ctxt, opts) => {
