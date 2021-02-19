@@ -57,6 +57,7 @@ const drawCircle = (ctxt, x, y, radius, color, opts = {}) => {
 const drawPolygon = (ctxt, vertices, color, opts = {}) => {
   const v0 = vertices[0];
   setupLineStyle(ctxt, opts);
+  // ctxt.fillStyle = 'white';
   ctxt.strokeStyle = color;
   ctxt.beginPath();
   ctxt.moveTo(v0.x, v0.y)
@@ -66,6 +67,7 @@ const drawPolygon = (ctxt, vertices, color, opts = {}) => {
   }
   ctxt.closePath();
   ctxt.stroke();
+  //ctxt.fill();
 }
 
 export {

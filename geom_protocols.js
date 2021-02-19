@@ -82,12 +82,31 @@ defimpl(PolygonCollider, Polygon, 'collide', (a, b) => {
     }
   });
 
-  return {found: !!separatingEdge, separatingEdge: minEdge, magnitude: minMag};
+  if (separatingEdge) {
+    return [];
+  }
+
+  let acc = [];
+
+  acc = a.vertices.reduce((acc, p) => {
+    if (PointCaster.contains(b, p)) {
+      return [...acc, new CollisionInfo(p, minEdge.normal, minMag)]
+    }
+    return acc;
+  }, acc);
+
+  acc = b.vertices.reduce((acc, p) => {
+    if (PointCaster.contains(a, p)) {
+      return [...acc, new CollisionInfo(p, minEdge.normal, minMag)]
+    }
+    return acc;
+  }, acc);
+
+  return acc;
 });
 
 defimpl(Render, CollisionInfo, 'render', (ci, ctxt, opts) => {
-  const { magnitude, edge: {a, b, normal } } = ci;
-  const d = b.sub(a);
-  const m = d.scale(0.5).add(a);
-  GfxTools.drawVector(ctxt, m, m.add(normal.scale(magnitude)), 'green');
+  const { point, magnitude, normal } = ci;
+  GfxTools.drawVector(ctxt, point, point.add(normal.scale(20)), 'green');
+  GfxTools.drawDisc(ctxt, point.x, point.y, 3, 'green');
 });

@@ -48,11 +48,12 @@ const buildCircleContainedPolygon = (center, radius, vertexCount) => {
 }
 
 class CollisionInfo {
-  // constructor(Edge, Number) -> CollisionInfo
-  constructor(edge, magnitude) {
-    this.edge = edge
+  // constructor(Vector2, Vector2, Number) -> CollisionInfo
+  constructor(point, normal, magnitude) {
+    this.point = point
+    this.normal = normal
     this.magnitude = magnitude
   }
 }
 
-export { CollisionInfo, Edge, Polygon, Vertex, buildCircleContainedPolygon, sat };
+export { CollisionInfo, Edge, Polygon, Vertex, buildCircleContainedPolygon };

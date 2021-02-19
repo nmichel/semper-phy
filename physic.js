@@ -83,10 +83,11 @@ function loop(ts) {
   bodies.forEach(body => Render.render(body, context, {debug: false}));
 
   const ray = Ray.buildRayFromPoints(a, b);
-  const collisions = bodies.reduce((collisions, body) => [...collisions, ...ray.cast(body)], []);
-  collisions.forEach(c => Render.render(c, context));
+  bodies
+    .reduce((collisions, body) => [...collisions, ...ray.cast(body)], [])
+    .forEach(c => Render.render(c, context));
 
-  let satCollisions = [];
+  let collisions = [];
 
   for (let i = 0; i < bodies.length; ++i) {
     const a = bodies[i];
@@ -98,18 +99,17 @@ function loop(ts) {
       const b = bodies[j];
       const worldShapeA = Transformer.toWorld(a.shape, a.frame);
       const worldShapeB = Transformer.toWorld(b.shape, b.frame);
-      const { found, separatingEdge, magnitude } = Collider.collide(worldShapeA, worldShapeB);
-      if (! found) {
-        const collision = new CollisionInfo(separatingEdge, magnitude);
-        satCollisions.push({ collision, a, b });
-      }
+      
+      Collider
+        .collide(worldShapeA, worldShapeB)
+        .forEach(collision => collisions.push({ collision, a, b }));
     }
   }
 
-  satCollisions.forEach(p => Render.render(p.collision, context));
+  collisions.forEach(p => Render.render(p.collision, context));
 
   for (let k = 0; k < 4; ++k) {
-    satCollisions.forEach(({ a, b, collision }) => applyImpulse(a, b, collision));
+    collisions.forEach(({ a, b, collision }) => applyImpulse(a, b, collision));
   }
 
   Render.render(ray, context);
@@ -120,7 +120,7 @@ function loop(ts) {
 requestAnimationFrame(loop);
 
 function applyImpulse(a, b, collision) {
-  const { edge: { normal }, magnitude, bearer } = collision;
+  const { normal, magnitude } = collision;
   const invMassA = a.mass > 0 ? 1.0 / a.mass : 0;
   const invMassB = b.mass > 0 ? 1.0 / b.mass : 0;
   const invMassSum = invMassA + invMassB;
