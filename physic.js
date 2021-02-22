@@ -4,7 +4,7 @@ import { CollisionInfo, buildCircleContainedPolygon, Polygon } from './geom.js';
 import { Ray } from './ray.js';
 import { Collider, PointCaster, Render, Transformer } from './protocols.js';
 import { RigidBody } from './rigidbody.js';
-import { Vector2 } from './math.js';
+import { toDegres, Vector2, crossRotation, toRadians } from './math.js';
 
 import './aabb_protocols.js';
 import './circle_protocols.js';
@@ -120,7 +120,7 @@ function loop(ts) {
 requestAnimationFrame(loop);
 
 function applyImpulse(a, b, collision) {
-  const { normal, magnitude } = collision;
+  const { point, normal, magnitude } = collision;
   const invMassA = a.mass > 0 ? 1.0 / a.mass : 0;
   const invMassB = b.mass > 0 ? 1.0 / b.mass : 0;
   const invMassSum = invMassA + invMassB;
@@ -131,20 +131,34 @@ function applyImpulse(a, b, collision) {
   if (b.frame.position.sub(a.frame.position).dot(relativeNormal) < 0) {
     relativeNormal.scaleSelf(-1)
   }
-  const relativeVelocity = b.linearVelocity.sub(a.linearVelocity);
+
+  const rap = point.sub(a.frame.position);
+  const rbp = point.sub(b.frame.position);
+  const relativeVelocity = b.linearVelocity.add(crossRotation(toRadians(b.angularVelocity), rbp)).sub(a.linearVelocity.add(crossRotation(toRadians(a.angularVelocity), rap)));
+
   const relativeVelocityOnNormal = relativeVelocity.dot(relativeNormal);
   if (relativeVelocityOnNormal > 0) {
     return;
   }  
 
+  const CoefApCrossN = rap.crossCoef(relativeNormal);
+  const CoefBpCrossN = rbp.crossCoef(relativeNormal);
+  const Ia = 1000;
+  const Ib = 1000;
   const e = Math.min(a.restitution, b.restitution);
-  const num = -(1 + e) * relativeVelocityOnNormal;
-  const j = num / invMassSum;
+  const numerator = -(1 + e) * relativeVelocityOnNormal;
+  const denominator = invMassSum + (CoefApCrossN * CoefApCrossN / Ia) + (CoefBpCrossN * CoefBpCrossN / Ib);
+  const j = numerator / denominator;
   const impulse = relativeNormal.scale(j);
 
   a.linearVelocity.addToSelf(impulse.scale(-invMassA));
   b.linearVelocity.addToSelf(impulse.scale(invMassB));
 
+  a.angularVelocity -= toDegres(rap.crossCoef(relativeNormal.scale(j)) / Ia);
+  b.angularVelocity += toDegres(rbp.crossCoef(relativeNormal.scale(j)) / Ib);
+
+  // Positionnal correction
+  // 
   const percent = 0.2 // usually 20% to 80%
   const slop = 0.01 // usually 0.01 to 0.1
   const correction = normal.scale(Math.max(magnitude - slop, 0.0) / invMassSum * percent);

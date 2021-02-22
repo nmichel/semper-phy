@@ -6,6 +6,14 @@ function toRadians(deg) {
   return deg * Math.PI / 180;
 }
 
+function toDegres(rad) {
+  return rad * 180 / Math.PI;
+}
+
+function crossRotation(omega, {x, y}) {
+  return new Vector2(-omega * y, omega * x);
+}
+
 class Vector2 {
   constructor(x = 0.0, y = 0.0) {
     this.x = x;
@@ -51,7 +59,7 @@ class Vector2 {
   }
 
   crossCoef({x, y}) {
-    return this.x * y - x * this.y;
+    return this.x * y - this.y * x;
   }
 
   length() {
@@ -190,4 +198,4 @@ function segmentIntersection(p, p2, q, q2) {
 	return [t, u];
 }
 
-export { Matrix3, Span, Vector2, clamp, segmentIntersection };
+export { Matrix3, Span, Vector2, clamp, segmentIntersection, toRadians, toDegres, crossRotation };
