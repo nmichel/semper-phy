@@ -37,7 +37,7 @@ const buildVertexFromAngleAndRadius = (angle, radius) => {
 }
 
 const buildCircleContainedPolygon = (center, radius, vertexCount) => {
-  const alpha = Math.random() * Math.PI;
+  const alpha = 0;
   const vertices = [buildVertexFromAngleAndRadius(alpha, radius).addToSelf(center)];
   const offset = (2.0 * Math.PI) / vertexCount;
   for (let i = 1; i < vertexCount; ++i) {
