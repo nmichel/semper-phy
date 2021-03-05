@@ -13,6 +13,10 @@ import './frame_protocols.js';
 import './ray_protocols.js';
 import './rigidbody_protocols.js';
 
+const momentOfIntertiaDisk = (mass, radius) => 1/2 * mass * radius * radius;
+const momentOfIntertiaRectangle = (mass, height, width) => 1/12 * mass * (height * height + width * width);
+const momentOfIntertiaRegularPolygon = (mass, radius, sides) => 1/6 * mass * radius * radius * (2 + Math.cos(2* Math.PI / sides));
+
 const canvas = document.getElementById('game');
 const canvasParent = canvas.parentElement;
 canvas.width = canvasParent.offsetWidth;
@@ -51,10 +55,10 @@ const bodies = [];
 // bodies.push(new RigidBody(50, new Vector2(800, 200), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5), new Vector2(0, 10), -30, 1));
 // bodies.push(new RigidBody(20, new Vector2(800, 500), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5), new Vector2(0, -10), 20, 1));
 
-bodies.push(new RigidBody(0, new Vector2(800, 20), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 1000));
-bodies.push(new RigidBody(0, new Vector2(800, 900), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 1000));
-bodies.push(new RigidBody(0, new Vector2(75, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 1000));
-bodies.push(new RigidBody(0, new Vector2(1530, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 1000));
+bodies.push(new RigidBody(0, new Vector2(800, 20), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 100000, momentOfIntertiaRectangle(100000, 1400, 20)));
+bodies.push(new RigidBody(0, new Vector2(800, 900), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 100000, momentOfIntertiaRectangle(100000, 1400, 20)));
+bodies.push(new RigidBody(0, new Vector2(75, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 100000, momentOfIntertiaRectangle(100000, 20, 900)));
+bodies.push(new RigidBody(0, new Vector2(1530, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 100000, momentOfIntertiaRectangle(100000, 20, 900)));
 
 /*
 for (let j  = 0; j < 5; ++j) {
@@ -98,11 +102,11 @@ for (let j  = 0; j < 5; ++j) {
     const linearSpeed = new Vector2(Math.random() * scalarVelocity - scalarVelocity/2, Math.random() * scalarVelocity - scalarVelocity/2);
     const angularSpeed = Math.random() * 36;
     if (Math.random() > 0.5) {
-      bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), new Circle(radius), linearSpeed, angularSpeed, 1));
+      bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), new Circle(radius), linearSpeed, angularSpeed, radius*radius, momentOfIntertiaDisk(10, radius*radius)));
     }
     else {
       const verts = Math.round(3 + Math.random() * 5);
-      bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), buildCircleContainedPolygon(new Vector2(0, 0), radius, verts), new Vector2(0, - Math.sign(i - 2) * 50), angularSpeed, 1));
+      bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), buildCircleContainedPolygon(new Vector2(0, 0), radius, verts), new Vector2(0, - Math.sign(i - 2) * 50), angularSpeed, radius*radius, momentOfIntertiaRegularPolygon(10, radius*radius, verts)));
     }
   }
 }
@@ -179,8 +183,8 @@ function applyImpulse(a, b, collision) {
 
   const CoefApCrossN = rap.crossCoef(relativeNormal);
   const CoefBpCrossN = rbp.crossCoef(relativeNormal);
-  const Ia = 1000;
-  const Ib = 1000;
+  const Ia = a.inertia;
+  const Ib = b.inertia;
   const e = Math.min(a.restitution, b.restitution);
   const numerator = -(1 + e) * relativeVelocityOnNormal;
   const denominator = invMassSum + (CoefApCrossN * CoefApCrossN / Ia) + (CoefBpCrossN * CoefBpCrossN / Ib);
