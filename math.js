@@ -58,6 +58,7 @@ class Vector2 {
     return this.x * x + this.y * y;
   }
 
+  // crossCoef(Vector2, Vector2) ->  Number
   crossCoef({x, y}) {
     return this.x * y - this.y * x;
   }
@@ -75,7 +76,7 @@ class Vector2 {
     return this;
   }
 
-  // rotateAround(Vector2, Number, Vector2)
+  // rotateAround(Vector2, Number, Vector2) -> Vector2
   rotateAround(angleInDeg, center) {
     const { x, y } = this.sub(center);
 

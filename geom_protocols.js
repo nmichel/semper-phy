@@ -1,7 +1,8 @@
 import { defimpl } from './functional.js';
-import { CollisionInfo, Edge, Polygon, Vertex } from './geom.js';
+import { Edge, Polygon, Vertex } from './geom.js';
+import { CollisionInfo } from './protocols.js';
 import { RayIntersection } from './ray.js';
-import { Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols.js';
+import { CircleCollider, Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols.js';
 import { segmentIntersection } from './math.js';
 import * as GfxTools from './gfx.js';
 
@@ -104,6 +105,44 @@ defimpl(PolygonCollider, Polygon, 'collide', (a, b) => {
 
   return acc;
 });
+
+defimpl(CircleCollider, Polygon, 'collide', (polygon, circle) => {
+  const { minVect } = polygon.vertices.reduce((acc, vertex) => {
+    const { minDist } = acc = acc
+    const c2v = vertex.sub(circle.position)
+    const c2vLength = c2v.length()
+    if (c2vLength < minDist) {
+      return { ...acc, minDist: c2vLength, minVect: c2v }
+    }
+    return acc
+  }, { minDist: Number.POSITIVE_INFINITY, minVect: null })
+
+  const normals = [...polygon.edges.map(edge => edge.normal), minVect.normalize()]
+  let minMag = Number.POSITIVE_INFINITY;
+  let minNormal = null;
+  const separatingEdge = normals.find(normal => {
+    const spanA = polygon.computeProjectionSpan(normal);
+    const spanB = circle.computeProjectionSpan(normal);
+    if (spanA.doesOverlap(spanB)) {
+      const overlap = spanA.overlap(spanB);
+      if (overlap < minMag) {
+        minMag = overlap;
+        minNormal = normal;
+      }
+      return false;
+    }
+    else {
+      return true;
+    }
+  })
+
+  if (separatingEdge) {
+    return []
+  }
+
+  const p = circle.position.sub(minNormal.scale(circle.radius))
+  return [new CollisionInfo(p, minNormal, minMag)]
+})
 
 defimpl(Render, CollisionInfo, 'render', (ci, ctxt, opts) => {
   const { point, magnitude, normal } = ci;

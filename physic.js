@@ -1,8 +1,8 @@
 import { AABB } from './aabb.js';
 import { Circle } from './circle.js';
-import { CollisionInfo, buildCircleContainedPolygon, Polygon } from './geom.js';
+import { buildCircleContainedPolygon, Polygon } from './geom.js';
 import { Ray } from './ray.js';
-import { Collider, PointCaster, Render, Transformer } from './protocols.js';
+import { CollisionInfo, Collider, PointCaster, Render, Transformer } from './protocols.js';
 import { RigidBody } from './rigidbody.js';
 import { toDegres, Vector2, crossRotation, toRadians } from './math.js';
 
@@ -48,14 +48,15 @@ const bodies = [];
 
 // bodies.push(new RigidBody(95, new Vector2(800, 300), new AABB(100, 60)));
 
-// bodies.push(new RigidBody(95, new Vector2(800, 200), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5), new Vector2(0, 10), 0, 1));
-// bodies.push(new RigidBody(95, new Vector2(800, 500), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5), new Vector2(0, -10), 0, 1));
+// bodies.push(new RigidBody(50, new Vector2(800, 200), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5), new Vector2(0, 10), -30, 1));
+// bodies.push(new RigidBody(20, new Vector2(800, 500), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5), new Vector2(0, -10), 20, 1));
 
+bodies.push(new RigidBody(0, new Vector2(800, 20), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 1000));
+bodies.push(new RigidBody(0, new Vector2(800, 900), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 1000));
+bodies.push(new RigidBody(0, new Vector2(75, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 1000));
+bodies.push(new RigidBody(0, new Vector2(1530, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 1000));
 
-bodies.push(new RigidBody(0, new Vector2(800, 20), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 0));
-bodies.push(new RigidBody(0, new Vector2(800, 900), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 0));
-bodies.push(new RigidBody(0, new Vector2(75, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 0));
-bodies.push(new RigidBody(0, new Vector2(1530, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 0));
+/*
 for (let j  = 0; j < 5; ++j) {
   for (let i  = 0; i < 5; ++i) {
     const angle = Math.random() * 90;
@@ -65,6 +66,44 @@ for (let j  = 0; j < 5; ++j) {
     const angularSpeed = Math.random() * 36;
     bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), buildCircleContainedPolygon(new Vector2(0, 0), radius, verts), new Vector2(0, - Math.sign(i - 2) * 50), angularSpeed, 1));
     // bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), buildCircleContainedPolygon(new Vector2(0, 0), radius, verts), linearSpeed, angularSpeed, 1));
+  }
+}
+*/
+
+// bodies.push(new RigidBody(50, new Vector2(800, 200), new Circle(50), new Vector2(10, 10), -30, 1));
+// bodies.push(new RigidBody(20, new Vector2(800, 500), new Circle(30), new Vector2(10, -10), 20, 1));
+
+/*
+for (let j  = 0; j < 5; ++j) {
+  for (let i  = 0; i < 5; ++i) {
+    const angle = Math.random() * 90;
+    const radius = 30.0 + Math.random() * 40;
+    const scalarVelocity = 140;
+    const linearSpeed = new Vector2(Math.random() * scalarVelocity - scalarVelocity/2, Math.random() * scalarVelocity - scalarVelocity/2);
+    const angularSpeed = Math.random() * 36;
+    bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), new Circle(radius), linearSpeed, angularSpeed, 1));
+//    bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), new Circle(radius), new Vector2(0, - Math.sign(i - 2) * 50), angularSpeed, 1));
+  }
+}
+*/
+
+// bodies.push(new RigidBody(20, new Vector2(800, 200), new Circle(30), new Vector2(5, 10), 20, 1));
+// bodies.push(new RigidBody(50, new Vector2(800, 500), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5), new Vector2(0, -10), -30, 1));
+
+for (let j  = 0; j < 5; ++j) {
+  for (let i  = 0; i < 5; ++i) {
+    const angle = Math.random() * 90;
+    const radius = 30.0 + Math.random() * 40;
+    const scalarVelocity = 140;
+    const linearSpeed = new Vector2(Math.random() * scalarVelocity - scalarVelocity/2, Math.random() * scalarVelocity - scalarVelocity/2);
+    const angularSpeed = Math.random() * 36;
+    if (Math.random() > 0.5) {
+      bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), new Circle(radius), linearSpeed, angularSpeed, 1));
+    }
+    else {
+      const verts = Math.round(3 + Math.random() * 5);
+      bodies.push(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), buildCircleContainedPolygon(new Vector2(0, 0), radius, verts), new Vector2(0, - Math.sign(i - 2) * 50), angularSpeed, 1));
+    }
   }
 }
 
@@ -84,8 +123,8 @@ function loop(ts) {
 
   const ray = Ray.buildRayFromPoints(a, b);
   bodies
-    .reduce((collisions, body) => [...collisions, ...ray.cast(body)], [])
-    .forEach(c => Render.render(c, context));
+  .reduce((collisions, body) => [...collisions, ...ray.cast(body)], [])
+  .forEach(c => Render.render(c, context));
 
   let collisions = [];
 
@@ -100,17 +139,14 @@ function loop(ts) {
       const worldShapeA = Transformer.toWorld(a.shape, a.frame);
       const worldShapeB = Transformer.toWorld(b.shape, b.frame);
       
-      Collider
-        .collide(worldShapeA, worldShapeB)
-        .forEach(collision => collisions.push({ collision, a, b }));
+      Collider.collide(worldShapeA, worldShapeB)
+      .forEach(collision => collisions.push({ collision, a, b }));
     }
   }
 
   collisions.forEach(p => Render.render(p.collision, context));
 
-  for (let k = 0; k < 4; ++k) {
-    collisions.forEach(({ a, b, collision }) => applyImpulse(a, b, collision));
-  }
+  collisions.forEach(({ a, b, collision }) => applyImpulse(a, b, collision));
 
   Render.render(ray, context);
 
