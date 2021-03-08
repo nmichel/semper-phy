@@ -9,7 +9,10 @@ class RigidBody {
     this.angularVelocity = angularVelocity;
     this.mass = mass;
     this.inertia = inertia;
-    this.restitution = restitution; 
+    this.restitution = restitution;
+
+    this.inverseMass = mass > 0 ? (1.0 / mass) : 0.0;
+    this.inverseInertia = inertia > 0 ? (1.0 / inertia) : 0.0;
   }
 
   updateFrame(deltaInS) {
@@ -18,8 +21,8 @@ class RigidBody {
   }
 
   applyImpulse(impulse, contactVector) {
-    this.linearVelocity.addToSelf(impulse.scale(1.0 / this.mass));
-    this.angularVelocity += toDegres(contactVector.crossCoef(impulse) / this.inertia);
+    this.linearVelocity.addToSelf(impulse.scale(this.inverseMass));
+    this.angularVelocity += toDegres(contactVector.crossCoef(impulse) * this.inverseInertia);
   }
 }
 

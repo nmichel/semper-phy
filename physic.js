@@ -55,10 +55,10 @@ const bodies = [];
 // bodies.push(new RigidBody(50, new Vector2(800, 200), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5), new Vector2(0, 10), -30, 1));
 // bodies.push(new RigidBody(20, new Vector2(800, 500), buildCircleContainedPolygon(new Vector2(0, 0), 100, 5), new Vector2(0, -10), 20, 1));
 
-bodies.push(new RigidBody(0, new Vector2(800, 20), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 100000, momentOfIntertiaRectangle(100000, 1400, 20)));
-bodies.push(new RigidBody(0, new Vector2(800, 900), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 100000, momentOfIntertiaRectangle(100000, 1400, 20)));
-bodies.push(new RigidBody(0, new Vector2(75, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 100000, momentOfIntertiaRectangle(100000, 20, 900)));
-bodies.push(new RigidBody(0, new Vector2(1530, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 100000, momentOfIntertiaRectangle(100000, 20, 900)));
+bodies.push(new RigidBody(0, new Vector2(800, 20), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 0, 0));
+bodies.push(new RigidBody(0, new Vector2(800, 900), new Polygon([new Vector2(700, 10), new Vector2(-700, 10), new Vector2(-700, -10), new Vector2(700, -10)]), new Vector2(0, 0), 0, 0, 0));
+bodies.push(new RigidBody(0, new Vector2(75, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 0, 0));
+bodies.push(new RigidBody(0, new Vector2(1530, 460), new Polygon([new Vector2(10, 450), new Vector2(-10, 450), new Vector2(-10, -450), new Vector2(10, -450)]), new Vector2(0, 0), 0, 0, 0));
 
 /*
 for (let j  = 0; j < 5; ++j) {
@@ -161,9 +161,7 @@ requestAnimationFrame(loop);
 
 function applyImpulse(a, b, collision) {
   const { point, normal, magnitude } = collision;
-  const invMassA = a.mass > 0 ? 1.0 / a.mass : 0;
-  const invMassB = b.mass > 0 ? 1.0 / b.mass : 0;
-  const invMassSum = invMassA + invMassB;
+  const invMassSum = a.inverseMass + b.inverseMass;
   if (invMassSum == 0.0) {
     return;
   }
@@ -183,11 +181,9 @@ function applyImpulse(a, b, collision) {
 
   const CoefApCrossN = rap.crossCoef(relativeNormal);
   const CoefBpCrossN = rbp.crossCoef(relativeNormal);
-  const Ia = a.inertia;
-  const Ib = b.inertia;
   const e = Math.min(a.restitution, b.restitution);
   const numerator = -(1 + e) * relativeVelocityOnNormal;
-  const denominator = invMassSum + (CoefApCrossN * CoefApCrossN / Ia) + (CoefBpCrossN * CoefBpCrossN / Ib);
+  const denominator = invMassSum + (CoefApCrossN * CoefApCrossN * a.inverseInertia) + (CoefBpCrossN * CoefBpCrossN * b.inverseInertia);
   const j = numerator / denominator;
   const impulse = relativeNormal.scale(j);
 
@@ -199,8 +195,8 @@ function applyImpulse(a, b, collision) {
   const percent = 0.2 // usually 20% to 80%
   const slop = 0.01 // usually 0.01 to 0.1
   const correction = normal.scale(Math.max(magnitude - slop, 0.0) / invMassSum * percent);
-  a.frame.position.subToSelf(correction.scale(invMassA));
-  b.frame.position.addToSelf(correction.scale(invMassB));
+  a.frame.position.subToSelf(correction.scale(a.inverseMass));
+  b.frame.position.addToSelf(correction.scale(b.inverseMass));
 }
 
 function mouseDownHandler(e) {
