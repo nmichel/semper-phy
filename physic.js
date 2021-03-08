@@ -191,11 +191,8 @@ function applyImpulse(a, b, collision) {
   const j = numerator / denominator;
   const impulse = relativeNormal.scale(j);
 
-  a.linearVelocity.addToSelf(impulse.scale(-invMassA));
-  b.linearVelocity.addToSelf(impulse.scale(invMassB));
-
-  a.angularVelocity -= toDegres(rap.crossCoef(relativeNormal.scale(j)) / Ia);
-  b.angularVelocity += toDegres(rbp.crossCoef(relativeNormal.scale(j)) / Ib);
+  a.applyImpulse(impulse.scale(-1.0), rap);
+  b.applyImpulse(impulse, rbp);
 
   // Positionnal correction
   // 
