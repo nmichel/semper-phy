@@ -5,6 +5,7 @@ import { Ray } from './ray.js';
 import { CollisionInfo, Collider, PointCaster, Render, Transformer } from './protocols.js';
 import { RigidBody } from './rigidbody.js';
 import { toDegres, Vector2, crossRotation, toRadians } from './math.js';
+import * as GfxTools from './gfx.js';
 
 import './aabb_protocols.js';
 import './circle_protocols.js';
@@ -115,20 +116,26 @@ let prevTs = performance.now();
 let a = new Vector2(400, 600);
 let b = new Vector2(1000, 200);
 
-let movingBody = null;
+let ray = null;
 
 function loop(ts) {
   const deltaMs = ts - prevTs;
   prevTs = ts;
 
+  let impulseInfo = null;
+
   context.clearRect(0, 0, canvas.width, canvas.height);
   bodies.forEach(body => body.updateFrame(deltaMs/1000));
   bodies.forEach(body => Render.render(body, context, {debug: false}));
 
-  const ray = Ray.buildRayFromPoints(a, b);
-  bodies
-  .reduce((collisions, body) => [...collisions, ...ray.cast(body)], [])
-  .forEach(c => Render.render(c, context));
+  if (ray) {
+    const collisions = bodies.reduce((collisions, body) => [...collisions, ...(ray.cast(body).map(c => {return { collision: c, body }}))], [])
+    if (collisions.length > 0) {
+      const closest = collisions.reduce((current, item) => item.collision.t < current.collision.t ? item : current);
+      impulseInfo = closest;
+      Render.render(closest.collision, context);
+    }
+  }
 
   let collisions = [];
 
@@ -152,7 +159,23 @@ function loop(ts) {
 
   collisions.forEach(({ a, b, collision }) => applyImpulse(a, b, collision));
 
-  Render.render(ray, context);
+  if (impulseInfo) {
+    const { collision, body } = impulseInfo;
+    const { position } = body.frame;
+    const r = collision.point.sub(position);
+    const magnitudeVector = endPoint.sub(startPoint);
+    const scaleFactor = 10;
+    const magnitude = magnitudeVector.length();
+    const impulse = ray.direction.scale(magnitude * scaleFactor);
+    body.applyImpulse(impulse, r);
+
+    GfxTools.drawVector(context, position, position.add(r), { strokeStyle: 'orange', lineDash: [5, 5] });
+    GfxTools.drawVector(context, collision.point.sub(magnitudeVector), collision.point, { strokeStyle: 'white', lineWidth: 5 });
+  }
+
+  if (ray) {
+    Render.render(ray, context);
+  }
 
   requestAnimationFrame(loop);
 }
@@ -199,22 +222,31 @@ function applyImpulse(a, b, collision) {
   b.frame.position.addToSelf(correction.scale(b.inverseMass));
 }
 
+let startPoint = null;
+let endPoint = null;
+
 function mouseDownHandler(e) {
   const rect = canvas.getBoundingClientRect();
-  const position = new Vector2(e.clientX - rect.left, e.clientY - rect.top);
-  movingBody = bodies.find(b => PointCaster.contains(b, position));
+  startPoint = new Vector2(e.clientX - rect.left, e.clientY - rect.top);
+  endPoint = null;
+  ray = null;
 }
 
 function mouseUpHandler(e) {
-  movingBody = null;
+  startPoint = null;
+  endPoint = null;
+  ray = null;
 }
 
 function mouseMoveHandler(e) {
-  if (movingBody) {
-    const mouseMovementX = e.movementX;
-    const mouseMovementY = e.movementY;
-    const direction = new Vector2(mouseMovementX, mouseMovementY);
-    movingBody.frame.setPosition(movingBody.frame.position.add(direction));
+  if (startPoint) {
+    const rect = canvas.getBoundingClientRect();
+    endPoint = new Vector2(e.clientX - rect.left, e.clientY - rect.top);
+    ray = Ray.buildRayFromPoints(startPoint, endPoint);
+  
+    // const mouseMovementX = e.movementX;
+    // const mouseMovementY = e.movementY;
+    // const direction = new Vector2(mouseMovementX, mouseMovementY);
   }
 }
 
