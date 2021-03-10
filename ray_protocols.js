@@ -4,9 +4,9 @@ import { Render, Transformer } from './protocols.js';
 import * as GfxTools from './gfx.js';
 
 defimpl(Render, Ray, 'render', (ray, ctxt, opts) => {
-  GfxTools.drawLine(ctxt, ray.origin.sub(ray.direction.scale(1000)), ray.origin.add(ray.direction.scale(2000)), 'yellow', {lineDash: [5, 5]});
-  GfxTools.drawVector(ctxt, ray.origin, ray.origin.add(ray.direction.scale(100)), 'yellow');
-  GfxTools.drawDisc(ctxt, ray.origin.x, ray.origin.y, 2, 'yellow');
+  GfxTools.drawLine(ctxt, ray.origin.sub(ray.direction.scale(1000)), ray.origin.add(ray.direction.scale(2000)), {strokeStyle: 'yellow', lineDash: [5, 5]});
+  GfxTools.drawVector(ctxt, ray.origin, ray.origin.add(ray.direction.scale(100)), { strokeStyle: 'yellow' });
+  GfxTools.drawDisc(ctxt, ray.origin.x, ray.origin.y, 2, { strokeStyle: 'yellow' });
 });
 
 defimpl(Transformer, Ray, 'toLocal', (ray, frame) => {
@@ -14,8 +14,8 @@ defimpl(Transformer, Ray, 'toLocal', (ray, frame) => {
 });
 
 defimpl(Render, RayIntersection, 'render', (collision, ctxt, opts) => {
-  GfxTools.drawVector(ctxt, collision.point, collision.point.add(collision.normal.scale(30)), 'blue');
-  GfxTools.drawDisc(ctxt, collision.point.x, collision.point.y, 3, 'orange');
+  GfxTools.drawVector(ctxt, collision.point, collision.point.add(collision.normal.scale(30)), { strokeStyle: 'blue' });
+  GfxTools.drawDisc(ctxt, collision.point.x, collision.point.y, 3, { strokeStyle: 'orange' });
 });
 
 defimpl(Transformer, RayIntersection, 'toWorld', (collision, frame) => {

@@ -1,28 +1,30 @@
 import { Vector2 } from './math.js';
 
-const setupLineStyle = (ctxt, {lineDash = []}) => {
-  ctxt.setLineDash(lineDash);
+const setupStyle = (ctxt, opts) => {
+  ctxt.setLineDash(opts.lineDash || []);
+  ctxt.strokeStyle = opts.strokeStyle || 'white';
+  ctxt.fillStyle = opts.fillStyle || ctxt.strokeStyle;
+  ctxt.lineWidth = opts.lineWidth || 1;
 };
 
-const drawLine = (ctxt, a, b, color, opts = {}) => {
-  setupLineStyle(ctxt, opts);
-  ctxt.strokeStyle = color;
+const drawLine = (ctxt, a, b, opts = {}) => {
+  setupStyle(ctxt, opts);
+
   ctxt.beginPath();
   ctxt.moveTo(a.x, a.y)
   ctxt.lineTo(b.x, b.y);
   ctxt.stroke();
 }
 
-const drawVector = (ctxt, a, b, color, opts = {}) => {
+const drawVector = (ctxt, a, b, opts = {}) => {
   const d = b.sub(a);
   d.normalizeSelf();
   d.scaleSelf(5);
   const {x, y} = d;
   const m = new Vector2(-y, x);
 
-  ctxt.strokeStyle = color;
+  setupStyle(ctxt, opts);
 
-  setupLineStyle(ctxt, opts);
   ctxt.beginPath();
   ctxt.moveTo(a.x, a.y)
   ctxt.lineTo(b.x, b.y);
@@ -35,30 +37,29 @@ const drawVector = (ctxt, a, b, color, opts = {}) => {
   ctxt.lineTo(b.x, b.y)
   ctxt.lineTo(arrowB.x, arrowB.y);
   ctxt.stroke();
-
 }
 
-const drawDisc = (ctxt, x, y, radius, color, opts = {}) => {
-  setupLineStyle(ctxt, opts);
+const drawDisc = (ctxt, x, y, radius, opts = {}) => {
+  setupStyle(ctxt, opts);
+
   ctxt.beginPath();
-  ctxt.fillStyle=color;
   ctxt.arc(x, y, radius, 0, 2 * Math.PI);
   ctxt.fill();
 }
 
-const drawCircle = (ctxt, x, y, radius, color, opts = {}) => {
-  setupLineStyle(ctxt, opts);
+const drawCircle = (ctxt, x, y, radius, opts = {}) => {
+  setupStyle(ctxt, opts);
+
   ctxt.beginPath();
-  ctxt.strokeStyle=color;
   ctxt.arc(x, y, radius, 0, 2 * Math.PI);
   ctxt.stroke();
 }
 
-const drawPolygon = (ctxt, vertices, color, opts = {}) => {
-  const v0 = vertices[0];
-  setupLineStyle(ctxt, opts);
+const drawPolygon = (ctxt, vertices, opts = {}) => {
+  setupStyle(ctxt, opts);
+  
   // ctxt.fillStyle = 'white';
-  ctxt.strokeStyle = color;
+  const v0 = vertices[0];
   ctxt.beginPath();
   ctxt.moveTo(v0.x, v0.y)
   for (let i = 1; i < vertices.length; ++i) {

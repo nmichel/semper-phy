@@ -8,7 +8,7 @@ import * as GfxTools from './gfx.js';
 
 defimpl(Render, Vertex, 'render', (vertex, ctxt, opts) => {
   const { x, y } = vertex;
-  GfxTools.drawDisc(ctxt, x, y, 5, 'red');
+  GfxTools.drawDisc(ctxt, x, y, 5, { strokeStyle: 'red' });
 });
 
 defimpl(Render, Edge, 'render', (edge, ctxt, opts) => {
@@ -17,14 +17,14 @@ defimpl(Render, Edge, 'render', (edge, ctxt, opts) => {
   const m = d.scale(0.5).add(a);
   const offset = normal.scale(20.0);
   
-  GfxTools.drawVector(ctxt, m, m.add(normal.scale(15.0)), 'red');
-  GfxTools.drawVector(ctxt, m.sub(d.scale(0.4)).add(offset), m.add(d.scale(0.4)).add(offset), 'yellow');
+  GfxTools.drawVector(ctxt, m, m.add(normal.scale(15.0)), { strokeStyle: 'red' });
+  GfxTools.drawVector(ctxt, m.sub(d.scale(0.4)).add(offset), m.add(d.scale(0.4)).add(offset), { strokeStyle: 'yellow' });
 });
 
 defimpl(Render, Polygon, 'render', (polygon, ctxt, opts) => {
   const { debug = false, color = 'white' } = opts;
 
-  GfxTools.drawPolygon(ctxt, polygon.vertices, color);
+  GfxTools.drawPolygon(ctxt, polygon.vertices, { strokeStyle: color });
   if (debug) {
     polygon.vertices.forEach(v => Render.render(v, ctxt, opts));
     polygon.edges.forEach(e => Render.render(e, ctxt, opts));
@@ -146,6 +146,6 @@ defimpl(CircleCollider, Polygon, 'collide', (polygon, circle) => {
 
 defimpl(Render, CollisionInfo, 'render', (ci, ctxt, opts) => {
   const { point, magnitude, normal } = ci;
-  GfxTools.drawVector(ctxt, point, point.add(normal.scale(20)), 'green');
-  GfxTools.drawDisc(ctxt, point.x, point.y, 3, 'green');
+  GfxTools.drawVector(ctxt, point, point.add(normal.scale(20)), { strokeStyle: 'green' });
+  GfxTools.drawDisc(ctxt, point.x, point.y, 3, { strokeStyle: 'green' });
 });

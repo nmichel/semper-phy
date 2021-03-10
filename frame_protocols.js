@@ -9,7 +9,7 @@ defimpl(Render, Frame, 'render', (frame, ctxt, opts) => {
   const { x: xa, y: ya } = aAxis;
   const oAxis = new Vector2(-ya, xa);
 
-  GfxTools.drawVector(ctxt, frame.position, frame.position.add(aAxis), 'green');
-  GfxTools.drawVector(ctxt, frame.position, frame.position.add(oAxis), 'red');
-  GfxTools.drawDisc(ctxt, frame.position.x, frame.position.y, 2, 'red');
+  GfxTools.drawVector(ctxt, frame.position, frame.position.add(aAxis), { strokeStyle: 'green' });
+  GfxTools.drawVector(ctxt, frame.position, frame.position.add(oAxis), { strokeStyle: 'red' });
+  GfxTools.drawDisc(ctxt, frame.position.x, frame.position.y, 2, { strokeStyle: 'red' });
 });

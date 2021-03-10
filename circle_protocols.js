@@ -33,7 +33,7 @@ defimpl(RayCaster, Circle, 'cast', (circle, ray) => {
 
 defimpl(Render, Circle, 'render', (circle, ctxt) => {
   const {x, y} = circle.position;
-  GfxTools.drawCircle(ctxt, x, y, circle.radius, 'white');
+  GfxTools.drawCircle(ctxt, x, y, circle.radius, { strokeStyle: 'white' });
 });
 
 defimpl(Transformer, Circle, 'toWorld', (circle, frame) => {
