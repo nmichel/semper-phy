@@ -1,4 +1,4 @@
-import { CircleCollider, Collider, CollisionInfo, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols.js';
+import { CircleCollider, Collider, CollisionInfo, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
 import { toDegres, Vector2, crossRotation, toRadians } from './math.js';
 
 class Scene {

@@ -1,4 +1,4 @@
-import { defprotocol } from './functional.js';
+import { defprotocol } from '../functional.js';
 
 const CircleCollider = defprotocol('CircleCollider', ['collide']);
 const Collider = defprotocol('Collider', ['collide']);

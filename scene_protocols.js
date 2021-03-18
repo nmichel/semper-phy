@@ -1,5 +1,5 @@
 import { defimpl } from './functional.js';
-import { Render } from './protocols.js';
+import { Render } from './protocols/protocols.js';
 import { Scene } from './scene.js';
 
 defimpl(Render, Scene, 'render', (scene, ctxt) => {

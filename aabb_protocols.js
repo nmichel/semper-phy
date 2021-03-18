@@ -2,7 +2,7 @@ import { Inertia } from './protocols/inertia.js';
 import { defimpl } from './functional.js';
 import { AABB } from './aabb.js';
 import { Polygon } from './geom.js';
-import { PointCaster, RayCaster, Transformer } from './protocols.js';
+import { PointCaster, RayCaster, Transformer } from './protocols/protocols.js';
 import { RayIntersection } from './ray.js';
 import { Vector2 } from './math.js';
 

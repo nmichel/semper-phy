@@ -1,5 +1,5 @@
 import { Ray } from './ray.js';
-import { Render } from './protocols.js';
+import { Render } from './protocols/protocols.js';
 import { Vector2 } from './math.js';
 import * as GfxTools from './gfx.js';
 // import buildScene from './scenes/random_grid.js';
@@ -26,8 +26,6 @@ const context = canvas.getContext('2d');
 const scene = buildScene();
 
 let prevTs = performance.now();
-let a = new Vector2(400, 600);
-let b = new Vector2(1000, 200);
 
 let ray = null;
 

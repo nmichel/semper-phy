@@ -1,6 +1,6 @@
 import { defimpl } from './functional.js';
 import { Ray, RayIntersection } from './ray.js';
-import { Render, Transformer } from './protocols.js';
+import { Render, Transformer } from './protocols/protocols.js';
 import * as GfxTools from './gfx.js';
 
 defimpl(Render, Ray, 'render', (ray, ctxt, opts) => {

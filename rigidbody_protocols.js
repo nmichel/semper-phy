@@ -1,5 +1,5 @@
 import { defimpl } from './functional.js';
-import { PointCaster, RayCaster, Render, Transformer } from './protocols.js';
+import { PointCaster, RayCaster, Render, Transformer } from './protocols/protocols.js';
 import { RigidBody } from './rigidbody.js';
 
 defimpl(Render, RigidBody, 'render', (rigidbody, ctxt, opts) => {

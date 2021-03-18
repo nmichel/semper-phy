@@ -1,4 +1,4 @@
-import { CircleCollider, Collider, CollisionInfo, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols.js';
+import { CircleCollider, Collider, CollisionInfo, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
 import { Inertia } from './protocols/inertia.js';
 import { RayIntersection } from './ray.js';
 import { Circle } from './circle.js';

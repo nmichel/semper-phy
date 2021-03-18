@@ -1,9 +1,9 @@
 import { Inertia } from './protocols/inertia.js';
 import { defimpl } from './functional.js';
 import { Edge, Polygon, Vertex } from './geom.js';
-import { CollisionInfo } from './protocols.js';
+import { CollisionInfo } from './protocols/protocols.js';
 import { RayIntersection } from './ray.js';
-import { CircleCollider, Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols.js';
+import { CircleCollider, Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
 import { segmentIntersection } from './math.js';
 import * as GfxTools from './gfx.js';
 

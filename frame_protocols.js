@@ -1,6 +1,6 @@
 import { defimpl } from './functional.js';
 import { Frame } from './frame.js';
-import { Render } from './protocols.js';
+import { Render } from './protocols/protocols.js';
 import * as GfxTools from './gfx.js';
 import { Vector2 } from './math.js';
 
