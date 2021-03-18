@@ -1,3 +1,4 @@
+import { Inertia } from './protocols/inertia.js';
 import { defimpl } from './functional.js';
 import { AABB } from './aabb.js';
 import { Polygon } from './geom.js';
@@ -61,4 +62,8 @@ defimpl(Transformer, AABB, 'toWorld', (aabb, frame) => {
 defimpl(PointCaster, AABB, 'contains', (aabb, point) => {
   const absPoint = point.abs();
   return aabb.halfSize.x >= absPoint.x && aabb.halfSize.y >= absPoint.y;
+});
+
+defimpl(Inertia, AABB, 'compute', ({ size: { x: width, y: height } }, mass) => {
+  return 1/12 * mass * (height * height + width * width);
 });

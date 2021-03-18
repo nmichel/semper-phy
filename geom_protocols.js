@@ -1,3 +1,4 @@
+import { Inertia } from './protocols/inertia.js';
 import { defimpl } from './functional.js';
 import { Edge, Polygon, Vertex } from './geom.js';
 import { CollisionInfo } from './protocols.js';
@@ -142,7 +143,11 @@ defimpl(CircleCollider, Polygon, 'collide', (polygon, circle) => {
 
   const p = circle.position.sub(minNormal.scale(circle.radius))
   return [new CollisionInfo(p, minNormal, minMag)]
-})
+});
+
+defimpl(Inertia, Polygon, 'compute', ({ radius, sidesCount }, mass) => {
+  return 1/6 * mass * radius * radius * (2 + Math.cos(2* Math.PI / sidesCount));
+});
 
 defimpl(Render, CollisionInfo, 'render', (ci, ctxt, opts) => {
   const { point, magnitude, normal } = ci;

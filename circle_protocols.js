@@ -1,4 +1,5 @@
 import { CircleCollider, Collider, CollisionInfo, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols.js';
+import { Inertia } from './protocols/inertia.js';
 import { RayIntersection } from './ray.js';
 import { Circle } from './circle.js';
 import { defimpl } from './functional.js';
@@ -62,4 +63,8 @@ defimpl(CircleCollider, Circle, 'collide', (a, b) => {
   return [new CollisionInfo(a.position.add(a2b.scale(0.5)), normal, mag)];
 });
 
-defimpl(PolygonCollider, Circle, 'collide', (circle, polygon) =>  CircleCollider.collide(polygon, circle));
+defimpl(PolygonCollider, Circle, 'collide', (circle, polygon) => CircleCollider.collide(polygon, circle));
+
+defimpl(Inertia, Circle, 'compute', ({ radius }, mass) => {
+  return 1/2 * mass * radius * radius;
+});

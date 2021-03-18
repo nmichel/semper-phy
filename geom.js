@@ -14,9 +14,11 @@ class Edge {
 }
 
 class Polygon {
-  // constructor([Vertex]) -> Polygon
-  constructor(vertices) {
+  // constructor([Vertex], Integer) -> Polygon
+  constructor(vertices, radius) {
     this.vertices = vertices;
+    this.radius = radius;
+    this.sidesCount = vertices.length;
 
     const lastVert = this.vertices[this.vertices.length - 1];
     const [_v, edges] = this.vertices.reduce(([prevVert, edges], vert) => {
@@ -44,7 +46,7 @@ const buildCircleContainedPolygon = (center, radius, vertexCount) => {
     vertices.push(buildVertexFromAngleAndRadius(alpha + i * offset, radius).addToSelf(center));
   }
 
-  return new Polygon(vertices);
+  return new Polygon(vertices, radius);
 }
 
 export { Edge, Polygon, Vertex, buildCircleContainedPolygon };
