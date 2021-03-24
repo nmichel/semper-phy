@@ -1,7 +1,7 @@
-import { AABB } from '../aabb.js';
-import { RigidBody } from '../rigidbody.js';
-import { Scene } from '../scene.js';
-import { Vector2 } from '../math.js';
+import { AABB } from '../../aabb.js';
+import { RigidBody } from '../../rigidbody.js';
+import { Scene } from '../../scene.js';
+import { Vector2 } from '../../math.js';
 
 export default function buildScene() {
   const scene = new Scene();
