@@ -1,3 +1,4 @@
+import '../../../physic/engine.js';
 import { Ray } from '../ray.js';
 import { Render } from '../protocols/protocols.js';
 import { Vector2 } from '../math.js';
@@ -7,14 +8,6 @@ import * as GfxTools from '../gfx.js';
 // import buildScene from './scenes/just_a_bar.js';
 // import buildScene from './scenes/pool.js';
 import buildScene from './scenes/squares_struggle.js';
-
-import '../aabb_protocols.js';
-import '../circle_protocols.js';
-import '../geom_protocols.js';
-import '../frame_protocols.js';
-import '../ray_protocols.js';
-import '../scene_protocols.js';
-import '../rigidbody_protocols.js';
 
 const canvas = document.getElementById('game');
 const canvasParent = canvas.parentElement;
