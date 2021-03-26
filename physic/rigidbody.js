@@ -11,14 +11,20 @@ class RigidBody {
     this.mass = mass;
     this.inertia = mass == 0 ? 0 : Inertia.compute(shape, mass);
     this.restitution = restitution;
-
     this.inverseMass = mass > 0 ? (1.0 / mass) : 0.0;
     this.inverseInertia = this.inertia > 0 ? (1.0 / this.inertia) : 0.0;
+
+    this.listeners = [];
+  }
+
+  addListener(listenerFn) {
+    this.listeners.push(listenerFn);
   }
 
   updateFrame(deltaInS) {
     this.frame.setPosition(this.frame.position.add(this.linearVelocity.scale(deltaInS)));
     this.frame.setRotation(((this.frame.rotation + this.angularVelocity * deltaInS) + 360) % 360);
+    this.listeners.forEach(listenerFn => listenerFn());
   }
 
   applyImpulse(impulse, contactVector) {
