@@ -1,4 +1,5 @@
 export { CircleCollider } from './circle_collider.js';
+export { Cloner } from './cloner.js';
 export { CollisionInfo, Collider } from './collider.js';
 export { Inertia } from './inertia.js';
 export { PointCaster } from './point_caster.js';

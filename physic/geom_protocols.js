@@ -3,8 +3,8 @@ import { defimpl } from './functional.js';
 import { Edge, Polygon, Vertex } from './geom.js';
 import { CollisionInfo } from './protocols/protocols.js';
 import { RayIntersection } from './ray.js';
-import { CircleCollider, Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
-import { segmentIntersection } from './math.js';
+import { CircleCollider, Cloner, Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
+import { segmentIntersection, Vector2 } from './math.js';
 import * as GfxTools from './gfx.js';
 
 defimpl(Render, Vertex, 'render', (vertex, ctxt, opts) => {
@@ -153,4 +153,9 @@ defimpl(Render, CollisionInfo, 'render', (ci, ctxt, opts) => {
   const { point, magnitude, normal } = ci;
   GfxTools.drawVector(ctxt, point, point.add(normal.scale(20)), { strokeStyle: 'green' });
   GfxTools.drawDisc(ctxt, point.x, point.y, 3, { strokeStyle: 'green' });
+});
+
+defimpl(Cloner, CollisionInfo, 'clone', (ci) => {
+  const { point, magnitude, normal } = ci;
+  return new CollisionInfo(new Vector2(point.x, point.y), new Vector2(normal.x, normal.y), magnitude);
 });
