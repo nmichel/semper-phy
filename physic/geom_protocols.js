@@ -109,7 +109,7 @@ defimpl(PolygonCollider, Polygon, 'collide', (a, b) => {
 
 defimpl(CircleCollider, Polygon, 'collide', (polygon, circle) => {
   const { minVect } = polygon.vertices.reduce((acc, vertex) => {
-    const { minDist } = acc = acc
+    const { minDist } = acc
     const c2v = vertex.sub(circle.position)
     const c2vLength = c2v.length()
     if (c2vLength < minDist) {

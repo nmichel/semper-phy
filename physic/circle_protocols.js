@@ -57,7 +57,6 @@ defimpl(CircleCollider, Circle, 'collide', (a, b) => {
   }
 
   const mag = radii - a2bLength;
-  a2bLength
   const normal = a2b.scale(1.0 / a2bLength);
 
   return [new CollisionInfo(a.position.add(a2b.scale(0.5)), normal, mag)];

@@ -1,5 +1,5 @@
-import { CircleCollider, Collider, CollisionInfo, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
-import { toDegres, Vector2, crossRotation, toRadians } from './math.js';
+import { Collider, Transformer } from './protocols/protocols.js';
+import { toRadians } from './math.js';
 
 class Scene {
   constructor() {
@@ -44,18 +44,22 @@ class Scene {
     if (b.frame.position.sub(a.frame.position).dot(relativeNormal) < 0) {
       relativeNormal.scaleSelf(-1)
     }
-  
+
     const rap = point.sub(a.frame.position);
     const rbp = point.sub(b.frame.position);
-    const relativeVelocity = b.linearVelocity.add(crossRotation(toRadians(b.angularVelocity), rbp)).sub(a.linearVelocity.add(crossRotation(toRadians(a.angularVelocity), rap)));
+    const rapPerp = rap.tangential();
+    const rbpPerp = rbp.tangential();
+    const tangentialSpeedVectorA = rapPerp.scale(toRadians(a.angularVelocity));
+    const tangentialSpeedVectorB = rbpPerp.scale(toRadians(b.angularVelocity));
+    const relativeVelocity = b.linearVelocity.add(tangentialSpeedVectorB).sub(a.linearVelocity.add(tangentialSpeedVectorA));
   
     const relativeVelocityOnNormal = relativeVelocity.dot(relativeNormal);
     if (relativeVelocityOnNormal > 0) {
       return;
     }  
   
-    const CoefApCrossN = rap.crossCoef(relativeNormal);
-    const CoefBpCrossN = rbp.crossCoef(relativeNormal);
+    const CoefApCrossN = rapPerp.dot(relativeNormal)
+    const CoefBpCrossN = rbpPerp.dot(relativeNormal)
     const e = Math.min(a.restitution, b.restitution);
     const numerator = -(1 + e) * relativeVelocityOnNormal;
     const denominator = invMassSum + (CoefApCrossN * CoefApCrossN * a.inverseInertia) + (CoefBpCrossN * CoefBpCrossN * b.inverseInertia);

@@ -10,10 +10,6 @@ function toDegres(rad) {
   return rad * 180 / Math.PI;
 }
 
-function crossRotation(omega, {x, y}) {
-  return new Vector2(-omega * y, omega * x);
-}
-
 class Vector2 {
   constructor(x = 0.0, y = 0.0) {
     this.x = x;
@@ -61,6 +57,13 @@ class Vector2 {
   // crossCoef(Vector2, Vector2) ->  Number
   crossCoef({x, y}) {
     return this.x * y - this.y * x;
+  }
+
+  /**
+   * @returns {Vector2} The vector orthogonal to this one, counterclockwise.
+   */
+  tangential() {
+    return new Vector2(-this.y, this.x);
   }
 
   length() {
@@ -199,4 +202,4 @@ function segmentIntersection(p, p2, q, q2) {
 	return [t, u];
 }
 
-export { Matrix3, Span, Vector2, clamp, segmentIntersection, toRadians, toDegres, crossRotation };
+export { Matrix3, Span, Vector2, clamp, segmentIntersection, toRadians, toDegres };
