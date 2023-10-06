@@ -2,6 +2,12 @@ import { Inertia } from "./protocols/inertia.js";
 import { toDegres, Vector2 } from "./math.js";
 import { Frame } from "./frame.js";
 
+const APPLY_GRAVITY = true;
+const GRAVITY = new Vector2(0, 9.81);
+
+const APPLY_DAMPING = true;
+const DAMPING = 0.05;
+
 class RigidBody {
   constructor(rotation, position, shape, linearVelocity = new Vector2(0, 0), angularVelocity = 0.0, mass = 1, restitution = 1) {
     this.frame = new Frame(rotation, position);
@@ -22,6 +28,15 @@ class RigidBody {
   }
 
   updateFrame(deltaInS) {
+    if (APPLY_GRAVITY && this.inverseMass > 0) {
+      this.linearVelocity.addToSelf(GRAVITY.scale(deltaInS));
+    }
+
+    if (APPLY_DAMPING) {
+      this.linearVelocity.scaleSelf(1.0 - (DAMPING * deltaInS));
+      this.angularVelocity *= (1.0 - (DAMPING * deltaInS));
+    }
+
     this.frame.setPosition(this.frame.position.add(this.linearVelocity.scale(deltaInS)));
     this.frame.setRotation(((this.frame.rotation + this.angularVelocity * deltaInS) + 360) % 360);
     this.listeners.forEach(listenerFn => listenerFn());
