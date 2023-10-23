@@ -11,6 +11,8 @@ function toDegres(rad) {
 }
 
 class Vector2 {
+  static zero = new Vector2(0, 0);
+
   constructor(x = 0.0, y = 0.0) {
     this.x = x;
     this.y = y;
@@ -66,8 +68,17 @@ class Vector2 {
     return new Vector2(-this.y, this.x);
   }
 
+  squaredDistanceTo(p) {
+    const ap = p.sub(this);
+    return ap.squaredLength()
+  }
+
+  squaredLength() {
+    return this.dot(this);
+  }
+
   length() {
-    return Math.sqrt(this.dot(this));
+    return Math.sqrt(this.squaredLength(this));
   }
 
   normalize() {
@@ -94,6 +105,10 @@ class Vector2 {
 
   abs() {
     return new Vector2(Math.abs(this.x), Math.abs(this.y));
+  }
+
+  quasiSame(p) {
+    return p.squaredDistanceTo(this) < 1.0;
   }
 }
 

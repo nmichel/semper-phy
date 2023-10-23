@@ -46,22 +46,29 @@ defimpl(PointCaster, Circle, 'contains', (circle, point) => {
   return dist <= circle.radius;
 });
 
+defimpl(Collider, Circle, 'overlap', (circle, shape) => CircleCollider.overlap(shape, circle));
 defimpl(Collider, Circle, 'collide', (circle, shape) => CircleCollider.collide(shape, circle));
 
-defimpl(CircleCollider, Circle, 'collide', (a, b) => {
+defimpl(CircleCollider, Circle, 'overlap', (a, b) => {
   const a2b = b.position.sub(a.position);
   const a2bLength = a2b.length();
   const radii = a.radius + b.radius;
   if (a2bLength > radii) {
-    return [];
+    return null;
   }
 
-  const mag = radii - a2bLength;
+  const depth = radii - a2bLength;
   const normal = a2b.scale(1.0 / a2bLength);
 
-  return [new CollisionInfo(a.position.add(a2b.scale(0.5)), normal, mag)];
+  return {depth, normal};
 });
 
+defimpl(CircleCollider, Circle, 'collide', (a, b) => {
+  const a2b = b.position.sub(a.position).normalizeSelf();
+  return [a.position.add(a2b.scale(a.radius))]
+});
+
+defimpl(PolygonCollider, Circle, 'overlap', (circle, polygon) => CircleCollider.overlap(polygon, circle));
 defimpl(PolygonCollider, Circle, 'collide', (circle, polygon) => CircleCollider.collide(polygon, circle));
 
 defimpl(Inertia, Circle, 'compute', ({ radius }, mass) => {

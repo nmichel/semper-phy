@@ -1,5 +1,5 @@
 import { defprotocol } from '../functional.js';
 
-const CircleCollider = defprotocol('CircleCollider', ['collide']);
+const CircleCollider = defprotocol('CircleCollider', ['overlap', 'collide']);
 
 export { CircleCollider };

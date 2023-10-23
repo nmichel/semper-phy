@@ -11,6 +11,25 @@ class Edge {
     this.normal = new Vector2(y, -x);
     this.normal.normalizeSelf();
   }
+
+  nearestFrom(p) {
+    const ab = this.b.sub(this.a);
+    const ap = p.sub(this.a);
+
+    const dotProd = ap.dot(ab);
+    const abNorm2 = ab.squaredLength();
+    const normalizedD = dotProd / abNorm2;
+
+    if (normalizedD <= 0) {
+      return this.a.clone()
+    }
+
+    if (normalizedD >= 1) {
+      return this.b.clone()
+    }
+
+    return this.a.add(ab.scale(normalizedD))
+  }
 }
 
 class Polygon {

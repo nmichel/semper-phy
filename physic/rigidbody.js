@@ -9,7 +9,7 @@ const APPLY_DAMPING = true;
 const DAMPING = 0.05;
 
 class RigidBody {
-  constructor(rotation, position, shape, linearVelocity = new Vector2(0, 0), angularVelocity = 0.0, mass = 1, restitution = 1) {
+  constructor(rotation, position, shape, linearVelocity = new Vector2(0, 0), angularVelocity = 0.0, mass = 1, restitution = 0.9) {
     this.frame = new Frame(rotation, position);
     this.shape = shape;
     this.linearVelocity = linearVelocity;
@@ -29,7 +29,7 @@ class RigidBody {
 
   updateFrame(deltaInS) {
     if (APPLY_GRAVITY && this.inverseMass > 0) {
-      this.linearVelocity.addToSelf(GRAVITY.scale(deltaInS));
+      this.linearVelocity.addToSelf(GRAVITY.scale(10*deltaInS));
     }
 
     if (APPLY_DAMPING) {

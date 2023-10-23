@@ -1,5 +1,5 @@
 import { defprotocol } from '../functional.js';
 
-const PolygonCollider = defprotocol('PolygonCollider', ['collide']);
+const PolygonCollider = defprotocol('PolygonCollider', ['overlap', 'collide']);
 
 export { PolygonCollider };

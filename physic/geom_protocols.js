@@ -61,9 +61,10 @@ defimpl(PointCaster, Polygon, 'contains', (polygon, point) => {
   return !polygon.edges.find(({ a, b }) => Math.sign(b.sub(a).crossCoef(point.sub(a))) < 0);
 });
 
+defimpl(Collider, Polygon, 'overlap', (polygon, shape) => PolygonCollider.overlap(shape, polygon));
 defimpl(Collider, Polygon, 'collide', (polygon, shape) => PolygonCollider.collide(shape, polygon));
 
-defimpl(PolygonCollider, Polygon, 'collide', (a, b) => {
+defimpl(PolygonCollider, Polygon, 'overlap', (a, b) => {
   const edges = [...a.edges, ...b.edges];
   let minMag = Number.POSITIVE_INFINITY;
   let minEdge = null;
@@ -85,29 +86,82 @@ defimpl(PolygonCollider, Polygon, 'collide', (a, b) => {
   });
 
   if (separatingEdge) {
-    return [];
+    return null;
   }
 
-  let acc = [];
-
-  acc = a.vertices.reduce((acc, p) => {
-    if (PointCaster.contains(b, p)) {
-      return [...acc, new CollisionInfo(p, minEdge.normal, minMag)]
-    }
-    return acc;
-  }, acc);
-
-  acc = b.vertices.reduce((acc, p) => {
-    if (PointCaster.contains(a, p)) {
-      return [...acc, new CollisionInfo(p, minEdge.normal, minMag)]
-    }
-    return acc;
-  }, acc);
-
-  return acc;
+  return {depth: minMag, normal: minEdge.normal.clone()}
 });
 
-defimpl(CircleCollider, Polygon, 'collide', (polygon, circle) => {
+function quasiSame(a, b) {
+  return Math.abs(a - b) < 0.0005;
+}
+
+defimpl(PolygonCollider, Polygon, 'collide', (a, b) => {
+  let contact1 = Vector2.zero
+  let contact2 = Vector2.zero
+  let contactCount = 0
+  let minDist = Number.POSITIVE_INFINITY
+
+  a.vertices.forEach(p => {
+    // console.log('* a / p', p);
+    b.edges.forEach(edge => {
+      // console.log('| testing edge', edge);
+
+      const ct = edge.nearestFrom(p)
+      const dist = p.squaredDistanceTo(ct);
+
+      if (quasiSame(dist, minDist)) {
+        if (!contact1.quasiSame(ct)) {
+          // console.log(`| contact 2 (${dist}) [${ct.x}, ${ct.y}]`);
+          contact2 = ct
+          contactCount = 2
+        }
+      }
+      else if (dist < minDist) {
+        // console.log(`| contact 1 (${dist}) [${ct.x}, ${ct.y}]`);
+
+        minDist = dist
+        contact1 = ct
+        contactCount = 1
+      }
+    })
+  })
+
+  b.vertices.forEach(p => {
+    // console.log('* b / p', p);
+    a.edges.forEach(edge => {
+      // console.log('| testing edge', edge);
+      const ct = edge.nearestFrom(p)
+      const dist = p.squaredDistanceTo(ct);
+
+      if (quasiSame(dist, minDist)) {
+        if (!contact1.quasiSame(ct)) {
+          // console.log(`| contact 2 (${dist}) [${ct.x}, ${ct.y}]`);
+          contact2 = ct
+          contactCount = 2
+        }
+      }
+      else if (dist < minDist) {
+        // console.log(`| contact 1 (${dist}) [${ct.x}, ${ct.y}]`);
+
+        minDist = dist
+        contact1 = ct
+        contactCount = 1
+      }
+    })
+  })
+
+  switch (contactCount) {
+    case 0:
+      return []
+    case 1:
+      return [contact1]
+    case 2:
+      return [contact1, contact2]
+  }
+})
+
+defimpl(CircleCollider, Polygon, 'overlap', (polygon, circle) => {
   const { minVect } = polygon.vertices.reduce((acc, vertex) => {
     const { minDist } = acc
     const c2v = vertex.sub(circle.position)
@@ -138,12 +192,25 @@ defimpl(CircleCollider, Polygon, 'collide', (polygon, circle) => {
   })
 
   if (separatingEdge) {
-    return []
+    return null
   }
 
-  const p = circle.position.sub(minNormal.scale(circle.radius))
-  return [new CollisionInfo(p, minNormal, minMag)]
+  return {depth: minMag, normal: minNormal}
 });
+
+defimpl(CircleCollider, Polygon, 'collide', (polygon, circle) => {
+  const [point, _dist] = polygon.edges.reduce((acc, edge) => {
+    const cp = edge.nearestFrom(circle.position)
+    const distanceSquared = circle.position.squaredDistanceTo(cp);
+    const [_currentPoint, currentDistSquared] = acc;
+    if (distanceSquared < currentDistSquared) {
+      return [cp, distanceSquared];
+    }
+    return acc
+  }, [Vector2.zero, Number.POSITIVE_INFINITY])
+
+  return [point]
+})
 
 defimpl(Inertia, Polygon, 'compute', ({ radius, sidesCount }, mass) => {
   return 1/6 * mass * radius * radius * (2 + Math.cos(2* Math.PI / sidesCount));
