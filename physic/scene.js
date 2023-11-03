@@ -1,6 +1,23 @@
 import { CollisionInfo, Collider, Transformer } from './protocols/protocols.js';
 import { toRadians } from './math.js';
 
+// Pairing function
+// from http://szudzik.com/ElegantPairing.pdf
+// Works with non négative integers
+//
+// When used with pair of bodies, ensure that
+// - the smallest body id is always the first argument
+// - ids are always different
+const pairing = (a, b) => {
+  // /!\ Not needed as we require that a < b
+  // 
+  // if (a >= b) {
+  //   return a * a + a + b;
+  // }
+
+  return b * b + a;
+}
+
 class Scene {
   constructor() {
     this.bodies = [];
@@ -19,11 +36,13 @@ class Scene {
     for (let i = 0; i < cycles; ++i) {
       this.bodies.forEach(body => body.updateFrame(dt2 / 1000));
 
+      const pairHash = {};
+
       // Sort the bodies by their x position
       this.bodies.sort((a, b) => a.aabb.min.x - b.aabb.min.x);
 
       // Find all pairs of bodies that MAY collide
-      const [pairs] =
+      const [pairsX] =
         this.bodies.reduce((acc, body) => {
           const [pairs, stack] = acc;
           if (stack.length == 0) {
@@ -41,8 +60,12 @@ class Scene {
             }
 
             // All remaining bodies in the stack are overlapping the current body
-            // and MAY collide with it
+            // and MAY collide with it.
+            // Store the pair in a hashmap indexed by the pair hash
             stack.forEach(b => {
+              const aId = Math.min(body.id, b.id);
+              const bId = Math.max(body.id, b.id);
+              pairHash[pairing(aId, bId)] = true;
               pairs.push([body, b]);
             })
 
@@ -52,8 +75,47 @@ class Scene {
           return acc;
         }, [[], []]);
 
+      // Sort the bodies by their y position
+      this.bodies.sort((a, b) => a.aabb.min.y - b.aabb.min.y);
+
+      // Find all pairs of bodies that MAY collide along the y axis
+      const [pairsY] =
+        this.bodies.reduce((acc, body) => {
+          const [pairs, stack] = acc;
+          if (stack.length == 0) {
+            stack.push(body);
+          } else {
+            // Pop bodies out of the stack that are not overlapping the current body
+            let posInStack = 0;
+            while (posInStack < stack.length) {
+              if (stack[posInStack].aabb.max.y < body.aabb.min.y) {
+                stack.splice(posInStack, 1);
+              }
+              else {
+                posInStack++;
+              }
+            }
+
+            // All remaining bodies in the stack are overlapping the current body
+            // and MAY collide with it.
+            // We check if they are in the hashmap, to ensure that we only keep
+            // pairs that MAY collide in both axis.
+            stack.forEach(b => {
+              const aId = Math.min(body.id, b.id);
+              const bId = Math.max(body.id, b.id);
+              if (pairHash[pairing(aId, bId)]) {
+                pairs.push([body, b]);
+              }
+            })
+
+            // Stack the current body 
+            stack.push(body);
+          }
+          return acc;
+        }, [[], []]);
+
       // Find all pairs of bodies that DO collide
-      pairs.forEach(([a, b]) => {
+      pairsY.forEach(([a, b]) => {
         const collisions = [];    
         const worldShapeA = Transformer.toWorld(a.shape, a.frame);
         const worldShapeB = Transformer.toWorld(b.shape, b.frame);

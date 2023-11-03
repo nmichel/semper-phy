@@ -10,7 +10,10 @@ const APPLY_DAMPING = true;
 const DAMPING = 0.05;
 
 class RigidBody {
+  static idSeed = 0;
+
   constructor(rotation, position, shape, linearVelocity = new Vector2(0, 0), angularVelocity = 0.0, mass = 1, restitution = 0.9) {
+    this.id = ++RigidBody.idSeed;
     this.frame = new Frame(rotation, position);
     this.shape = shape;
     this.linearVelocity = linearVelocity;
