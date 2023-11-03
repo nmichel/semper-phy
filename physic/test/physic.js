@@ -4,10 +4,11 @@ import { Render } from '../protocols/protocols.js';
 import { Vector2 } from '../math.js';
 import * as GfxTools from '../gfx.js';
 // import buildScene from './scenes/random_grid.js';
-// import buildScene from './scenes/spinning_squares.js';
+import buildScene from './scenes/spinning_squares.js';
 // import buildScene from './scenes/just_a_bar.js';
 // import buildScene from './scenes/pool.js';
-import buildScene from './scenes/squares_struggle.js';
+// import buildScene from './scenes/squares_struggle.js';
+// import buildScene from './scenes/simple.js';
 
 const canvas = document.getElementById('game');
 const canvasParent = canvas.parentElement;

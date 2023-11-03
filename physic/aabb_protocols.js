@@ -1,12 +1,12 @@
 import { Inertia } from './protocols/inertia.js';
 import { defimpl } from './functional.js';
-import { AABB } from './aabb.js';
+import { Box } from './aabb.js';
 import { Polygon } from './geom.js';
 import { PointCaster, RayCaster, Transformer } from './protocols/protocols.js';
 import { RayIntersection } from './ray.js';
 import { Vector2 } from './math.js';
 
-defimpl(RayCaster, AABB, 'cast', (aabb, ray) => {
+defimpl(RayCaster, Box, 'cast', (aabb, ray) => {
   // Code and explanation (especially on how to handle infinite slopes): https://tavianator.com/2011/ray_box.html
 
   const min = aabb.halfSize.scale(-1.0);
@@ -49,7 +49,7 @@ defimpl(RayCaster, AABB, 'cast', (aabb, ray) => {
   }
 });
 
-defimpl(Transformer, AABB, 'toWorld', (aabb, frame) => {
+defimpl(Transformer, Box, 'toWorld', (aabb, frame) => {
   const {x, y} = aabb.halfSize;
   return new Polygon([
     frame.positionToWorld(new Vector2(x, y)),
@@ -59,11 +59,11 @@ defimpl(Transformer, AABB, 'toWorld', (aabb, frame) => {
   ]);
 });
 
-defimpl(PointCaster, AABB, 'contains', (aabb, point) => {
+defimpl(PointCaster, Box, 'contains', (aabb, point) => {
   const absPoint = point.abs();
   return aabb.halfSize.x >= absPoint.x && aabb.halfSize.y >= absPoint.y;
 });
 
-defimpl(Inertia, AABB, 'compute', ({ size: { x: width, y: height } }, mass) => {
+defimpl(Inertia, Box, 'compute', ({ size: { x: width, y: height } }, mass) => {
   return 1/12 * mass * (height * height + width * width);
 });

@@ -62,7 +62,7 @@ class Brush {
   }
 
   collide(other) {
-    // check for collision between two objects using axis-aligned bounding box (AABB)
+    // check for collision between two objects using axis-aligned bounding box (Box)
     // @see https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
     return this.x < other.x + other.width &&
             this.x + this.width > other.x &&

@@ -1,15 +1,15 @@
 import { Circle } from '../../circle.js';
-import { AABB } from '../../aabb.js';
+import { Box } from '../../aabb.js';
 import { RigidBody } from '../../rigidbody.js';
 import { Scene } from '../../scene.js';
 import { toRadians, Vector2 } from '../../math.js';
 
 export default function buildScene() {
   const scene = new Scene();
-  scene.addBody(new RigidBody(0, new Vector2(800, 20), new AABB(1400, 20), new Vector2(0, 0), 0, 0));
-  scene.addBody(new RigidBody(0, new Vector2(800, 900), new AABB(1400, 20), new Vector2(0, 0), 0, 0));
-  scene.addBody(new RigidBody(0, new Vector2(75, 460), new AABB(20, 900), new Vector2(0, 0), 0, 0));
-  scene.addBody(new RigidBody(0, new Vector2(1530, 460), new AABB(20, 900), new Vector2(0, 0), 0, 0));
+  scene.addBody(new RigidBody(0, new Vector2(800, 20), new Box(1400, 20), new Vector2(0, 0), 0, 0));
+  scene.addBody(new RigidBody(0, new Vector2(800, 900), new Box(1400, 20), new Vector2(0, 0), 0, 0));
+  scene.addBody(new RigidBody(0, new Vector2(75, 460), new Box(20, 900), new Vector2(0, 0), 0, 0));
+  scene.addBody(new RigidBody(0, new Vector2(1530, 460), new Box(20, 900), new Vector2(0, 0), 0, 0));
 
   const radius = 40;
   const mass = radius * radius * Math.PI * 0.01;

@@ -1,13 +1,13 @@
 import { Circle } from '../../circle.js';
 import { buildCircleContainedPolygon } from '../../geom.js';
-import { AABB } from '../../aabb.js';
+import { Box } from '../../aabb.js';
 import { RigidBody } from '../../rigidbody.js';
 import { Scene } from '../../scene.js';
 import { Vector2 } from '../../math.js';
 
 export default function buildScene() {
   const scene = new Scene();
-  scene.addBody(new RigidBody(0, new Vector2(800, 600), new AABB(1400, 20), new Vector2(0, 0), 0, 0));
+  scene.addBody(new RigidBody(0, new Vector2(800, 600), new Box(1400, 20), new Vector2(0, 0), 0, 0));
 
   const angle = Math.random() * 90;
   const radius = 30.0 + Math.random() * 40;
