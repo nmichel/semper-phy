@@ -6,6 +6,7 @@ defimpl(Render, RigidBody, 'render', (rigidbody, ctxt, opts) => {
   const worldShape = Transformer.toWorld(rigidbody.shape, rigidbody.frame);
   Render.render(worldShape, ctxt, opts);
   Render.render(rigidbody.frame, ctxt, opts);
+  Render.render(rigidbody.aabb, ctxt, opts);
 });
 
 defimpl(RayCaster, RigidBody, 'cast', (rigidbody, ray) => {

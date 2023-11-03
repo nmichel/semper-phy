@@ -2,9 +2,10 @@ import { Inertia } from './protocols/inertia.js';
 import { defimpl } from './functional.js';
 import { Box } from './box.js';
 import { Polygon } from './geom.js';
-import { PointCaster, RayCaster, Transformer } from './protocols/protocols.js';
+import { Aligner, PointCaster, RayCaster, Transformer } from './protocols/protocols.js';
 import { RayIntersection } from './ray.js';
 import { Vector2 } from './math.js';
+import { AABB } from './aabb.js';
 
 defimpl(RayCaster, Box, 'cast', (box, ray) => {
   // Code and explanation (especially on how to handle infinite slopes): https://tavianator.com/2011/ray_box.html
@@ -66,4 +67,14 @@ defimpl(PointCaster, Box, 'contains', (box, point) => {
 
 defimpl(Inertia, Box, 'compute', ({ size: { x: width, y: height } }, mass) => {
   return 1/12 * mass * (height * height + width * width);
+});
+
+defimpl(Aligner, Box, 'computeAABB', (box, frame) => {
+  const topLeft = frame.positionToWorld(box.halfSize.scale(-1));
+  const bottomRight = frame.positionToWorld(box.halfSize);
+  const aabbb = new AABB();
+  aabbb
+    .update(topLeft)
+    .update(bottomRight);
+  return aabbb;
 });

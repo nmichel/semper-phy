@@ -1,9 +1,11 @@
-import { CircleCollider, Collider, CollisionInfo, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
+import { Aligner, CircleCollider, Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
 import { Inertia } from './protocols/inertia.js';
 import { RayIntersection } from './ray.js';
 import { Circle } from './circle.js';
 import { defimpl } from './functional.js';
 import * as GfxTools from './gfx.js';
+import { Vector2 } from './math.js';
+import { AABB } from './aabb.js';
 
 defimpl(RayCaster, Circle, 'cast', (circle, ray) => {
   const radius2 = circle.radius * circle.radius;
@@ -73,4 +75,17 @@ defimpl(PolygonCollider, Circle, 'collide', (circle, polygon) => CircleCollider.
 
 defimpl(Inertia, Circle, 'compute', ({ radius }, mass) => {
   return 1/2 * mass * radius * radius;
+});
+
+defimpl(Aligner, Circle, 'computeAABB', (circle, frame) => {
+  const { radius } = circle;
+  const position = frame.positionToWorld(Vector2.zero);
+  const delta = new Vector2(radius, radius);
+  const topLeft = position.sub(delta);
+  const bottomRight = position.add(delta);
+  const aabbb = new AABB();
+  aabbb
+    .update(topLeft)
+    .update(bottomRight);
+  return aabbb;
 });

@@ -1,3 +1,4 @@
+export { Aligner } from './aligner.js';
 export { CircleCollider } from './circle_collider.js';
 export { Cloner } from './cloner.js';
 export { CollisionInfo, Collider } from './collider.js';

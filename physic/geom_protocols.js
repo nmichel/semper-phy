@@ -1,10 +1,11 @@
 import { Inertia } from './protocols/inertia.js';
 import { defimpl } from './functional.js';
 import { Edge, Polygon, Vertex } from './geom.js';
-import { CollisionInfo } from './protocols/protocols.js';
 import { RayIntersection } from './ray.js';
-import { CircleCollider, Cloner, Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
+import { CollisionInfo } from './protocols/protocols.js';
+import { Aligner, CircleCollider, Cloner, Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols.js';
 import { segmentIntersection, Vector2 } from './math.js';
+import { AABB } from './aabb.js';
 import * as GfxTools from './gfx.js';
 
 defimpl(Render, Vertex, 'render', (vertex, ctxt, opts) => {
@@ -214,6 +215,12 @@ defimpl(CircleCollider, Polygon, 'collide', (polygon, circle) => {
 
 defimpl(Inertia, Polygon, 'compute', ({ radius, sidesCount }, mass) => {
   return 1/6 * mass * radius * radius * (2 + Math.cos(2* Math.PI / sidesCount));
+});
+
+defimpl(Aligner, Polygon, 'computeAABB', (polygon, frame) => {
+  return polygon.vertices.reduce((aabb, v) => {
+    return aabb.update(frame.positionToWorld(v));
+  }, new AABB());
 });
 
 defimpl(Render, CollisionInfo, 'render', (ci, ctxt, opts) => {

@@ -1,4 +1,5 @@
 import { Inertia } from "./protocols/inertia.js";
+import { Aligner } from "./protocols/aligner.js";
 import { toDegres, Vector2 } from "./math.js";
 import { Frame } from "./frame.js";
 
@@ -19,7 +20,8 @@ class RigidBody {
     this.restitution = restitution;
     this.inverseMass = mass > 0 ? (1.0 / mass) : 0.0;
     this.inverseInertia = this.inertia > 0 ? (1.0 / this.inertia) : 0.0;
-
+    this.aabb = Aligner.computeAABB(this.shape, this.frame);
+  
     this.listeners = [];
   }
 
@@ -39,6 +41,9 @@ class RigidBody {
 
     this.frame.setPosition(this.frame.position.add(this.linearVelocity.scale(deltaInS)));
     this.frame.setRotation(((this.frame.rotation + this.angularVelocity * deltaInS) + 360) % 360);
+
+    this.aabb = Aligner.computeAABB(this.shape, this.frame);
+
     this.listeners.forEach(listenerFn => listenerFn());
   }
 
