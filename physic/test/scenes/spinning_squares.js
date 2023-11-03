@@ -1,4 +1,4 @@
-import { Box } from '../../aabb.js';
+import { Box } from '../../box.js';
 import { Circle } from '../../circle.js';
 import { RigidBody } from '../../rigidbody.js';
 import { Scene } from '../../scene.js';

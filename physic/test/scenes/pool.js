@@ -1,5 +1,5 @@
 import { Circle } from '../../circle.js';
-import { Box } from '../../aabb.js';
+import { Box } from '../../box.js';
 import { RigidBody } from '../../rigidbody.js';
 import { Scene } from '../../scene.js';
 import { toRadians, Vector2 } from '../../math.js';

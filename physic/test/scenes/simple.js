@@ -1,6 +1,6 @@
 import { Circle } from '../../circle.js';
 import { buildCircleContainedPolygon } from '../../geom.js';
-import { Box } from '../../aabb.js';
+import { Box } from '../../box.js';
 import { RigidBody } from '../../rigidbody.js';
 import { Scene } from '../../scene.js';
 import { Vector2 } from '../../math.js';

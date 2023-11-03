@@ -1,16 +1,16 @@
 import { Inertia } from './protocols/inertia.js';
 import { defimpl } from './functional.js';
-import { Box } from './aabb.js';
+import { Box } from './box.js';
 import { Polygon } from './geom.js';
 import { PointCaster, RayCaster, Transformer } from './protocols/protocols.js';
 import { RayIntersection } from './ray.js';
 import { Vector2 } from './math.js';
 
-defimpl(RayCaster, Box, 'cast', (aabb, ray) => {
+defimpl(RayCaster, Box, 'cast', (box, ray) => {
   // Code and explanation (especially on how to handle infinite slopes): https://tavianator.com/2011/ray_box.html
 
-  const min = aabb.halfSize.scale(-1.0);
-  const max = aabb.halfSize;
+  const min = box.halfSize.scale(-1.0);
+  const max = box.halfSize;
 
   const rayDirectionInv = new Vector2(1.0 / ray.direction.x, 1.0 / ray.direction.y);
 
@@ -34,13 +34,13 @@ defimpl(RayCaster, Box, 'cast', (aabb, ray) => {
     const result = [];
     if (tmin > 0) {
       const point = ray.getPointAtCoef(tmin);
-      const normal = aabb.findNormal(point);
+      const normal = box.findNormal(point);
       const col = new RayIntersection(point, normal, tmin);
       result.push(col);
     }
     if (tmax > 0) {
       const point = ray.getPointAtCoef(tmax);
-      const normal = aabb.findNormal(point);
+      const normal = box.findNormal(point);
       const col = new RayIntersection(point, normal, tmax);
       result.push(col);
     }
@@ -49,8 +49,8 @@ defimpl(RayCaster, Box, 'cast', (aabb, ray) => {
   }
 });
 
-defimpl(Transformer, Box, 'toWorld', (aabb, frame) => {
-  const {x, y} = aabb.halfSize;
+defimpl(Transformer, Box, 'toWorld', (box, frame) => {
+  const {x, y} = box.halfSize;
   return new Polygon([
     frame.positionToWorld(new Vector2(x, y)),
     frame.positionToWorld(new Vector2(-x, y)),
@@ -59,9 +59,9 @@ defimpl(Transformer, Box, 'toWorld', (aabb, frame) => {
   ]);
 });
 
-defimpl(PointCaster, Box, 'contains', (aabb, point) => {
+defimpl(PointCaster, Box, 'contains', (box, point) => {
   const absPoint = point.abs();
-  return aabb.halfSize.x >= absPoint.x && aabb.halfSize.y >= absPoint.y;
+  return box.halfSize.x >= absPoint.x && box.halfSize.y >= absPoint.y;
 });
 
 defimpl(Inertia, Box, 'compute', ({ size: { x: width, y: height } }, mass) => {
