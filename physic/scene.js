@@ -19,45 +19,75 @@ class Scene {
     for (let i = 0; i < cycles; ++i) {
       this.bodies.forEach(body => body.updateFrame(dt2 / 1000));
 
-      for (let i = 0; i < this.bodies.length; ++i) {
-        const a = this.bodies[i];
-        for (let j = i+1; j < this.bodies.length; ++j) {  
-          const collisions = [];    
-          const b = this.bodies[j];
-          const worldShapeA = Transformer.toWorld(a.shape, a.frame);
-          const worldShapeB = Transformer.toWorld(b.shape, b.frame);
+      // Sort the bodies by their x position
+      this.bodies.sort((a, b) => a.aabb.min.x - b.aabb.min.x);
 
-          const overlap = Collider.overlap(worldShapeA, worldShapeB)
-          if (overlap) {
-            const {depth,  normal} = overlap
-
-            const direction = b.frame.position.sub(a.frame.position)
-            if (direction.dot(normal) < 0) {
-              normal.scaleSelf(-1)
+      // Find all pairs of bodies that MAY collide
+      const [pairs] =
+        this.bodies.reduce((acc, body) => {
+          const [pairs, stack] = acc;
+          if (stack.length == 0) {
+            stack.push(body);
+          } else {
+            // Pop bodies out of the stack that are not overlapping the current body
+            let posInStack = 0;
+            while (posInStack < stack.length) {
+              if (stack[posInStack].aabb.max.x < body.aabb.min.x) {
+                stack.splice(posInStack, 1);
+              }
+              else {
+                posInStack++;
+              }
             }
 
-            const correction =  normal.scale(depth);
-            const totalMass = a.mass + b.mass;
-            if (a.inverseMass > 0.0) {
-              a.frame.position.subToSelf(correction.scale(a.mass / totalMass))
-            }
-            if (b.inverseMass > 0.0) {
-              b.frame.position.addToSelf(correction.scale(b.mass / totalMass))
-            }
+            // All remaining bodies in the stack are overlapping the current body
+            // and MAY collide with it
+            stack.forEach(b => {
+              pairs.push([body, b]);
+            })
 
-            const contactPoints = Collider.collide(worldShapeA, worldShapeB)
-            contactPoints.forEach(point => {
-              const collInfo = new CollisionInfo(point,  normal)
-              const collision = { collision: collInfo, a, b };
-              collisions.push(collision)
-              this.collisions.push(collision)
-            });
-    
-            const impulses = collisions.map(({ a, b, collision }) => this.computeImpulse(a, b, collision));
-            impulses.forEach(i => {if (i) this.applyImpulse(i, impulses.length)});
+            // Stack the current body 
+            stack.push(body);
           }
+          return acc;
+        }, [[], []]);
+
+      // Find all pairs of bodies that DO collide
+      pairs.forEach(([a, b]) => {
+        const collisions = [];    
+        const worldShapeA = Transformer.toWorld(a.shape, a.frame);
+        const worldShapeB = Transformer.toWorld(b.shape, b.frame);
+  
+        const overlap = Collider.overlap(worldShapeA, worldShapeB)
+        if (overlap) {
+          const {depth,  normal} = overlap
+  
+          const direction = b.frame.position.sub(a.frame.position)
+          if (direction.dot(normal) < 0) {
+            normal.scaleSelf(-1)
+          }
+  
+          const correction =  normal.scale(depth);
+          const totalMass = a.mass + b.mass;
+          if (a.inverseMass > 0.0) {
+            a.frame.position.subToSelf(correction.scale(a.mass / totalMass))
+          }
+          if (b.inverseMass > 0.0) {
+            b.frame.position.addToSelf(correction.scale(b.mass / totalMass))
+          }
+  
+          const contactPoints = Collider.collide(worldShapeA, worldShapeB)
+          contactPoints.forEach(point => {
+            const collInfo = new CollisionInfo(point,  normal)
+            const collision = { collision: collInfo, a, b };
+            collisions.push(collision)
+            this.collisions.push(collision)
+          });
+  
+          const impulses = collisions.map(({ a, b, collision }) => this.computeImpulse(a, b, collision));
+          impulses.forEach(i => {if (i) this.applyImpulse(i, impulses.length)});
         }
-      }
+      });
     }
   }
 
