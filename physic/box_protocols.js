@@ -70,11 +70,8 @@ defimpl(Inertia, Box, 'compute', ({ size: { x: width, y: height } }, mass) => {
 });
 
 defimpl(Aligner, Box, 'computeAABB', (box, frame) => {
-  const topLeft = frame.positionToWorld(box.halfSize.scale(-1));
-  const bottomRight = frame.positionToWorld(box.halfSize);
-  const aabbb = new AABB();
-  aabbb
-    .update(topLeft)
-    .update(bottomRight);
-  return aabbb;
+  const shape = Transformer.toWorld(box, frame);
+  return shape.vertices.reduce((aabb, v) => {
+    return aabb.update(v);
+  }, new AABB());
 });
