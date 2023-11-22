@@ -1,8 +1,8 @@
-import './aabb_protocols.js';
-import './box_protocols.js';
-import './circle_protocols.js';
-import './geom_protocols.js';
-import './frame_protocols.js';
-import './ray_protocols.js';
-import './scene_protocols.js';
-import './rigidbody_protocols.js';
+import './aabb_protocols';
+import './box_protocols.ts';
+import './circle_protocols';
+import './geom_protocols';
+import './frame_protocols';
+import './ray_protocols';
+import './scene_protocols';
+import './rigidbody_protocols';

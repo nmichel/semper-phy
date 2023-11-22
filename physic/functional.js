@@ -1,4 +1,4 @@
-import { defprotocol, defimpl } from './functional.ts';
+import { defprotocol, defimpl, NotImplementedError } from './functional.ts';
 
 const groupBy = (items, splitFn) => 
   items.reduce((acc, e) => {
@@ -8,5 +8,5 @@ const groupBy = (items, splitFn) =>
     return acc;
   }, {});
 
-export { groupBy, defprotocol, defimpl };
+export { groupBy, defprotocol, defimpl, NotImplementedError };
 

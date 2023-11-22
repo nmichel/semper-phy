@@ -1,4 +1,4 @@
-type ClassType<T> = new () => T;
+type ClassType<T> = new (...args: any[]) => T;
 
 type AnyFunction = (...args: any[]) => any; // Is not the same as type Function
 type Interface = { [key: string]: AnyFunction };

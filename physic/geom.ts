@@ -1,5 +1,6 @@
 import { Span, Vector2 } from './math.js'
 
+type Vertex = Vector2;
 const Vertex = Vector2;
 
 class Edge {
@@ -30,20 +31,24 @@ class Edge {
 
     return this.a.add(ab.scale(normalizedD))
   }
+
+  a: Vertex;
+  b: Vertex;
+  normal: Vector2;
 }
 
 class Polygon {
-  // constructor([Vertex], Integer) -> Polygon
-  constructor(vertices, radius) {
+  constructor(vertices: Vertex[], radius: number) {
     this.vertices = vertices;
     this.radius = radius;
     this.sidesCount = vertices.length;
 
     const lastVert = this.vertices[this.vertices.length - 1];
-    const [_v, edges] = this.vertices.reduce(([prevVert, edges], vert) => {
+    const [_v, edges] = this.vertices.reduce(([prevVert, edges], vert): [Vertex, Edge[]] => {
       edges.push(new Edge(prevVert, vert));
       return [vert, edges]
-    }, [lastVert, []]);
+    }, [lastVert, [] as Edge[]]);
+
     this.edges = edges;
   }
 
@@ -51,6 +56,11 @@ class Polygon {
   computeProjectionSpan(normal) {
     return this.vertices.reduce((span, v) => span.update(v.dot(normal)), new Span(Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY));
   }
+
+  vertices: Vertex[];
+  radius: number;
+  sidesCount: number;
+  edges: Edge[];
 }
 
 const buildVertexFromAngleAndRadius = (angle, radius) => {

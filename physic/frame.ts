@@ -1,11 +1,9 @@
-import { Matrix3, Vector2 } from './math.js';
+import { Matrix3, Vector2 } from './math';
 
 class Frame {
-  constructor(rotation = 0.0, position = new Vector2()) {
+  constructor(rotation: number = 0.0, position: Vector2 = new Vector2()) {
     this.rotation = rotation;
     this.position = position;
-    this.l2w = null;
-    this.w2l = null;
 
     this.recomputeMatrices();
   }
@@ -40,6 +38,11 @@ class Frame {
     this.l2w = Matrix3.newRotation(this.rotation).mul(Matrix3.newTranslation(this.position));
     this.w2l = Matrix3.newTranslation(this.position.scale(-1.0)).mul(Matrix3.newRotation(-this.rotation));
   }
+
+  rotation: number;
+  position: Vector2;
+  l2w: Matrix3;
+  w2l: Matrix3;
 }
 
 export { Frame };

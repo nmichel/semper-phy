@@ -1,10 +1,10 @@
 import './physic/engine.js';
-import { buildCircleContainedPolygon } from './physic/geom.js';
+import { buildCircleContainedPolygon } from './physic/geom';
 
 import { App } from './app.js'
 import { Render } from './physic/protocols/protocols.js';
-import { Circle } from './physic/circle.js';
-import { Box } from './physic/box.js';
+import { Circle } from './physic/circle';
+import { Box } from './physic/box';
 import { RigidBody } from './physic/rigidbody.js';
 import { Scene } from './physic/scene.js';
 import { Vector2 } from './physic/math.js';
