@@ -1,4 +1,4 @@
-class App {
+class BrowserApp {
   constructor(divElement) {
     this.#divElement = divElement;
     this.#divElement.setAttribute('tabindex', '0');
@@ -71,4 +71,4 @@ class App {
   #isRunning = false;
 }
 
-export { App };
+export { BrowserApp };

@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../../digiforma/christmas_game_2020"
 		}
 	],
 	"settings": {}
