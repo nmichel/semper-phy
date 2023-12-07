@@ -4,7 +4,7 @@ import { buildCircleContainedPolygon } from './physic/geom.js';
 import { BrowserApp } from './browser_app.js'
 import { Render } from './physic/protocols/protocols.js';
 import { Circle } from './physic/circle.js';
-import { Box } from './physic/box.js';
+import { Box as RBBox} from './physic/box.js';
 import { RigidBody } from './physic/rigidbody.js';
 import { Scene } from './physic/scene.js';
 import { Vector2 } from './physic/math.js';
@@ -19,30 +19,30 @@ class MyApp extends BrowserApp {
     this.#buildScene();
   }
 
-  onClick(e) {
-    if (this.isRunning) {
+  override onClick(e): void {
+    if (super.isRunning) {
       this.#addBody();
     }
   }
 
-  onDblclick(_e) {
-    this.isRunning = !this.isRunning;
+  override onDblclick(_e) {
+    super.isRunning = !super.isRunning;
   }
 
-  onMousemove(e) {
+  override onMousemove(e) {
     this.#mousePos = new Vector2(e.offsetX, e.offsetY);
   }
 
-  onKeydown(e) {
-    if (this.isRunning) {
+  override onKeydown(e) {
+    if (super.isRunning) {
       e.preventDefault();
       this.#addBody();
     }
   }
 
-  render(dt) {
+  override render(dt) {
     this.#scene.step(dt);  
-    Render.render(this.#scene, this.context as CanvasRenderingContext2D);
+    Render.render(this.#scene, super.context as CanvasRenderingContext2D);
   }
 
   #addBody() {
@@ -60,9 +60,9 @@ class MyApp extends BrowserApp {
 
   #buildScene() {
     const scene = new Scene();
-    scene.addBody(new RigidBody(0, new Vector2(250, 450), new Box(400, 20), new Vector2(0, 0), 0, 0));
-    scene.addBody(new RigidBody(0, new Vector2(20, 250), new Box(20, 300), new Vector2(0, 0), 0, 0));
-    scene.addBody(new RigidBody(0, new Vector2(480, 250), new Box(20, 300), new Vector2(0, 0), 0, 0));
+    scene.addBody(new RigidBody(0, new Vector2(250, 450), new RBBox(400, 20), new Vector2(0, 0), 0, 0));
+    scene.addBody(new RigidBody(0, new Vector2(20, 250), new RBBox(20, 300), new Vector2(0, 0), 0, 0));
+    scene.addBody(new RigidBody(0, new Vector2(480, 250), new RBBox(20, 300), new Vector2(0, 0), 0, 0));
   
     const radius = 30.0;
     scene.addBody(new RigidBody(0, new Vector2(250, 50), new Circle(radius), new Vector2(0, 0), 0, radius*radius));
@@ -86,28 +86,28 @@ class MyApp2 extends BrowserApp {
     this.#buildScene();
   }
 
-  onClick(e) {
+  override onClick(e) {
     if (this.isRunning) {
       this.#addBody();
     }
   }
 
-  onDblclick(_e) {
+  override onDblclick(_e) {
     this.isRunning = !this.isRunning;
   }
 
-  onMousemove(e) {
+  override onMousemove(e) {
     this.#mousePos = new Vector2(e.offsetX, e.offsetY);
   }
 
-  onKeydown(e) {
+  override onKeydown(e) {
     if (this.isRunning) {
       e.preventDefault();
       this.#addBody();
     }
   }
 
-  render(dt) {
+  override render(dt) {
     this.#scene.step(dt);  
     Render.render(this.#scene, this.context as CanvasRenderingContext2D);
   }
@@ -116,14 +116,14 @@ class MyApp2 extends BrowserApp {
     const radius = 10.0 + Math.random() * 20;
     const linearSpeed = new Vector2(0, 0);
     const angularSpeed = 0;
-    this.#scene.addBody(new RigidBody(0, this.#mousePos.clone(), new Box(3*radius, radius), linearSpeed, angularSpeed, radius*radius));
+    this.#scene.addBody(new RigidBody(0, this.#mousePos.clone(), new RBBox(3*radius, radius), linearSpeed, angularSpeed, radius*radius));
   }
 
   #buildScene() {
     const scene = new Scene();
-    scene.addBody(new RigidBody(0, new Vector2(250, 450), new Box(400, 20), new Vector2(0, 0), 0, 0));
-    scene.addBody(new RigidBody(0, new Vector2(20, 250), new Box(20, 300), new Vector2(0, 0), 0, 0));
-    scene.addBody(new RigidBody(0, new Vector2(480, 250), new Box(20, 300), new Vector2(0, 0), 0, 0));
+    scene.addBody(new RigidBody(0, new Vector2(250, 450), new RBBox(400, 20), new Vector2(0, 0), 0, 0));
+    scene.addBody(new RigidBody(0, new Vector2(20, 250), new RBBox(20, 300), new Vector2(0, 0), 0, 0));
+    scene.addBody(new RigidBody(0, new Vector2(480, 250), new RBBox(20, 300), new Vector2(0, 0), 0, 0));
   
     const radius = 30.0;
     scene.addBody(new RigidBody(0, new Vector2(250, 50), new Circle(radius), new Vector2(0, 0), 0, radius*radius));
@@ -142,14 +142,25 @@ class StatsDisplay extends GameObject implements Renderable {
     super(app);
   }
 
-  register(services: Services): void {
+  override register(services: Services): void {
     services.renderingService.register(this);
   }
 
+  /**
+   * From Renderable
+   */
   render(renderer: CanvasRenderingContext2D): void {
-    renderer.font = '10px Arial';
+    renderer.font = '10px Courier New';
+    renderer.translate(40, 20);
+    renderer.fillStyle = 'rgba(0, 0, 255, 0.5)';
+    renderer.fillRect(0, 0, 400, 85);
     renderer.fillStyle = 'white';
-    renderer.fillText(`FPS: ${this.app.stats.reclaimablesCount}`, 10, 10);
+    renderer.translate(10, 5);
+    renderer.fillText(`reclaimablesCount:             ${this.app.stats.reclaimablesCount}`, 0, 10);
+    renderer.fillText(`reclaimabledInLastFrameCount:  ${this.app.stats.reclaimabledInLastFrameCount}`, 0, 30);
+    renderer.fillText(`reclaimabledTotalCount:        ${this.app.stats.reclaimabledTotalCount}`, 0, 50);
+    renderer.fillText(`lastFrameDuration:             ${this.app.stats.lastFrameDuration}`, 0, 70);
+    renderer.setTransform(1, 0, 0, 1, 0, 0);
   }
 }
 
@@ -162,14 +173,18 @@ class ScoreDisplay extends GameObject implements Renderable, Updatable {
     this.#score += score;
   }
 
-  register(services: Services): void {
+  override register(services: Services): void {
     services.renderingService.register(this);
     services.updateService.register(this);
   }
 
+  /**
+   * From Renderable
+   */
   render(renderer: CanvasRenderingContext2D): void {
     const sin: number = Math.sin(this.#angle * 0.1 * Math.PI / 180);
 
+    const prevTextAlign = renderer.textAlign;
     renderer.textAlign = "center";
     renderer.translate(250, 250);
     renderer.rotate((sin * 45 * Math.PI) / 180);
@@ -177,8 +192,12 @@ class ScoreDisplay extends GameObject implements Renderable, Updatable {
     renderer.fillStyle = 'white';
     renderer.fillText(`Score: ${this.#score}`, 0, 0);
     renderer.setTransform(1, 0, 0, 1, 0, 0);
+    renderer.textAlign = prevTextAlign;
   }
 
+  /**
+   * From Updatable
+   */
   update(dt: number): void {
     this.#angle += dt;
   }
@@ -187,66 +206,178 @@ class ScoreDisplay extends GameObject implements Renderable, Updatable {
   #score: number = 0;
 }
 
-class FallingObject extends GameObject implements Renderable, Updatable {
-  constructor(app: GameApp, position: Vector2, radius: number) {
+class PhysicEngineGameObject extends GameObject implements Updatable, Renderable {
+  constructor(app: GameApp, engine: Scene) {
     super(app);
-    this.#position = position.clone();
-    this.#radius = radius;
-    this.#speed = new Vector2(0, Math.random() * 5.0 + 1);
+
+    this.#engine = engine;
+    this.#debug = false;
   }
 
-  register(services: Services): void {
-    services.renderingService.register(this);
+  override register(services: Services): void {
     services.updateService.register(this);
+    services.renderingService.register(this);
   }
 
-  render(renderer: CanvasRenderingContext2D): void {
-    renderer.fillStyle = 'white';
-    renderer.beginPath();
-    renderer.arc(this.#position.x, this.#position.y, this.#radius, 0, 2 * Math.PI);
-    renderer.fill();
-  }
-
+  /**
+   * From Updatable
+   */
   update(dt: number): void {
-    this.#position.addToSelf(this.#speed.scale(dt/100));
-    if (this.#position.y > 500) {
-      this.reclaim();
+    this.#engine.step(dt);
+  }
+
+  /**
+   * From Renderable
+   */
+  render(renderer: CanvasRenderingContext2D): void {
+    if (this.#debug) {
+      Render.render(this.#engine, renderer);
     }
   }
 
+  #engine: Scene;
+  #debug: boolean;
+}
+
+class RigidBodyGameObject extends GameObject implements Renderable {
+  constructor(app: GameApp, body: RigidBody, engine: Scene) {
+    super(app);
+    this.#body = body;
+    this.#engine = engine;
+
+    this.#engine.addBody(this.#body);
+    this.#body.addListener(this.#handleRigibodyEvent.bind(this));
+  }
+
+  /**
+   * From GameObject
+   */
+  override reclaim(): void {
+    this.#engine.removeBody(this.#body);
+    super.reclaim();
+  }
+
+  /**
+   * From Renderable
+  */
+  render(renderer: CanvasRenderingContext2D): void {
+    renderer.translate(this.#position.x, this.#position.y);
+    renderer.rotate(this.#rotation * Math.PI / 180);
+
+    this.localRender(renderer)
+
+    renderer.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  localRender(_renderer: CanvasRenderingContext2D): void {}
+
+  #handleRigibodyEvent() {
+    this.#position = this.#body.frame.position.clone();
+    this.#rotation = this.#body.frame.rotation;
+  }
+
+  #body: RigidBody;
+  #engine: Scene;
   #position: Vector2;
-  #speed: Vector2;
+  #rotation: number = 0;
+}
+
+class Box extends RigidBodyGameObject {
+  constructor(app: GameApp, engine: Scene, position: Vector2, side: number) {
+    super(app, new RigidBody(0, position.clone(), new RBBox(side, side), new Vector2(0, Math.random() * 5.0 + 1), 0, side * side), engine);
+
+    this.#side = side;
+  }
+
+  override register(services: Services): void {
+    services.renderingService.register(this);
+  }
+
+  override localRender(renderer: CanvasRenderingContext2D): void {
+    renderer.fillStyle = 'white';
+    renderer.fillRect(-this.#side / 2, -this.#side / 2, this.#side, this.#side);
+  }
+
+  #side: number;
+}
+
+
+class Ball extends RigidBodyGameObject {
+  constructor(app: GameApp, engine: Scene, position: Vector2, radius: number) {
+    super(app, new RigidBody(0, position.clone(), new Circle(radius), new Vector2(0, Math.random() * 5.0 + 1), 0, 100), engine);
+
+    this.#radius = radius;
+  }
+
+  override register(services: Services): void {
+    services.renderingService.register(this);
+  }
+
+  override localRender(renderer: CanvasRenderingContext2D): void {
+    renderer.fillStyle = 'white';
+    renderer.beginPath();
+    renderer.arc(0, 0, this.#radius, 0, 2 * Math.PI);
+    renderer.fill();
+  }
+
   #radius: number;
+}
+
+class Wall extends RigidBodyGameObject {
+  constructor(app: GameApp, engine: Scene, position: Vector2, width: number, height: number) {
+    super(app, new RigidBody(0, position.clone(), new RBBox(width, height), new Vector2(0, 0), 0, 0), engine);
+
+    this.#width = width;
+    this.#height = height;
+  }
+
+  override register(services: Services): void {
+    services.renderingService.register(this);
+  }
+
+  override localRender(renderer: CanvasRenderingContext2D): void {
+    renderer.fillStyle = 'white';
+    renderer.fillRect(-this.#width / 2, -this.#height / 2, this.#width, this.#height);
+  }
+
+  #width: number;
+  #height: number;
 }
 
 class MyGameApp extends GameApp {
   constructor(divElement) {
     super(divElement);
-    this.#initialize();
+
+    this.#physicScene = new Scene();
+
+    this.#scoreDisplay = new ScoreDisplay(this);
+    new StatsDisplay(this);
+    new PhysicEngineGameObject(this, this.#physicScene)
+
+    new Wall(this, this.#physicScene, new Vector2(250, 450), 450, 20);
+    new Wall(this, this.#physicScene, new Vector2(20, 250), 20, 400);
+    new Wall(this, this.#physicScene, new Vector2(480, 250), 20, 400);
   }
 
-  onDblclick(_e) {
+  override onDblclick(_e) {
     this.isRunning = !this.isRunning;
   }
 
-  onClick(e) {
-    if (this.isRunning) {
-      (new FallingObject(this, this.#mousePos, 10)).register(this.services);
-    }
-  }
-
-  onMousemove(e) {
+  override onMousemove(e) {
     this.#mousePos = new Vector2(e.offsetX, e.offsetY);
   }
 
-  #initialize() {
-    this.#scoreDisplay = new ScoreDisplay(this);
-    this.#scoreDisplay.register(this.services);
-    (new StatsDisplay(this)).register(this.services);
+  override onKeydown(e) {
+    if (this.isRunning) {
+      // new Box(this, this.#physicScene, this.#mousePos, 10 + Math.random() * 20);
+      new Ball(this, this.#physicScene, this.#mousePos, 10 + Math.random() * 20);
+      this.#scoreDisplay.addScore(1);
+    }
   }
 
   #scoreDisplay: ScoreDisplay;
   #mousePos: Vector2;
+  #physicScene: Scene = new Scene();
 }
 
 const app3 = new MyGameApp(document.getElementById('app3'));

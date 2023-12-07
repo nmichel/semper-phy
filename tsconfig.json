@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "noImplicitOverride": true,
+        "target": "ES6",
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true
+    },
+    "include": ["./**/*"]
+}

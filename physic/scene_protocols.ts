@@ -31,7 +31,7 @@ defimpl(Render, CollisionTrail, {
 });
 
 defimpl(Render, Scene, {
-  render: (scene, ctxt): undefined => {
+  render: (scene: Scene, ctxt): undefined => {
     scene.collisions.forEach(p => trail.add(p.collision));
     scene.bodies.forEach(body => Render.render(body, ctxt, {debug: false}));
     // Render.render(trail, ctxt);

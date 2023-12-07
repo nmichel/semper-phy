@@ -71,11 +71,18 @@ class RenderingService extends Registry<Registrable<Renderable>> implements Serv
 type Services = {
   renderingService: RenderingService;
   updateService: UpdateService;
+  [key: string]: any;
 }
 
 class GameObject {
   constructor(app: GameApp) {
     this.#app = app;
+  
+    app.register(this);
+  }
+
+  register(services: Services): void {
+    throw new Error("Method not implemented.");
   }
 
   get id(): number {
@@ -94,43 +101,69 @@ class GameObject {
   #app: GameApp;
 }
 
-class GameApp extends BrowserApp implements FrameInfoSource {
+class GameApp extends BrowserApp implements FrameInfoSource, Service {
   constructor(divElement: HTMLDivElement) {
     super(divElement);
 
     this.#services = {
-      renderingService: new RenderingService(this.context as CanvasRenderingContext2D),
-      updateService: new UpdateService(this)
+      updateService: new UpdateService(this),
+      renderingService: new RenderingService(super.context as CanvasRenderingContext2D),
+      self: this
     };
   }
 
+  /**
+   * From BrowserApp
+   * 
+   * @param dt the time elapsed since the last frame in milliseconds
+   */  
+  override render(dt: number): void {
+    this.#dt = dt;
+    this.#stats.lastFrameDuration = dt;
+    for (const iterator in this.#services) {
+      this.#services[iterator].run();
+    }
+  }
+
+  /**
+   * From FrameInfoSource
+   * 
+   * @returns the time elapsed since the last frame in milliseconds
+   */
   get dt(): number {
     return this.#dt;
   }
 
-  render(dt: number): void {
-    this.#dt = dt;
-    for (const iterator in this.#services) {
-      this.#services[iterator].run();
-    }
+  /**
+   * From Service
+   */
+  run(): void {
     this.#collectReclaimed();
   }
 
-  get services(): Services {
-    return this.#services;
+  register(obj: GameObject): void {
+    obj.register(this.#services);
   }
 
   reclaim(obj: GameObject): void {
     this.#reclaimables.push(obj);
   }
 
+  get services(): Services {
+    return this.#services;
+  }
+
   get stats(): any {
     return {
+      ...this.#stats,
       reclaimablesCount: this.#reclaimables.length
     }
   }
 
   #collectReclaimed() {
+    this.#stats.reclaimabledInLastFrameCount = this.#reclaimables.length;
+    this.#stats.reclaimabledTotalCount += this.#reclaimables.length;
+
     this.#reclaimables.forEach(obj => {
       this.#services.renderingService.unregister(obj.id);
       this.#services.updateService.unregister(obj.id);
@@ -139,8 +172,13 @@ class GameApp extends BrowserApp implements FrameInfoSource {
   }
 
   #dt: number = 0;
+  #stats: any = {
+    reclaimabledInLastFrameCount: 0,
+    reclaimabledTotalCount: 0,
+    lastFrameDuration: 0,
+  };
   #services: Services;
   #reclaimables: GameObject[] = [];
 }
 
-export { GameApp, GameObject, Renderable, Updatable, Service, Services };
+export { GameApp, GameObject, Renderable, Updatable, Service, Services};

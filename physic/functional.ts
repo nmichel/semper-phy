@@ -92,7 +92,7 @@ export function defimpl<Type extends Interface, Target>(protocol: Protocol<Type>
     const __impls = protocol.__impls;
     const keys: [keyof Type] = Object.keys(def) as unknown as [keyof Type];
     keys.forEach(key => {
-        const impl = __impls[klass.name] || {};
+        const impl = __impls[klass.name] || {} as ProtocolImpl<Type, Target>;
         impl[key] = def[key];
         __impls[klass.name] = impl;
     })

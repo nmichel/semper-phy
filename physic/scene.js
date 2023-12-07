@@ -42,6 +42,13 @@ class Scene {
     this.bodies.push(body);
   }
 
+  removeBody(body) {
+    const index = this.bodies.indexOf(body);
+    if (index > -1) {
+      this.bodies.splice(index, 1);
+    }
+  }
+
   step(dt) {
     this.collisions = [];
     const cycles = 10;

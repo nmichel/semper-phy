@@ -4,9 +4,10 @@ import { Cloner, Render, Transformer } from './protocols/protocols';
 import * as GfxTools from './gfx';
 import { Vector2 } from './math';
 import { Frame } from './frame.js';
+import { CollisionInfo } from './protocols/collider.js';
 
 defimpl(Render, Ray, {
-  render: (ray, ctxt): undefined => {
+  render: (ray: Ray, ctxt): undefined => {
     GfxTools.drawLine(ctxt, ray.origin.sub(ray.direction.scale(1000)), ray.origin.add(ray.direction.scale(2000)), {strokeStyle: 'yellow', lineDash: [5, 5]});
     GfxTools.drawVector(ctxt, ray.origin, ray.origin.add(ray.direction.scale(100)), { strokeStyle: 'yellow' });
     GfxTools.drawDisc(ctxt, ray.origin.x, ray.origin.y, 2, { strokeStyle: 'yellow' });
@@ -14,7 +15,7 @@ defimpl(Render, Ray, {
 });
 
 defimpl(Transformer, Ray, {
-  toLocal: (ray, frame): Ray => {
+  toLocal: (ray: Ray, frame: Frame): Ray => {
     return new Ray(frame.positionToLocal(ray.origin), frame.directionToLocal(ray.direction));
   },
   toWorld: function (_ray: Ray, _frame: Frame): Ray {
@@ -29,14 +30,14 @@ defimpl(Cloner, Ray, {
 });
 
 defimpl(Render, RayIntersection, {
-  render: (collision, ctxt): undefined => {
+  render: (collision: RayIntersection, ctxt): undefined => {
     GfxTools.drawVector(ctxt, collision.point, collision.point.add(collision.normal.scale(30)), { strokeStyle: 'blue' });
     GfxTools.drawDisc(ctxt, collision.point.x, collision.point.y, 3, { strokeStyle: 'orange' });
   }
 });
 
 defimpl(Transformer, RayIntersection, {
-  toWorld: (collision, frame): RayIntersection => {
+  toWorld: (collision: RayIntersection, frame): RayIntersection => {
     return new RayIntersection(frame.positionToWorld(collision.point), frame.directionToWorld(collision.normal), collision.t);
   },
   toLocal: function (_obj: RayIntersection, _frame: Frame): RayIntersection {

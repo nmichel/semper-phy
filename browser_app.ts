@@ -38,6 +38,10 @@ class BrowserApp {
     return this.#context;
   }
 
+  render(deltaMs) {
+    throw new Error('not implemented');
+  }
+
   #loop(ts) {
     if (this.#isRunning) {
       const deltaMs = ts - this.#prevTs;
