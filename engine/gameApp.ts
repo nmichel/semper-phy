@@ -1,4 +1,5 @@
-import { BrowserApp } from "./browser_app";
+import { BrowserApp } from "../browser_app";
+import { GameObject } from "./gameObject";
 
 
 type HasId = {
@@ -72,33 +73,6 @@ type Services = {
   renderingService: RenderingService;
   updateService: UpdateService;
   [key: string]: any;
-}
-
-class GameObject {
-  constructor(app: GameApp) {
-    this.#app = app;
-  
-    app.register(this);
-  }
-
-  register(services: Services): void {
-    throw new Error("Method not implemented.");
-  }
-
-  get id(): number {
-    return this.#id;
-  }
-
-  get app(): GameApp {
-    return this.#app;
-  }
-
-  reclaim(): void {
-    this.#app.reclaim(this);
-  }
-
-  #id: number = Math.random() * 10000000000;
-  #app: GameApp;
 }
 
 class GameApp extends BrowserApp implements FrameInfoSource, Service {
@@ -181,4 +155,4 @@ class GameApp extends BrowserApp implements FrameInfoSource, Service {
   #reclaimables: GameObject[] = [];
 }
 
-export { GameApp, GameObject, Renderable, Updatable, Service, Services};
+export { GameApp, Renderable, Updatable, Service, Services};

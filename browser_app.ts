@@ -5,7 +5,7 @@ class BrowserApp {
     this.#canvasElement = document.createElement('canvas');
     this.#canvasElement.setAttribute('tabindex', '0');
     this.#divElement.appendChild(this.#canvasElement);
-    this.#context = this.#canvasElement.getContext('2d');
+    this.#context = this.#canvasElement.getContext('2d', { alpha: false });
     this.#canvasElement.width = this.#divElement.clientWidth;
     this.#canvasElement.height = this.#divElement.clientHeight;
     

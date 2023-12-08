@@ -1,0 +1,31 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+.sandbox {
+  align-items: center;
+  display: flex;
+  gap: 0.5em;
+}
+
+.description {
+  border: 1px solid #ccc;
+  display: block;
+  height: 500px;
+  padding: 2rem;
+  width: 500px;
+}
+
+.description__title {
+  font-size: larger;
+  padding-bottom: 1em;
+}
+
+.game {
+  background: black;
+  display: block;
+  height: 100vh;
+  width: 100vw;
+}
