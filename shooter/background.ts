@@ -18,7 +18,7 @@ class BackgroundBlock implements Renderable {
     const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
 
     context.fillStyle = this.#color;
-    context.fillRect(0, 0, width, height);    
+    context.fillRect(0, 0, width, height);
     context.fillStyle = 'rgba(0, 0, 0, 0)';
     context.fillRect(width, 0, trail, height);
     this.#image = canvas.transferToImageBitmap();
@@ -66,8 +66,10 @@ class BackgroundBlock implements Renderable {
   #image: ImageBitmap;
 }
 
-class BackgroundLayer implements Updatable, Renderable {
-  constructor(width: number, speedMs: number) {
+class BackgroundLayer extends GameObject implements Updatable, Renderable {
+  constructor(app: GameApp, width: number, speedMs: number) {
+    super(app);
+  
     this.#width = width;
     this.#speedMs = speedMs;
   }
@@ -78,6 +80,11 @@ class BackgroundLayer implements Updatable, Renderable {
 
   render(renderer: CanvasRenderingContext2D): void {
     this.#blocks.forEach(block => block.render(renderer));
+  }
+
+  override register(services: Services): void {
+    services.updateService.register(this);
+    services.renderingService.register(this);
   }
 
   reject(): void {
@@ -101,14 +108,14 @@ class BackgroundLayer implements Updatable, Renderable {
   #blocks: BackgroundBlock[] = [];
 }
 
-export class Background extends GameObject implements Updatable, Renderable {
+export class Background extends GameObject {
   constructor(app: GameApp) {
     super(app);
 
     this.#layers = [
-      new BackgroundLayer(500, 0.001 * 50),
-      new BackgroundLayer(500, 0.001 * 75),
-      new BackgroundLayer(500, 0.001 * 100),
+      new BackgroundLayer(app, 500, 0.001 * 50),
+      new BackgroundLayer(app, 500, 0.001 * 75),
+      new BackgroundLayer(app, 500, 0.001 * 100),
     ]
 
     this.#layers[0]
@@ -123,17 +130,11 @@ export class Background extends GameObject implements Updatable, Renderable {
       .push(new BackgroundBlock(this.#layers[2], 100, 400, 'red', 100))
   }
 
-  override register(services: Services): void {
-    services.updateService.register(this);
-    services.renderingService.register(this);
-  }
-  
-  update(dt: number): void {
-    this.#layers.forEach(layer => layer.update(dt));
-  }
-  
-  render(renderer: CanvasRenderingContext2D): void {
-    this.#layers.forEach(layer => layer.render(renderer));
+  override register(services: Services): void {}
+
+  override reclaim(): void {
+    this.#layers.forEach(layer => layer.reclaim());
+    super.reclaim();
   }
 
   #layers: BackgroundLayer[];
