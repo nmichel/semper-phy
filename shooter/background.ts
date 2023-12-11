@@ -17,8 +17,35 @@ class BackgroundBlock implements Renderable {
     const canvas = new OffscreenCanvas(width, height);
     const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
 
-    context.fillStyle = this.#color;
-    context.fillRect(0, 0, width, height);
+    context.globalCompositeOperation = "lighter";
+    context.shadowBlur = 10;
+  
+    const gradient = context.createLinearGradient(0, 0, this.#width, 0);
+    gradient.addColorStop(0, "black");
+    gradient.addColorStop(0.5, this.#color);
+    gradient.addColorStop(1.0, "black");
+
+    const lineWidth = 10;
+    const baseY = this.#height - lineWidth;
+
+    context.beginPath();
+    context.moveTo(0, baseY);
+    context.bezierCurveTo(this.#width / 4, baseY, this.#width / 4, 0, this.#width / 2, 10);
+    context.bezierCurveTo(3 * this.#width / 4, 10, 3 * this.#width / 4, baseY, this.#width, baseY);
+
+    context.fillStyle = gradient;
+    context.lineWidth = lineWidth;
+    context.strokeStyle = this.#color;
+    context.stroke();
+
+    context.lineWidth = 4;
+    context.stroke();
+
+    context.lineWidth = 1;
+    context.stroke();
+
+    context.fill();
+  
     context.fillStyle = 'rgba(0, 0, 0, 0)';
     context.fillRect(width, 0, trail, height);
     this.#image = canvas.transferToImageBitmap();
@@ -54,7 +81,7 @@ class BackgroundBlock implements Renderable {
       clamp(this.#targetWidth - this.#offset, 0, this.#targetWidth)
     );
     const dx = Math.max(0, this.#offset);
-    renderer.drawImage(this.#image, sx, 0, sw, this.#height, dx, 500 - this.#height, sw, this.#height);
+    renderer.drawImage(this.#image, sx, 0, sw, this.#height, dx + 10, 450 - this.#height, sw, this.#height);
   }
 
   #owner: BackgroundLayer;
@@ -94,7 +121,7 @@ class BackgroundLayer extends GameObject implements Updatable, Renderable {
 
   push(block: BackgroundBlock): this {
     const [last] = this.#blocks.slice(-1);
-    block.offset = last ? last.offset + last.width : this.#width;
+    block.offset = Math.max(last ? last.offset + last.width : this.#width, this.#width);
     this.#blocks.push(block);
     return this;
   }
@@ -113,21 +140,22 @@ export class Background extends GameObject {
     super(app);
 
     this.#layers = [
-      new BackgroundLayer(app, 500, 0.001 * 50),
-      new BackgroundLayer(app, 500, 0.001 * 75),
-      new BackgroundLayer(app, 500, 0.001 * 100),
+      new BackgroundLayer(app, 800, 0.001 * 50),
+      new BackgroundLayer(app, 800, 0.001 * 75),
+      new BackgroundLayer(app, 800, 0.001 * 100),
     ]
 
     this.#layers[0]
       .push(new BackgroundBlock(this.#layers[0], 1000, 200, 'rgb(0, 0, 120)'))
       .push(new BackgroundBlock(this.#layers[0], 1000, 250, 'rgb(0, 0, 110)'))
       .push(new BackgroundBlock(this.#layers[0], 1000, 275, 'rgb(0, 0, 140)'));
-    this.#layers[1].push(new BackgroundBlock(this.#layers[1], 350, 300, 'rgb(120, 120, 0)'));
+    this.#layers[1]
+      .push(new BackgroundBlock(this.#layers[1], 350, 300, 'rgba(120, 120, 0, 0.5)'));
     this.#layers[2]
-      .push(new BackgroundBlock(this.#layers[2], 100, 400, 'red', 100))
-      .push(new BackgroundBlock(this.#layers[2], 100, 400, 'red', 200))
-      .push(new BackgroundBlock(this.#layers[2], 100, 400, 'red', 150))
-      .push(new BackgroundBlock(this.#layers[2], 100, 400, 'red', 100))
+      .push(new BackgroundBlock(this.#layers[2], 100, 350, 'rgba(120, 0, 0, 0.5)'))
+      .push(new BackgroundBlock(this.#layers[2], 100, 350, 'rgba(120, 0, 0, 0.5)'))
+      .push(new BackgroundBlock(this.#layers[2], 100, 350, 'rgba(120, 0, 0, 0.5)'))
+      .push(new BackgroundBlock(this.#layers[2], 100, 350, 'rgba(120, 0, 0, 0.5)'))
   }
 
   override register(services: Services): void {}

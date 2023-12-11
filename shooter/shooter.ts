@@ -21,9 +21,9 @@ class Shooter extends GameApp {
     new StatsDisplay(this);
     new PhysicEngineGameObject(this, this.#physicScene)
 
-    new Wall(this, this.#physicScene, new Vector2(250, 450), 450, 20);
+    new Wall(this, this.#physicScene, new Vector2(410, 450), 800, 20);
     new Wall(this, this.#physicScene, new Vector2(20, 250), 20, 400);
-    new Wall(this, this.#physicScene, new Vector2(480, 250), 20, 400);
+    new Wall(this, this.#physicScene, new Vector2(800, 250), 20, 400);
   }
 
   override onDblclick(_e) {
