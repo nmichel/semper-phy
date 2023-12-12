@@ -5,7 +5,7 @@ import { Vector2 } from '../physic/math.js';
 import { GameApp, Services } from '../engine/gameApp.js';
 import { RigidBodyGameObject } from '../engine/rigidBodyGameObject.js';
 
-class Box extends RigidBodyGameObject {
+export class Box extends RigidBodyGameObject {
   constructor(app: GameApp, engine: Scene, position: Vector2, side: number) {
     super(app, new RigidBody(0, position.clone(), new RBBox(side, side), new Vector2(0, Math.random() * 5 + 1), 0, side * side), engine);
 

@@ -1,6 +1,6 @@
+import { Vector2 } from '../physic/math.js';
 import { BrowserApp } from "../browser_app";
 import { GameObject } from "./gameObject";
-
 
 type HasId = {
   get id(): number;
@@ -69,9 +69,85 @@ class RenderingService extends Registry<Registrable<Renderable>> implements Serv
   #renderer: CanvasRenderingContext2D;
 }
 
+interface EventHandler {
+  handleInputState(_inputState: InputState): void;
+}
+
+type InputState = {
+  mousePos: Vector2;
+  eventDbleClick: boolean;
+  eventMouseMove: boolean;
+  eventKeyDown: boolean;
+  eventKeyUp: boolean;
+};
+
+const EVENTS = {
+  EVENT_MOUSE_MOVE: 'mouse_move',
+  EVENT_DBL_CLICK: 'dbl_click',
+  EVENT_KEY_DOWN: 'key_down',
+} as const;
+
+class EventService extends Registry<Registrable<EventHandler>> implements Service {
+  constructor() {
+    super();
+
+    this.#inputState = {
+      mousePos: new Vector2(0, 0),
+      eventDbleClick: false,
+      eventMouseMove: false,
+      eventKeyDown: false,
+      eventKeyUp: false,
+    };
+  }
+
+  run(): void {
+    if (this.#somethingHappened) {
+      this.apply(obj => obj.handleInputState(this.#inputState));
+      this.#resetState();
+    }
+  }
+
+  onMousemove(e) {
+    this.#inputState.eventMouseMove = true;
+    this.#inputState.mousePos = new Vector2(e.offsetX, e.offsetY);
+    this.#somethingHappend();
+  } 
+
+  onDblclick(_e) {
+    this.#inputState.eventDbleClick = true;
+    this.#somethingHappend();
+  }
+
+  onKeydown(e) {
+    this.#inputState.eventKeyDown = true;
+    this.#somethingHappend();
+  }
+
+  onKeyup(e) {
+    this.#inputState.eventKeyUp = true;
+    this.#somethingHappend();
+  }
+
+  #somethingHappend() {
+    this.#somethingHappened = true;
+  }
+
+  #resetState() {
+    this.#inputState.eventDbleClick = false;
+    this.#inputState.eventMouseMove = false;
+    this.#inputState.eventKeyDown = false;
+    this.#inputState.eventKeyUp = false;
+    this.#somethingHappened = false;
+  }
+
+  #inputState: InputState;
+  #somethingHappened: boolean = false;
+}
+
 type Services = {
   renderingService: RenderingService;
   updateService: UpdateService;
+  eventService: EventService;
   [key: string]: any;
 }
 
@@ -82,6 +158,7 @@ class GameApp extends BrowserApp implements FrameInfoSource, Service {
     this.#services = {
       updateService: new UpdateService(this),
       renderingService: new RenderingService(super.context as CanvasRenderingContext2D),
+      eventService: new EventService(),
       self: this
     };
   }
@@ -115,6 +192,21 @@ class GameApp extends BrowserApp implements FrameInfoSource, Service {
     this.#collectReclaimed();
   }
 
+  /**
+   * From BrowserApp
+   */
+  override onDblclick(e) {
+    this.#services.eventService.onDblclick(e);
+  }
+
+  override onMousemove(e) {
+    this.#services.eventService.onMousemove(e);
+  }
+
+  override onKeydown(e) {
+    this.#services.eventService.onKeydown(e);
+  }
+
   register(obj: GameObject): void {
     obj.register(this.#services);
   }
@@ -141,6 +233,7 @@ class GameApp extends BrowserApp implements FrameInfoSource, Service {
     this.#reclaimables.forEach(obj => {
       this.#services.renderingService.unregister(obj.id);
       this.#services.updateService.unregister(obj.id);
+      this.#services.eventService.unregister(obj.id);
     });
     this.#reclaimables = [];
   }
@@ -155,4 +248,4 @@ class GameApp extends BrowserApp implements FrameInfoSource, Service {
   #reclaimables: GameObject[] = [];
 }
 
-export { GameApp, Renderable, Updatable, Service, Services};
+export { GameApp, Renderable, Updatable, EventHandler, Service, InputState, Services};
