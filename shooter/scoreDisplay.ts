@@ -23,8 +23,8 @@ export class ScoreDisplay extends GameObject implements Renderable, Updatable {
 
     const prevTextAlign = renderer.textAlign;
     renderer.textAlign = "center";
-    renderer.translate(250, 250);
-    renderer.rotate((sin * 45 * Math.PI) / 180);
+    renderer.translate(700, 50);
+    renderer.rotate((sin * 20 * Math.PI) / 180);
     renderer.font = '20px Arial';
     renderer.fillStyle = 'white';
     renderer.fillText(`Score: ${this.#score}`, 0, 0);
