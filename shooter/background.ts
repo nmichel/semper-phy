@@ -6,9 +6,9 @@ function clamp(what, min, max) {
 }
 
 class BackgroundBlock implements Renderable {
-  constructor(owner: BackgroundLayer, width: number, height: number, color: string, trail: number = 0) {
+  constructor(owner: BackgroundLayer, width: number, height: number, color: string, startY: number, endY: number) {
     this.#owner = owner;
-    this.#width = width + trail;
+    this.#width = width;
     this.#targetWidth = owner.width;
     this.#height = height;
     this.#color = color;
@@ -17,23 +17,30 @@ class BackgroundBlock implements Renderable {
     const canvas = new OffscreenCanvas(width, height);
     const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
 
-    context.globalCompositeOperation = "lighter";
-    context.shadowBlur = 10;
-  
-    const gradient = context.createLinearGradient(0, 0, this.#width, 0);
-    gradient.addColorStop(0, "black");
-    gradient.addColorStop(0.5, this.#color);
-    gradient.addColorStop(1.0, "black");
-
     const lineWidth = 10;
-    const baseY = this.#height - lineWidth;
+    const localZero = this.#height * Math.random();
 
+    // Fill background
     context.beginPath();
-    context.moveTo(0, baseY);
-    context.bezierCurveTo(this.#width / 4, baseY, this.#width / 4, 0, this.#width / 2, 10);
-    context.bezierCurveTo(3 * this.#width / 4, 10, 3 * this.#width / 4, baseY, this.#width, baseY);
+    context.moveTo(0, this.#height);
+    context.lineTo(0, startY);
+    context.bezierCurveTo(this.#width / 4, startY, this.#width / 4, localZero, this.#width / 2, localZero);
+    context.bezierCurveTo(3 * this.#width / 4, localZero, 3 * this.#width / 4, endY, this.#width, endY);
+    context.lineTo(this.#width, this.#height);
 
-    context.fillStyle = gradient;
+    context.globalCompositeOperation = "source-over";
+    context.fillStyle = this.#color;
+    context.fill();
+
+    // Draw bezier curve
+    context.beginPath();
+    context.lineTo(0, startY);
+    context.bezierCurveTo(this.#width / 4, startY, this.#width / 4, localZero, this.#width / 2, localZero);
+    context.bezierCurveTo(3 * this.#width / 4, localZero, 3 * this.#width / 4, endY, this.#width, endY);
+
+    context.globalCompositeOperation = "lighter";
+    context.shadowBlur = 10;  
+    context.lineCap = "round";
     context.lineWidth = lineWidth;
     context.strokeStyle = this.#color;
     context.stroke();
@@ -44,10 +51,6 @@ class BackgroundBlock implements Renderable {
     context.lineWidth = 1;
     context.stroke();
 
-    context.fill();
-  
-    context.fillStyle = 'rgba(0, 0, 0, 0)';
-    context.fillRect(width, 0, trail, height);
     this.#image = canvas.transferToImageBitmap();
   }
 
@@ -94,11 +97,21 @@ class BackgroundBlock implements Renderable {
 }
 
 class BackgroundLayer extends GameObject implements Updatable, Renderable {
-  constructor(app: GameApp, width: number, speedMs: number) {
+  constructor(app: GameApp, width: number, blockWidth: number, height: number, speedMs: number, color: string) {
     super(app);
   
     this.#width = width;
     this.#speedMs = speedMs;
+
+    const blockCount = Math.ceil(width / blockWidth) + 1;
+    const ys = [height - Math.random() * height];
+    for (let i = 0; i < blockCount; i++) {
+      const startY = ys[i];
+      ys.push(height - Math.random() * height);
+      const endY = ys[(i + 1) % blockCount];
+      const block = new BackgroundBlock(this, blockWidth, height, color, startY, endY);
+      this.#push(block);
+    }
   }
 
   update(dt: number): void {
@@ -116,10 +129,10 @@ class BackgroundLayer extends GameObject implements Updatable, Renderable {
 
   reject(): void {
     const [ejected] = this.#blocks.splice(0, 1);
-    this.push(ejected);
+    this.#push(ejected);
   }
 
-  push(block: BackgroundBlock): this {
+  #push(block: BackgroundBlock): this {
     const [last] = this.#blocks.slice(-1);
     block.offset = Math.max(last ? last.offset + last.width : this.#width, this.#width);
     this.#blocks.push(block);
@@ -140,22 +153,10 @@ export class Background extends GameObject {
     super(app);
 
     this.#layers = [
-      new BackgroundLayer(app, 800, 0.001 * 50),
-      new BackgroundLayer(app, 800, 0.001 * 75),
-      new BackgroundLayer(app, 800, 0.001 * 100),
+      new BackgroundLayer(app, 800, 700, 200, 0.001 * 50, 'rgb(0, 0, 60)'),
+      new BackgroundLayer(app, 800, 350, 150, 0.001 * 75, 'rgb(0, 0, 80)'),
+      new BackgroundLayer(app, 800, 100, 100, 0.001 * 100, 'rgb(0, 0, 100)'),
     ]
-
-    this.#layers[0]
-      .push(new BackgroundBlock(this.#layers[0], 1000, 200, 'rgb(0, 0, 120)'))
-      .push(new BackgroundBlock(this.#layers[0], 1000, 250, 'rgb(0, 0, 110)'))
-      .push(new BackgroundBlock(this.#layers[0], 1000, 275, 'rgb(0, 0, 140)'));
-    this.#layers[1]
-      .push(new BackgroundBlock(this.#layers[1], 350, 300, 'rgba(120, 120, 0, 0.5)'));
-    this.#layers[2]
-      .push(new BackgroundBlock(this.#layers[2], 100, 350, 'rgba(120, 0, 0, 0.5)'))
-      .push(new BackgroundBlock(this.#layers[2], 100, 350, 'rgba(120, 0, 0, 0.5)'))
-      .push(new BackgroundBlock(this.#layers[2], 100, 350, 'rgba(120, 0, 0, 0.5)'))
-      .push(new BackgroundBlock(this.#layers[2], 100, 350, 'rgba(120, 0, 0, 0.5)'))
   }
 
   override register(services: Services): void {}
