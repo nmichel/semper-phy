@@ -1,7 +1,7 @@
 import '../physic/engine.js';
 import { Scene } from '../physic/scene.js';
 import { Vector2 } from '../physic/math.js';
-import { EventHandler, GameApp, InputState, Services } from '../engine/gameApp';
+import { GameApp, Services } from '../engine/gameApp';
 import { StatsDisplay } from './statsDisplay.js';
 import { ScoreDisplay } from './scoreDisplay.js';
 import { PhysicEngineGameObject } from '../engine/physicEngineGameObject.js';
@@ -10,6 +10,7 @@ import { Ball } from './ball.js';
 import { Box } from './box.js';
 import { Wall } from './wall.js';
 import { GameObject } from '../engine/gameObject.js';
+import { EventHandler, InputState } from '../engine/eventService.js';
 
 class Shooter extends GameApp {
   constructor(divElement) {
