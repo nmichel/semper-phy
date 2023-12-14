@@ -15,6 +15,8 @@ class BrowserApp {
   onClick(e) {}
   onDblclick(e) {}
   onMousemove(e) {}
+  onMousedown(e) {}
+  onMouseup(e) {}
   onMouseout(e) {
     this.#isRunning = false;
   }
@@ -56,6 +58,8 @@ class BrowserApp {
   }
 
   #binEvents() {
+    this.#divElement.addEventListener('mousedown', this.onMousedown.bind(this));
+    this.#divElement.addEventListener('mouseup', this.onMouseup.bind(this));
     this.#divElement.addEventListener('mouseout', this.onMouseout.bind(this));
     this.#divElement.addEventListener('click', this.onClick.bind(this));
     this.#divElement.addEventListener('dblclick', this.onDblclick.bind(this));

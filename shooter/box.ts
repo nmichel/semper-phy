@@ -17,8 +17,21 @@ export class Box extends RigidBodyGameObject {
   }
 
   override localRender(renderer: CanvasRenderingContext2D): void {
-    renderer.fillStyle = 'white';
-    renderer.fillRect(-this.#side / 2, -this.#side / 2, this.#side, this.#side);
+    renderer.save();
+    renderer.globalCompositeOperation = "lighter";
+
+    renderer.beginPath();
+    renderer.rect(-this.#side / 2, -this.#side / 2, this.#side, this.#side);
+
+    renderer.shadowBlur = 5;
+    renderer.shadowColor = "white";
+    renderer.strokeStyle = "rgba(200, 200, 200, 0.5)";
+    renderer.lineWidth = 3;
+    renderer.stroke();
+    renderer.lineWidth = 1;
+    renderer.stroke();
+
+    renderer.restore();
   }
 
   #side: number;

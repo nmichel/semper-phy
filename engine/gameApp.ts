@@ -1,3 +1,4 @@
+import { Vector2 } from "../physic/math.js";
 import { BrowserApp } from "../browser_app";
 import { GameObject } from "./gameObject";
 import { Service } from './service.js';
@@ -12,7 +13,7 @@ type Services = {
   [key: string]: any;
 }
 
-class GameApp extends BrowserApp implements FrameInfoSource, Service {
+abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
   constructor(divElement: HTMLDivElement) {
     super(divElement);
 
@@ -56,6 +57,14 @@ class GameApp extends BrowserApp implements FrameInfoSource, Service {
   /**
    * From BrowserApp
    */
+  override onMousedown(e) {
+    this.#services.eventService.onMouseDown(e);
+  }
+
+  override onMouseup(e) {
+    this.#services.eventService.onMouseUp(e);
+  }
+
   override onDblclick(e) {
     this.#services.eventService.onDblclick(e);
   }
@@ -75,6 +84,8 @@ class GameApp extends BrowserApp implements FrameInfoSource, Service {
   reclaim(obj: GameObject): void {
     this.#reclaimables.push(obj);
   }
+
+  abstract isOffLimits(position: Vector2): boolean;
 
   get services(): Services {
     return this.#services;

@@ -1,6 +1,7 @@
+import { Vector2 } from "../physic/math";
 import { GameApp, Services } from "./gameApp";
 
-export class GameObject {
+export abstract class GameObject {
   constructor(app: GameApp) {
     this.#app = app;
   
@@ -9,6 +10,10 @@ export class GameObject {
 
   register(services: Services): void {
     throw new Error("Method not implemented.");
+  }
+
+  isOffLimits(position: Vector2): boolean {
+    return this.#app.isOffLimits(position);
   }
 
   get id(): number {
@@ -23,6 +28,6 @@ export class GameObject {
     this.#app.reclaim(this);
   }
 
-  #id: number = Math.random() * 10000000000;
+  #id: number = Math.ceil(Math.random() * 10000000000);
   #app: GameApp;
 }

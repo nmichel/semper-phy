@@ -1,5 +1,7 @@
-import { GameApp, Renderable, Services, Updatable } from "../engine/gameApp";
+import { GameApp, Services } from "../engine/gameApp";
 import { GameObject } from "../engine/gameObject";
+import { Renderable } from "../engine/renderingService";
+import { Updatable } from "../engine/updateService";
 
 function clamp(what, min, max) {
   return Math.min(max, Math.max(what, min));
@@ -134,7 +136,7 @@ class BackgroundLayer extends GameObject implements Updatable, Renderable {
 
   #push(block: BackgroundBlock): this {
     const [last] = this.#blocks.slice(-1);
-    block.offset = Math.max(last ? last.offset + last.width : this.#width, this.#width);
+    block.offset = last ? last.offset + last.width : 0;
     this.#blocks.push(block);
     return this;
   }

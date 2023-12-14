@@ -1,10 +1,11 @@
 import { RigidBody } from '../physic/rigidbody.js';
 import { Scene } from '../physic/scene.js';
 import { Vector2 } from '../physic/math.js';
-import { GameApp, Renderable } from './gameApp.js';
+import { GameApp } from './gameApp.js';
 import { GameObject } from './gameObject.js';
+import { Renderable } from './renderingService.js';
 
-export class RigidBodyGameObject extends GameObject implements Renderable {
+export abstract class RigidBodyGameObject extends GameObject implements Renderable {
   constructor(app: GameApp, body: RigidBody, engine: Scene) {
     super(app);
     this.#body = body;
@@ -34,11 +35,19 @@ export class RigidBodyGameObject extends GameObject implements Renderable {
     renderer.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-  localRender(_renderer: CanvasRenderingContext2D): void { }
+  abstract localRender(_renderer: CanvasRenderingContext2D): void;
 
+  get rigidBody(): RigidBody {
+    return this.#body;
+  }
+  
   #handleRigibodyEvent() {
     this.#position = this.#body.frame.position.clone();
     this.#rotation = this.#body.frame.rotation;
+
+    if (this.isOffLimits(this.#position)) {
+      this.reclaim();
+    }
   }
 
   #body: RigidBody;

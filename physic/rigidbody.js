@@ -24,8 +24,12 @@ class RigidBody {
     this.inverseMass = mass > 0 ? (1.0 / mass) : 0.0;
     this.inverseInertia = this.inertia > 0 ? (1.0 / this.inertia) : 0.0;
     this.aabb = Aligner.computeAABB(this.shape, this.frame);
-  
+    this.forces = [];
     this.listeners = [];
+  }
+
+  addForce(force) {
+    this.forces.push(force.clone());
   }
 
   addListener(listenerFn) {
@@ -35,6 +39,11 @@ class RigidBody {
   updateFrame(deltaInS) {
     if (APPLY_GRAVITY && this.inverseMass > 0) {
       this.linearVelocity.addToSelf(GRAVITY.scale(10*deltaInS));
+    }
+
+    if (this.inverseMass > 0) {
+      this.forces.forEach(force => this.linearVelocity.addToSelf(force.scale(deltaInS * this.inverseMass)));
+      this.forces = [];
     }
 
     if (APPLY_DAMPING) {

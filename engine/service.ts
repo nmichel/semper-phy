@@ -30,4 +30,4 @@ class Registry<T> {
   #registry: Registrable<T>[] = [];
 }
 
-export { Service, Registry, Registrable }
+export { HasId, Service, Registry, Registrable }

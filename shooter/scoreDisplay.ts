@@ -1,5 +1,7 @@
-import { GameApp, Renderable, Updatable, Services } from '../engine/gameApp';
+import { GameApp, Services } from '../engine/gameApp';
 import { GameObject } from '../engine/gameObject.js';
+import { Renderable } from '../engine/renderingService';
+import { Updatable } from '../engine/updateService';
 
 export class ScoreDisplay extends GameObject implements Renderable, Updatable {
   constructor(app: GameApp) {

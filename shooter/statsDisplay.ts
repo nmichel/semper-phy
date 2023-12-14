@@ -1,5 +1,6 @@
-import { Renderable, GameApp, Services } from "../engine/gameApp";
+import { GameApp, Services } from "../engine/gameApp";
 import { GameObject } from "../engine/gameObject";
+import { Renderable } from "../engine/renderingService";
 
 export class StatsDisplay extends GameObject implements Renderable {
     constructor(app: GameApp) {
