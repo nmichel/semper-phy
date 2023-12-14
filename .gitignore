@@ -18,3 +18,7 @@ yarn-error.log*
 
 # Jest cache
 /.jest/
+
+# git worktree
+
+/worktree

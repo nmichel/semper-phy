@@ -7,9 +7,21 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "watch": "vite build --watch"
+    "watch": "vite build --watch",
+    "lint": "eslint . --ext ts,tsx,js,jsx --max-warnings 210",
+    "format": "prettier --write . --loglevel error",
+    "format-check": "prettier --check .",
+    "type-check": "tsc"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "6.13.2",
+    "@typescript-eslint/parser": "6.13.2",
+    "eslint": "8.55.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-react": "7.33.2",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "eslint-plugin-react-refresh": "0.4.5",
+    "prettier": "2.8.8",
     "vite": "^4.5"
   }
 }

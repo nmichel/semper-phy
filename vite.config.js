@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import { resolve } from 'path';
 
 export default {
   build: {
@@ -7,7 +7,7 @@ export default {
       input: {
         main: resolve(__dirname, './index.html'),
         shooter: resolve(__dirname, './shooter/index.html'),
-      }
-    }        
-  }
-}
+      },
+    },
+  },
+};
