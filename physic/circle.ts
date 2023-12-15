@@ -1,4 +1,4 @@
-import { Span, Vector2 } from "./math";
+import { Span, Vector2 } from './math';
 
 class Circle {
   constructor(radius: number, position: Vector2 = new Vector2(0, 0)) {
@@ -7,8 +7,8 @@ class Circle {
   }
 
   computeProjectionSpan(normal: Vector2): Span {
-    const centerProj = this.position.dot(normal)
-    return new Span(centerProj - this.radius, centerProj + this.radius)
+    const centerProj = this.position.dot(normal);
+    return new Span(centerProj - this.radius, centerProj + this.radius);
   }
 
   radius: number;

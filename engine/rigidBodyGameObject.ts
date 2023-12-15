@@ -25,10 +25,10 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
 
   /**
    * From Renderable
-  */
+   */
   render(renderer: CanvasRenderingContext2D): void {
     renderer.translate(this.#position.x, this.#position.y);
-    renderer.rotate(this.#rotation * Math.PI / 180);
+    renderer.rotate((this.#rotation * Math.PI) / 180);
 
     this.localRender(renderer);
 
@@ -40,7 +40,7 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
   get rigidBody(): RigidBody {
     return this.#body;
   }
-  
+
   #handleRigibodyEvent() {
     this.#position = this.#body.frame.position.clone();
     this.#rotation = this.#body.frame.rotation;

@@ -11,14 +11,13 @@ class Box {
     const deltaY = Math.abs(this.halfSize.y - Math.abs(point.y));
     if (deltaX < deltaY) {
       return new Vector2(Math.sign(point.x), 0);
-    }
-    else {
+    } else {
       return new Vector2(0, Math.sign(point.y));
     }
   }
 
-  size: Vector2
-  halfSize: Vector2
+  size: Vector2;
+  halfSize: Vector2;
 }
 
 export { Box };

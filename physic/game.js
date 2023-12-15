@@ -5,7 +5,7 @@ import * as GfxTools from './gfx.js';
 const Control = {
   direction: new Vector2(0, 0),
   position: new Vector2(0, 0),
-  offset: 0
+  offset: 0,
 };
 
 class Game {
@@ -19,11 +19,10 @@ class Game {
     this.gameObjects = [];
   }
 
-  init() {
-  }
+  init() {}
 
   update(deltaMs) {
-    this.gameObjects.forEach((p) => {
+    this.gameObjects.forEach(p => {
       p.update(this, deltaMs);
     });
 
@@ -36,8 +35,8 @@ class Game {
   render(deltaMs) {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.gameObjects.forEach((p) => {
-      p.render(this.context, deltaMs)
+    this.gameObjects.forEach(p => {
+      p.render(this.context, deltaMs);
     });
   }
 
@@ -48,10 +47,10 @@ class Game {
   // Internals
 
   purge() {
-    const {false: gameObjects} = groupBy(this.gameObjects, e => e.deleted)
+    const { false: gameObjects } = groupBy(this.gameObjects, e => e.deleted);
     this.gameObjects = gameObjects || [];
   }
-};
+}
 
 class Brush {
   constructor(x, y, width, height) {
@@ -64,10 +63,12 @@ class Brush {
   collide(other) {
     // check for collision between two objects using axis-aligned bounding box (Box)
     // @see https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-    return this.x < other.x + other.width &&
-            this.x + this.width > other.x &&
-            this.y < other.y + other.height &&
-            this.y + this.height > other.y;
+    return (
+      this.x < other.x + other.width &&
+      this.x + this.width > other.x &&
+      this.y < other.y + other.height &&
+      this.y + this.height > other.y
+    );
   }
 }
 
@@ -81,10 +82,9 @@ class GameObject {
     this.deleted = true;
   }
 
-  update(game, deltaMs)  {}
+  update(game, deltaMs) {}
 
-  render(context) {
-  }
+  render(context) {}
 }
 
 class Collidable extends GameObject {
@@ -93,7 +93,7 @@ class Collidable extends GameObject {
   }
 
   getBrush() {
-    throw "Not implemented";
+    throw 'Not implemented';
   }
 
   collide(other) {
@@ -114,7 +114,7 @@ class Paddle extends Collidable {
     this.halfWidth = 17;
     this.pos = new Vector2(x, y);
     this.paddleSurfaceY = this.y - this.halfHeight;
-    this.color = color
+    this.color = color;
 
     this.targetSize = 0;
     this.step = 0;
@@ -128,7 +128,7 @@ class Paddle extends Collidable {
 
   render(context) {
     context.fillStyle = this.color;
-    context.fillRect(this.pos.x - this.halfWidth, this.pos.y - this.halfHeight, this.halfWidth * 2, this.halfHeight * 2 );
+    context.fillRect(this.pos.x - this.halfWidth, this.pos.y - this.halfHeight, this.halfWidth * 2, this.halfHeight * 2);
   }
 
   // Collidable
@@ -137,8 +137,7 @@ class Paddle extends Collidable {
     return new Brush(this.pos.x - this.halfWidth, this.pos.y - this.halfHeight, this.halfWidth * 2, this.halfHeight * 2);
   }
 
-  onHit(game) {
-  }
+  onHit(game) {}
 
   // Internals
 
@@ -168,11 +167,11 @@ class Star extends GameObject {
       this.deleted = true;
     }
 
-    this.position.addToSelf(this.direction.scale((this.speed + this.acceleration * this.lifeMs) * deltaMs))
+    this.position.addToSelf(this.direction.scale((this.speed + this.acceleration * this.lifeMs) * deltaMs));
   }
 
   render(context) {
-    GfxTools.drawDisc(context, this.position.x, this.position.y, this.radius, `rgba(${(1.0 - (this.lifeMs / 2000)) * 255}, 0, 0, 1)`);
+    GfxTools.drawDisc(context, this.position.x, this.position.y, this.radius, `rgba(${(1.0 - this.lifeMs / 2000) * 255}, 0, 0, 1)`);
   }
 }
 
@@ -219,9 +218,8 @@ function loop(ts) {
   requestAnimationFrame(loop);
 }
 
-
 const canvas = document.getElementById('game');
-canvas.addEventListener("mousemove", mouseMoveHandler, false);
+canvas.addEventListener('mousemove', mouseMoveHandler, false);
 
 function mouseMoveHandler(e) {
   const mouseMovementX = e.movementX;
@@ -229,7 +227,7 @@ function mouseMoveHandler(e) {
 
   const rect = canvas.getBoundingClientRect();
   Control.position = new Vector2(e.clientX - rect.left, e.clientY - rect.top);
-  const direction = new Vector2(mouseMovementX, mouseMovementY)
+  const direction = new Vector2(mouseMovementX, mouseMovementY);
   Control.direction = direction;
   Control.offset = Control.direction.length();
 }

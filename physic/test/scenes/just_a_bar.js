@@ -12,10 +12,9 @@ export default function buildScene() {
 
   // scene.addBody(new RigidBody(0, new Vector2(800, 400), new Box(100, 100), new Vector2(0, 0), 0, 1000));
 
-
   scene.addBody(new RigidBody(0, new Vector2(500, 500), new Box(100, 20), new Vector2(0, 0), 0, 1000, 0.3));
   scene.addBody(new RigidBody(0, new Vector2(300, 500), new Box(20, 100), new Vector2(0, 0), 0, 1000, 0.3));
-  
+
   // scene.addBody(new RigidBody(0, new Vector2(800, 400), new Box(1400, 20), new Vector2(0, 0), 0, 1000));
   // scene.addBody(new RigidBody(0, new Vector2(800, 600), new Box(1400, 20), new Vector2(0, 0), 0, 1000));
   // scene.addBody(new RigidBody(0, new Vector2(800, 700), new Box(1400, 20), new Vector2(0, 0), 0, 1000));

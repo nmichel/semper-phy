@@ -8,7 +8,7 @@ class BrowserApp {
     this.#context = this.#canvasElement.getContext('2d', { alpha: false });
     this.#canvasElement.width = this.#divElement.clientWidth;
     this.#canvasElement.height = this.#divElement.clientHeight;
-    
+
     this.#binEvents();
   }
 

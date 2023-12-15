@@ -1,16 +1,15 @@
 import './physic/engine.js';
 import { buildCircleContainedPolygon } from './physic/geom.js';
 
-import { BrowserApp } from './browser_app.js'
+import { BrowserApp } from './browser_app.js';
 import { Render } from './physic/protocols/protocols.js';
 import { Circle } from './physic/circle.js';
-import { Box as RBBox} from './physic/box.js';
+import { Box as RBBox } from './physic/box.js';
 import { RigidBody } from './physic/rigidbody.js';
 import { Scene } from './physic/scene.js';
 import { Vector2 } from './physic/math.js';
 import { GameApp, Renderable, Updatable, Services } from './engine/gameApp';
 import { GameObject } from './engine/gameObject.js';
-
 
 class MyApp extends BrowserApp {
   constructor(divElement) {
@@ -42,7 +41,7 @@ class MyApp extends BrowserApp {
   }
 
   override render(dt) {
-    this.#scene.step(dt);  
+    this.#scene.step(dt);
     Render.render(this.#scene, super.context as CanvasRenderingContext2D);
   }
 
@@ -51,11 +50,19 @@ class MyApp extends BrowserApp {
     const linearSpeed = new Vector2(0, 0);
     const angularSpeed = 0;
     if (Math.random() > 0.6) {
-      this.#scene.addBody(new RigidBody(0, this.#mousePos.clone(), new Circle(radius), linearSpeed, angularSpeed, radius*radius));
-    }
-    else {
+      this.#scene.addBody(new RigidBody(0, this.#mousePos.clone(), new Circle(radius), linearSpeed, angularSpeed, radius * radius));
+    } else {
       const verts = Math.round(3 + Math.random() * 5);
-      this.#scene.addBody(new RigidBody(0, this.#mousePos.clone(), buildCircleContainedPolygon(new Vector2(0, 0), radius, verts), linearSpeed, angularSpeed, radius*radius));
+      this.#scene.addBody(
+        new RigidBody(
+          0,
+          this.#mousePos.clone(),
+          buildCircleContainedPolygon(new Vector2(0, 0), radius, verts),
+          linearSpeed,
+          angularSpeed,
+          radius * radius
+        )
+      );
     }
   }
 
@@ -64,11 +71,11 @@ class MyApp extends BrowserApp {
     scene.addBody(new RigidBody(0, new Vector2(250, 450), new RBBox(400, 20), new Vector2(0, 0), 0, 0));
     scene.addBody(new RigidBody(0, new Vector2(20, 250), new RBBox(20, 300), new Vector2(0, 0), 0, 0));
     scene.addBody(new RigidBody(0, new Vector2(480, 250), new RBBox(20, 300), new Vector2(0, 0), 0, 0));
-  
-    const radius = 30.0;
-    scene.addBody(new RigidBody(0, new Vector2(250, 50), new Circle(radius), new Vector2(0, 0), 0, radius*radius));
 
-    this.#scene = scene
+    const radius = 30.0;
+    scene.addBody(new RigidBody(0, new Vector2(250, 50), new Circle(radius), new Vector2(0, 0), 0, radius * radius));
+
+    this.#scene = scene;
   }
 
   #scene;
@@ -109,7 +116,7 @@ class MyApp2 extends BrowserApp {
   }
 
   override render(dt) {
-    this.#scene.step(dt);  
+    this.#scene.step(dt);
     Render.render(this.#scene, this.context as CanvasRenderingContext2D);
   }
 
@@ -117,7 +124,9 @@ class MyApp2 extends BrowserApp {
     const radius = 10.0 + Math.random() * 20;
     const linearSpeed = new Vector2(0, 0);
     const angularSpeed = 0;
-    this.#scene.addBody(new RigidBody(0, this.#mousePos.clone(), new RBBox(3*radius, radius), linearSpeed, angularSpeed, radius*radius));
+    this.#scene.addBody(
+      new RigidBody(0, this.#mousePos.clone(), new RBBox(3 * radius, radius), linearSpeed, angularSpeed, radius * radius)
+    );
   }
 
   #buildScene() {
@@ -125,11 +134,11 @@ class MyApp2 extends BrowserApp {
     scene.addBody(new RigidBody(0, new Vector2(250, 450), new RBBox(400, 20), new Vector2(0, 0), 0, 0));
     scene.addBody(new RigidBody(0, new Vector2(20, 250), new RBBox(20, 300), new Vector2(0, 0), 0, 0));
     scene.addBody(new RigidBody(0, new Vector2(480, 250), new RBBox(20, 300), new Vector2(0, 0), 0, 0));
-  
-    const radius = 30.0;
-    scene.addBody(new RigidBody(0, new Vector2(250, 50), new Circle(radius), new Vector2(0, 0), 0, radius*radius));
 
-    this.#scene = scene
+    const radius = 30.0;
+    scene.addBody(new RigidBody(0, new Vector2(250, 50), new Circle(radius), new Vector2(0, 0), 0, radius * radius));
+
+    this.#scene = scene;
   }
 
   #scene;

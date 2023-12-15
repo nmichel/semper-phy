@@ -1,15 +1,15 @@
-import { Vector2 } from "../physic/math";
-import { GameApp, Services } from "./gameApp";
+import { Vector2 } from '../physic/math';
+import { GameApp, Services } from './gameApp';
 
 export abstract class GameObject {
   constructor(app: GameApp) {
     this.#app = app;
-  
+
     app.register(this);
   }
 
   register(services: Services): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   isOffLimits(position: Vector2): boolean {

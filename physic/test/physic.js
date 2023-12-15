@@ -30,9 +30,17 @@ function loop(ts) {
   let impulseInfo = null;
 
   if (ray) {
-    const collisions = scene.bodies.reduce((collisions, body) => [...collisions, ...(ray.cast(body).map(c => {return { collision: c, body }}))], [])
+    const collisions = scene.bodies.reduce(
+      (collisions, body) => [
+        ...collisions,
+        ...ray.cast(body).map(c => {
+          return { collision: c, body };
+        }),
+      ],
+      []
+    );
     if (collisions.length > 0) {
-      const closest = collisions.reduce((current, item) => item.collision.t < current.collision.t ? item : current);
+      const closest = collisions.reduce((current, item) => (item.collision.t < current.collision.t ? item : current));
       impulseInfo = closest;
 
       const { collision, body } = impulseInfo;
@@ -91,13 +99,13 @@ function mouseMoveHandler(e) {
     const rect = canvas.getBoundingClientRect();
     endPoint = new Vector2(e.clientX - rect.left, e.clientY - rect.top);
     ray = Ray.buildRayFromPoints(startPoint, endPoint);
-  
+
     // const mouseMovementX = e.movementX;
     // const mouseMovementY = e.movementY;
     // const direction = new Vector2(mouseMovementX, mouseMovementY);
   }
 }
 
-canvas.addEventListener("mousedown", mouseDownHandler, false);
-canvas.addEventListener("mouseup", mouseUpHandler, false);
-canvas.addEventListener("mousemove", mouseMoveHandler, false);
+canvas.addEventListener('mousedown', mouseDownHandler, false);
+canvas.addEventListener('mouseup', mouseUpHandler, false);
+canvas.addEventListener('mousemove', mouseMoveHandler, false);

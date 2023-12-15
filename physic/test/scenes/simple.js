@@ -13,7 +13,7 @@ export default function buildScene() {
   const radius = 30.0 + Math.random() * 40;
   const linearSpeed = new Vector2(0, 0);
   const angularSpeed = 0;
-  scene.addBody(new RigidBody(angle, new Vector2(800, 200), new Circle(radius), linearSpeed, angularSpeed, radius*radius));
+  scene.addBody(new RigidBody(angle, new Vector2(800, 200), new Circle(radius), linearSpeed, angularSpeed, radius * radius));
   // const verts = Math.round(3 + Math.random() * 5);
   // scene.addBody(new RigidBody(angle, new Vector2(800 + (j - 2) * 200, 200 + i * 150), buildCircleContainedPolygon(new Vector2(0, 0), radius, verts), new Vector2(0, - Math.sign(i - 2) * 50), angularSpeed, radius*radius));
 

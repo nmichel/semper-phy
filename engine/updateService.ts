@@ -1,4 +1,4 @@
-import { Registrable, Registry, Service } from "./service";
+import { Registrable, Registry, Service } from './service';
 
 interface Updatable {
   update(_dt: number): void;
@@ -21,4 +21,4 @@ class UpdateService extends Registry<Registrable<Updatable>> implements Service 
   #frameInfoSource: FrameInfoSource;
 }
 
-export { UpdateService, Updatable, FrameInfoSource }
+export { UpdateService, Updatable, FrameInfoSource };

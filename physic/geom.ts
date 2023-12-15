@@ -1,4 +1,4 @@
-import { Span, Vector2 } from './math.js'
+import { Span, Vector2 } from './math.js';
 
 type Vertex = Vector2;
 const Vertex = Vector2;
@@ -8,7 +8,7 @@ class Edge {
     this.a = a;
     this.b = b;
 
-    const {x, y} = b.sub(a);
+    const { x, y } = b.sub(a);
     this.normal = new Vector2(y, -x);
     this.normal.normalizeSelf();
   }
@@ -22,14 +22,14 @@ class Edge {
     const normalizedD = dotProd / abNorm2;
 
     if (normalizedD <= 0) {
-      return this.a.clone()
+      return this.a.clone();
     }
 
     if (normalizedD >= 1) {
-      return this.b.clone()
+      return this.b.clone();
     }
 
-    return this.a.add(ab.scale(normalizedD))
+    return this.a.add(ab.scale(normalizedD));
   }
 
   a: Vertex;
@@ -44,10 +44,13 @@ class Polygon {
     this.sidesCount = vertices.length;
 
     const lastVert = this.vertices[this.vertices.length - 1];
-    const [_v, edges] = this.vertices.reduce(([prevVert, edges], vert): [Vertex, Edge[]] => {
-      edges.push(new Edge(prevVert, vert));
-      return [vert, edges]
-    }, [lastVert, [] as Edge[]]);
+    const [_v, edges] = this.vertices.reduce(
+      ([prevVert, edges], vert): [Vertex, Edge[]] => {
+        edges.push(new Edge(prevVert, vert));
+        return [vert, edges];
+      },
+      [lastVert, [] as Edge[]]
+    );
 
     this.edges = edges;
   }
@@ -65,7 +68,7 @@ class Polygon {
 
 const buildVertexFromAngleAndRadius = (angle, radius) => {
   return new Vector2(Math.cos(angle) * radius, Math.sin(angle) * radius);
-}
+};
 
 const buildCircleContainedPolygon = (center, radius, vertexCount) => {
   const alpha = 0;
@@ -76,6 +79,6 @@ const buildCircleContainedPolygon = (center, radius, vertexCount) => {
   }
 
   return new Polygon(vertices, radius);
-}
+};
 
 export { Edge, Polygon, Vertex, buildCircleContainedPolygon };

@@ -11,8 +11,8 @@ export default function buildScene() {
   scene.addBody(new RigidBody(0, new Vector2(75, 460), new Box(20, 900), new Vector2(0, 0), 0, 0));
   scene.addBody(new RigidBody(0, new Vector2(1530, 460), new Box(20, 900), new Vector2(0, 0), 0, 0));
 
-  for (let j  = 0; j < 5; ++j) {
-    for (let i  = 0; i < 5; ++i) {
+  for (let j = 0; j < 5; ++j) {
+    for (let i = 0; i < 5; ++i) {
       scene.addBody(new RigidBody(0, new Vector2(800 + (j - 2) * 200, 150 + i * 150), new Box(70, 70), new Vector2(), 20, 0));
     }
   }
@@ -20,9 +20,12 @@ export default function buildScene() {
   const angle = Math.random() * 90;
   const radius = 20.0;
   const scalarVelocity = 240;
-  const linearSpeed = new Vector2(Math.random() * scalarVelocity - scalarVelocity/2, Math.random() * scalarVelocity - scalarVelocity/2);
+  const linearSpeed = new Vector2(
+    Math.random() * scalarVelocity - scalarVelocity / 2,
+    Math.random() * scalarVelocity - scalarVelocity / 2
+  );
   const angularSpeed = Math.random() * 36;
-  scene.addBody(new RigidBody(angle, new Vector2(200, 200), new Circle(radius), linearSpeed, angularSpeed, radius*radius));
+  scene.addBody(new RigidBody(angle, new Vector2(200, 200), new Circle(radius), linearSpeed, angularSpeed, radius * radius));
 
   return scene;
 }

@@ -10,14 +10,16 @@ export default function buildScene() {
   scene.addBody(new RigidBody(0, new Vector2(75, 460), new Box(20, 900), new Vector2(0, 0), 0, 0));
   scene.addBody(new RigidBody(0, new Vector2(1525, 460), new Box(20, 900), new Vector2(0, 0), 0, 0));
 
-  const splitOrCreate = function(x, y, w, h) {
+  const splitOrCreate = function (x, y, w, h) {
     if (w < 100 || h < 100 || w * h < 200 || Math.random() < 0.3) {
       const scalarVelocity = 20;
-      const linearSpeed = new Vector2(Math.random() * scalarVelocity - scalarVelocity/2, Math.random() * scalarVelocity - scalarVelocity/2);
+      const linearSpeed = new Vector2(
+        Math.random() * scalarVelocity - scalarVelocity / 2,
+        Math.random() * scalarVelocity - scalarVelocity / 2
+      );
       const angularSpeed = Math.random() * 10 - 5;
-      scene.addBody(new RigidBody(0, new Vector2(x + w / 2, y + h / 2), new Box(w*0.9, h*0.9), linearSpeed, angularSpeed, h * w));
-    }
-    else {
+      scene.addBody(new RigidBody(0, new Vector2(x + w / 2, y + h / 2), new Box(w * 0.9, h * 0.9), linearSpeed, angularSpeed, h * w));
+    } else {
       const hw = Math.round(Math.random() * w);
       const lw = w - hw;
       const hh = Math.round(Math.random() * h);
@@ -27,7 +29,7 @@ export default function buildScene() {
       splitOrCreate(x, y + hh, hw, lh);
       splitOrCreate(x + hw, y + hh, lw, lh);
     }
-  }
+  };
 
   splitOrCreate(100, 100, 1400, 750);
 

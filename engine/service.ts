@@ -1,16 +1,13 @@
-
-
 type HasId = {
   get id(): number;
-}
+};
 
 type Registrable<T> = T & HasId;
-  
+
 interface Service {
   run(): void;
 }
 
-  
 class Registry<T> {
   register(obj: Registrable<T>): void {
     this.#registry.push(obj);
@@ -30,4 +27,4 @@ class Registry<T> {
   #registry: Registrable<T>[] = [];
 }
 
-export { HasId, Service, Registry, Registrable }
+export { HasId, Service, Registry, Registrable };

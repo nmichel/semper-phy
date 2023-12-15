@@ -13,5 +13,5 @@ defimpl(Render, Frame, {
     GfxTools.drawVector(ctxt, frame.position, frame.position.add(aAxis), { strokeStyle: 'green' });
     GfxTools.drawVector(ctxt, frame.position, frame.position.add(oAxis), { strokeStyle: 'red' });
     GfxTools.drawDisc(ctxt, frame.position.x, frame.position.y, 2, { strokeStyle: 'red' });
-  }
+  },
 });

@@ -28,4 +28,4 @@ class RayIntersection {
   }
 }
 
-export { Ray, RayIntersection }
+export { Ray, RayIntersection };

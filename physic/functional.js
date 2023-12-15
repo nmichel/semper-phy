@@ -1,6 +1,6 @@
 import { defprotocol, defimpl, NotImplementedError } from './functional.ts';
 
-const groupBy = (items, splitFn) => 
+const groupBy = (items, splitFn) =>
   items.reduce((acc, e) => {
     const splitKey = splitFn(e);
     const accForKey = acc[splitKey] || [];
@@ -9,4 +9,3 @@ const groupBy = (items, splitFn) =>
   }, {});
 
 export { groupBy, defprotocol, defimpl, NotImplementedError };
-

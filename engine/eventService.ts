@@ -11,24 +11,27 @@ const EVENTS_NAMES = {
 } as const;
 
 const EVENTS = [
-  EVENTS_NAMES.EVENT_MOUSE_DOWN, EVENTS_NAMES.EVENT_MOUSE_UP,
-  EVENTS_NAMES.EVENT_DBL_CLICK, EVENTS_NAMES.EVENT_MOUSE_MOVE, EVENTS_NAMES.EVENT_KEY_DOWN, EVENTS_NAMES.EVENT_KEY_UP
-] as const; 
+  EVENTS_NAMES.EVENT_MOUSE_DOWN,
+  EVENTS_NAMES.EVENT_MOUSE_UP,
+  EVENTS_NAMES.EVENT_DBL_CLICK,
+  EVENTS_NAMES.EVENT_MOUSE_MOVE,
+  EVENTS_NAMES.EVENT_KEY_DOWN,
+  EVENTS_NAMES.EVENT_KEY_UP,
+] as const;
 
 type InputState = {
   mousePos: Vector2;
   buttonLeft: boolean;
-} & { [key in typeof EVENTS[number]]: boolean };
+} & { [key in (typeof EVENTS)[number]]: boolean };
 
 type EventHandler = (_inputState: InputState) => void;
 
 type EventMap = {
-  [key in typeof EVENTS[number]]?: EventHandler;
+  [key in (typeof EVENTS)[number]]?: EventHandler;
 };
 
 class EventService implements Service {
   constructor() {
-
     this.#inputState = {
       mousePos: new Vector2(0, 0),
       buttonLeft: false,
@@ -65,13 +68,12 @@ class EventService implements Service {
     }
   }
 
-
   run(): void {
     if (this.#somethingHappened) {
       for (const key of EVENTS) {
         if (this.#inputState[key]) {
           this.#eventMaps[key].forEach(([id, callback]) => {
-            callback({...this.#inputState});
+            callback({ ...this.#inputState });
           });
         }
       }
@@ -95,7 +97,7 @@ class EventService implements Service {
     this.#inputState.event_mouse_move = true;
     this.#inputState.mousePos = new Vector2(e.offsetX, e.offsetY);
     this.#somethingHappend();
-  } 
+  }
 
   onDblclick(_e) {
     this.#inputState.event_dbl_click = true;
@@ -128,7 +130,7 @@ class EventService implements Service {
 
   #inputState: InputState;
   #somethingHappened: boolean = false;
-  #eventMaps: { [key in typeof EVENTS[number]]: [number, EventHandler][]};
+  #eventMaps: { [key in (typeof EVENTS)[number]]: [number, EventHandler][] };
 }
 
-export { EventService, EventHandler, InputState, EVENTS, EVENTS_NAMES }
+export { EventService, EventHandler, InputState, EVENTS, EVENTS_NAMES };

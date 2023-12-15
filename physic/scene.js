@@ -13,7 +13,7 @@ class RigidBodySweepHash {
   #hashKey(bodyA, bodyB) {
     const aId = Math.min(bodyA.id, bodyB.id);
     const bId = Math.max(bodyA.id, bodyB.id);
-    const hash = this.#pairing(aId, bId)
+    const hash = this.#pairing(aId, bId);
     return hash;
   }
 
@@ -26,7 +26,7 @@ class RigidBodySweepHash {
   // - ids are always different
   #pairing(idA, idB) {
     // /!\ Not needed as we require that a < b
-    // 
+    //
     // if (idA >= idB) {
     //   return idA * idA + idA + idB;
     // }
@@ -34,7 +34,7 @@ class RigidBodySweepHash {
     return idB * idB + idA;
   }
 
-  #hash = {}
+  #hash = {};
 }
 
 class Scene {
@@ -72,8 +72,8 @@ class Scene {
     this.bodies.sort((a, b) => a.aabb.min.x - b.aabb.min.x);
 
     // Find all pairs of bodies that MAY collide
-    const [pairsX] =
-      this.bodies.reduce((acc, body) => {
+    const [pairsX] = this.bodies.reduce(
+      (acc, body) => {
         const [pairs, stack] = acc;
         if (stack.length == 0) {
           stack.push(body);
@@ -83,8 +83,7 @@ class Scene {
           while (posInStack < stack.length) {
             if (stack[posInStack].aabb.max.x < body.aabb.min.x) {
               stack.splice(posInStack, 1);
-            }
-            else {
+            } else {
               posInStack++;
             }
           }
@@ -95,21 +94,23 @@ class Scene {
           stack.forEach(b => {
             hash.add(body, b);
             pairs.push([body, b]);
-          })
+          });
 
-          // Stack the current body 
+          // Stack the current body
           stack.push(body);
         }
         return acc;
-      }, [[], []]);
+      },
+      [[], []]
+    );
 
     // Sort the bodies by their y position
     this.bodies.sort((a, b) => a.aabb.min.y - b.aabb.min.y);
 
     // Find all pairs of bodies that MAY collide along the y axis
     // and that are also in the hashmap
-    const [pairs] =
-      this.bodies.reduce((acc, body) => {
+    const [pairs] = this.bodies.reduce(
+      (acc, body) => {
         const [pairs, stack] = acc;
         if (stack.length == 0) {
           stack.push(body);
@@ -119,8 +120,7 @@ class Scene {
           while (posInStack < stack.length) {
             if (stack[posInStack].aabb.max.y < body.aabb.min.y) {
               stack.splice(posInStack, 1);
-            }
-            else {
+            } else {
               posInStack++;
             }
           }
@@ -133,13 +133,15 @@ class Scene {
             if (hash.exists(body, b)) {
               pairs.push([body, b]);
             }
-          })
+          });
 
-          // Stack the current body 
+          // Stack the current body
           stack.push(body);
         }
         return acc;
-      }, [[], []]);
+      },
+      [[], []]
+    );
 
     return pairs;
   }
@@ -147,51 +149,52 @@ class Scene {
   #narrowPhase(candidatePairs) {
     // Find all pairs of bodies that DO collide
     candidatePairs.forEach(([a, b]) => {
-      const collisions = [];    
+      const collisions = [];
       const worldShapeA = Transformer.toWorld(a.shape, a.frame);
       const worldShapeB = Transformer.toWorld(b.shape, b.frame);
 
-      const overlap = Collider.overlap(worldShapeA, worldShapeB)
+      const overlap = Collider.overlap(worldShapeA, worldShapeB);
       if (overlap) {
-        const {depth,  normal} = overlap
+        const { depth, normal } = overlap;
 
-        const direction = b.frame.position.sub(a.frame.position)
+        const direction = b.frame.position.sub(a.frame.position);
         if (direction.dot(normal) < 0) {
-          normal.scaleSelf(-1)
+          normal.scaleSelf(-1);
         }
 
-        const correction =  normal.scale(depth);
+        const correction = normal.scale(depth);
         const totalMass = a.mass + b.mass;
         if (a.inverseMass > 0.0) {
-          a.frame.position.subToSelf(correction.scale(a.mass / totalMass))
+          a.frame.position.subToSelf(correction.scale(a.mass / totalMass));
         }
         if (b.inverseMass > 0.0) {
-          b.frame.position.addToSelf(correction.scale(b.mass / totalMass))
+          b.frame.position.addToSelf(correction.scale(b.mass / totalMass));
         }
 
-        const contactPoints = Collider.collide(worldShapeA, worldShapeB)
+        const contactPoints = Collider.collide(worldShapeA, worldShapeB);
         contactPoints.forEach(point => {
-          const collInfo = new CollisionInfo(point,  normal)
+          const collInfo = new CollisionInfo(point, normal);
           const collision = { collision: collInfo, a, b };
-          collisions.push(collision)
-          this.collisions.push(collision)
+          collisions.push(collision);
+          this.collisions.push(collision);
         });
 
         const impulses = collisions.map(({ a, b, collision }) => this.#computeImpulse(a, b, collision));
-        impulses.forEach(i => {if (i) this.#applyImpulse(i, impulses.length)});
+        impulses.forEach(i => {
+          if (i) this.#applyImpulse(i, impulses.length);
+        });
       }
     });
   }
 
-
-  #applyImpulse({a, b, rap, rbp, impulse}, count) {
-    impulse.scaleSelf(1./count)
+  #applyImpulse({ a, b, rap, rbp, impulse }, count) {
+    impulse.scaleSelf(1 / count);
     a.applyImpulse(impulse.scale(-1.0), rap);
     b.applyImpulse(impulse, rbp);
   }
 
   #computeImpulse(a, b, collision) {
-    const { point,  normal } = collision;
+    const { point, normal } = collision;
     const invMassSum = a.inverseMass + b.inverseMass;
     if (invMassSum == 0.0) {
       return null;
@@ -213,24 +216,24 @@ class Scene {
     const relativeVelocityOnNormal = relativeVelocity.dot(normal);
     if (relativeVelocityOnNormal > 0) {
       return null;
-    }  
+    }
 
     // console.log('relativeVelocityOnNormal', relativeVelocityOnNormal)
-  
-    const CoefApCrossN = rapPerp.dot(normal)
-    const CoefBpCrossN = rbpPerp.dot(normal)
+
+    const CoefApCrossN = rapPerp.dot(normal);
+    const CoefBpCrossN = rbpPerp.dot(normal);
     // console.log("CoefApCrossN CoefBpCrossN ", CoefApCrossN, CoefBpCrossN)
     const e = Math.min(a.restitution, b.restitution);
     const numerator = -(1 + e) * relativeVelocityOnNormal;
     // console.log("numerator", numerator)
-    const denominator = invMassSum + (CoefApCrossN * CoefApCrossN * a.inverseInertia) + (CoefBpCrossN * CoefBpCrossN * b.inverseInertia);
+    const denominator = invMassSum + CoefApCrossN * CoefApCrossN * a.inverseInertia + CoefBpCrossN * CoefBpCrossN * b.inverseInertia;
     // console.log("denominator", denominator)
     const j = numerator / denominator;
     const impulse = normal.scale(j);
 
     // console.log('impulse', impulse)
 
-    return {a, b, rap, rbp, impulse}
+    return { a, b, rap, rbp, impulse };
   }
 
   bodies = [];

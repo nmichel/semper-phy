@@ -1,4 +1,4 @@
-import { Registrable, Registry, Service } from "./service";
+import { Registrable, Registry, Service } from './service';
 
 interface Renderable {
   render(_renderer: CanvasRenderingContext2D): void;
@@ -17,4 +17,4 @@ class RenderingService extends Registry<Registrable<Renderable>> implements Serv
   #renderer: CanvasRenderingContext2D;
 }
 
-export { RenderingService, Renderable }
+export { RenderingService, Renderable };

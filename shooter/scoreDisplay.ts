@@ -21,10 +21,10 @@ export class ScoreDisplay extends GameObject implements Renderable, Updatable {
    * From Renderable
    */
   render(renderer: CanvasRenderingContext2D): void {
-    const sin: number = Math.sin(this.#angle * 0.1 * Math.PI / 180);
+    const sin: number = Math.sin((this.#angle * 0.1 * Math.PI) / 180);
 
     const prevTextAlign = renderer.textAlign;
-    renderer.textAlign = "center";
+    renderer.textAlign = 'center';
     renderer.translate(700, 50);
     renderer.rotate((sin * 20 * Math.PI) / 180);
     renderer.font = '20px Arial';

@@ -1,7 +1,7 @@
-import { GameApp, Services } from "../engine/gameApp";
-import { GameObject } from "../engine/gameObject";
-import { Renderable } from "../engine/renderingService";
-import { Updatable } from "../engine/updateService";
+import { GameApp, Services } from '../engine/gameApp';
+import { GameObject } from '../engine/gameObject';
+import { Renderable } from '../engine/renderingService';
+import { Updatable } from '../engine/updateService';
 
 function clamp(what, min, max) {
   return Math.min(max, Math.max(what, min));
@@ -27,10 +27,10 @@ class BackgroundBlock implements Renderable {
     context.moveTo(0, this.#height);
     context.lineTo(0, startY);
     context.bezierCurveTo(this.#width / 4, startY, this.#width / 4, localZero, this.#width / 2, localZero);
-    context.bezierCurveTo(3 * this.#width / 4, localZero, 3 * this.#width / 4, endY, this.#width, endY);
+    context.bezierCurveTo((3 * this.#width) / 4, localZero, (3 * this.#width) / 4, endY, this.#width, endY);
     context.lineTo(this.#width, this.#height);
 
-    context.globalCompositeOperation = "source-over";
+    context.globalCompositeOperation = 'source-over';
     context.fillStyle = this.#color;
     context.fill();
 
@@ -38,11 +38,11 @@ class BackgroundBlock implements Renderable {
     context.beginPath();
     context.lineTo(0, startY);
     context.bezierCurveTo(this.#width / 4, startY, this.#width / 4, localZero, this.#width / 2, localZero);
-    context.bezierCurveTo(3 * this.#width / 4, localZero, 3 * this.#width / 4, endY, this.#width, endY);
+    context.bezierCurveTo((3 * this.#width) / 4, localZero, (3 * this.#width) / 4, endY, this.#width, endY);
 
-    context.globalCompositeOperation = "lighter";
-    context.shadowBlur = 10;  
-    context.lineCap = "round";
+    context.globalCompositeOperation = 'lighter';
+    context.shadowBlur = 10;
+    context.lineCap = 'round';
     context.lineWidth = lineWidth;
     context.strokeStyle = this.#color;
     context.stroke();
@@ -73,18 +73,15 @@ class BackgroundBlock implements Renderable {
     if (this.#offset > this.#targetWidth) {
       return; // out of screen on the right
     }
-  
+
     if (this.#offset < -this.#width) {
       this.#owner.reject(); // out of screen on the left
     }
   }
-  
+
   render(renderer: CanvasRenderingContext2D): void {
     const sx = Math.max(0, -this.#offset);
-    const sw = Math.min(
-      clamp(this.#width + sx, 0, this.#width),
-      clamp(this.#targetWidth - this.#offset, 0, this.#targetWidth)
-    );
+    const sw = Math.min(clamp(this.#width + sx, 0, this.#width), clamp(this.#targetWidth - this.#offset, 0, this.#targetWidth));
     const dx = Math.max(0, this.#offset);
     renderer.drawImage(this.#image, sx, 0, sw, this.#height, dx + 10, 450 - this.#height, sw, this.#height);
   }
@@ -101,7 +98,7 @@ class BackgroundBlock implements Renderable {
 class BackgroundLayer extends GameObject implements Updatable, Renderable {
   constructor(app: GameApp, width: number, blockWidth: number, height: number, speedMs: number, color: string) {
     super(app);
-  
+
     this.#width = width;
     this.#speedMs = speedMs;
 
@@ -158,7 +155,7 @@ export class Background extends GameObject {
       new BackgroundLayer(app, 800, 700, 200, 0.001 * 50, 'rgb(0, 0, 60)'),
       new BackgroundLayer(app, 800, 350, 150, 0.001 * 75, 'rgb(0, 0, 80)'),
       new BackgroundLayer(app, 800, 100, 100, 0.001 * 100, 'rgb(0, 0, 100)'),
-    ]
+    ];
   }
 
   override register(services: Services): void {}

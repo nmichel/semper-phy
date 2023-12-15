@@ -20,10 +20,10 @@ class Shooter extends GameApp {
     this.physicScene = new Scene();
 
     new Background(this);
-  
+
     this.scoreDisplay = new ScoreDisplay(this);
     new StatsDisplay(this);
-    new PhysicEngineGameObject(this, this.physicScene)
+    new PhysicEngineGameObject(this, this.physicScene);
 
     new Wall(this, this.physicScene, new Vector2(410, 450), 800, 20);
     new Wall(this, this.physicScene, new Vector2(20, 250), 20, 400);
@@ -45,7 +45,6 @@ class Shooter extends GameApp {
         // // new Ball(this.app, (this.app as Shooter).physicScene, state.mousePos.clone(), 10 + Math.random() * 20);
         (this.app as Shooter).scoreDisplay.addScore(1);
       }
-
     })(this);
 
     new Player(this, this.physicScene);
@@ -65,4 +64,3 @@ class Shooter extends GameApp {
 }
 
 const app3 = new Shooter(document.getElementById('app3'));
-

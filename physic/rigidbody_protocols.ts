@@ -9,19 +9,19 @@ defimpl(Render, RigidBody, {
     Render.render(worldShape, ctxt, opts);
     Render.render(rigidbody.frame, ctxt, opts);
     Render.render(rigidbody.aabb, ctxt, opts);
-  }
+  },
 });
 
 defimpl(RayCaster, RigidBody, {
   cast: (rigidbody: RigidBody, ray): RayIntersection[] => {
     const localRay = Transformer.toLocal(ray, rigidbody.frame);
     return RayCaster.cast(rigidbody.shape, localRay).map(c => Transformer.toWorld(c, rigidbody.frame));
-  }
+  },
 });
 
 defimpl(PointCaster, RigidBody, {
   contains: (rigidbody: RigidBody, point): boolean => {
     const localPoint = rigidbody.frame.positionToLocal(point);
     return PointCaster.contains(rigidbody.shape, localPoint);
-  }
+  },
 });

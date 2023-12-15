@@ -7,7 +7,11 @@ import { RigidBodyGameObject } from '../engine/rigidBodyGameObject.js';
 
 export class Box extends RigidBodyGameObject {
   constructor(app: GameApp, engine: Scene, position: Vector2, side: number) {
-    super(app, new RigidBody(0, position.clone(), new RBBox(side, side), new Vector2(0, Math.random() * 5 + 1), 0, side * side), engine);
+    super(
+      app,
+      new RigidBody(0, position.clone(), new RBBox(side, side), new Vector2(0, Math.random() * 5 + 1), 0, side * side),
+      engine
+    );
 
     this.#side = side;
   }
@@ -18,14 +22,14 @@ export class Box extends RigidBodyGameObject {
 
   override localRender(renderer: CanvasRenderingContext2D): void {
     renderer.save();
-    renderer.globalCompositeOperation = "lighter";
+    renderer.globalCompositeOperation = 'lighter';
 
     renderer.beginPath();
     renderer.rect(-this.#side / 2, -this.#side / 2, this.#side, this.#side);
 
     renderer.shadowBlur = 5;
-    renderer.shadowColor = "white";
-    renderer.strokeStyle = "rgba(200, 200, 200, 0.5)";
+    renderer.shadowColor = 'white';
+    renderer.strokeStyle = 'rgba(200, 200, 200, 0.5)';
     renderer.lineWidth = 3;
     renderer.stroke();
     renderer.lineWidth = 1;

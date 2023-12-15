@@ -14,7 +14,7 @@ export default function buildScene() {
   const radius = 40;
   const mass = radius * radius * Math.PI * 0.01;
   const yPos = 450;
-  
+
   const triangleHeight = 5;
   const angle = toRadians(30);
   const c = Math.cos(angle) * radius * 2;
@@ -29,7 +29,7 @@ export default function buildScene() {
       scene.addBody(new RigidBody(0, pos, new Circle(radius), new Vector2(), 0, mass));
     }
   }
-  
+
   scene.addBody(new RigidBody(0, new Vector2(400, yPos), new Circle(radius), new Vector2(), 0, mass));
 
   return scene;

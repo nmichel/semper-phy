@@ -1,6 +1,6 @@
-import { Vector2 } from "../physic/math.js";
-import { BrowserApp } from "../browser_app";
-import { GameObject } from "./gameObject";
+import { Vector2 } from '../physic/math.js';
+import { BrowserApp } from '../browser_app';
+import { GameObject } from './gameObject';
 import { Service } from './service.js';
 import { EventService } from './eventService.js';
 import { FrameInfoSource, UpdateService } from './updateService.js';
@@ -11,7 +11,7 @@ type Services = {
   updateService: UpdateService;
   eventService: EventService;
   [key: string]: any;
-}
+};
 
 abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
   constructor(divElement: HTMLDivElement) {
@@ -21,15 +21,15 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
       updateService: new UpdateService(this),
       renderingService: new RenderingService(super.context as CanvasRenderingContext2D),
       eventService: new EventService(),
-      self: this
+      self: this,
     };
   }
 
   /**
    * From BrowserApp
-   * 
+   *
    * @param dt the time elapsed since the last frame in milliseconds
-   */  
+   */
   override render(dt: number): void {
     this.#dt = dt;
     this.#stats.lastFrameDuration = dt;
@@ -40,7 +40,7 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
 
   /**
    * From FrameInfoSource
-   * 
+   *
    * @returns the time elapsed since the last frame in milliseconds
    */
   get dt(): number {
@@ -94,8 +94,8 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
   get stats(): any {
     return {
       ...this.#stats,
-      reclaimablesCount: this.#reclaimables.length
-    }
+      reclaimablesCount: this.#reclaimables.length,
+    };
   }
 
   #collectReclaimed() {

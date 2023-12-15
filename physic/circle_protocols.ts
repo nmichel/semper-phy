@@ -1,4 +1,13 @@
-import { Aligner, CircleCollider, Collider, PointCaster, PolygonCollider, RayCaster, Render, Transformer } from './protocols/protocols';
+import {
+  Aligner,
+  CircleCollider,
+  Collider,
+  PointCaster,
+  PolygonCollider,
+  RayCaster,
+  Render,
+  Transformer,
+} from './protocols/protocols';
 import { Inertia } from './protocols/inertia';
 import { Ray, RayIntersection } from './ray';
 import { Circle } from './circle';
@@ -15,10 +24,10 @@ defimpl(RayCaster, Circle, {
     const L = ray.origin.scale(-1);
     const tca = L.dot(ray.direction);
     // if (tca < 0) return false;
-    const d2 = L.dot(L) - tca * tca; 
-    if (d2 > radius2) return []; 
-    const thc = Math.sqrt(radius2 - d2); 
-    const t0 = tca - thc; 
+    const d2 = L.dot(L) - tca * tca;
+    if (d2 > radius2) return [];
+    const thc = Math.sqrt(radius2 - d2);
+    const t0 = tca - thc;
     const t1 = tca + thc;
 
     const result: RayIntersection[] = [];
@@ -35,14 +44,14 @@ defimpl(RayCaster, Circle, {
       result.push(col);
     }
     return result;
-  }
+  },
 });
 
 defimpl(Render, Circle, {
   render: (circle: Circle, ctxt: CanvasRenderingContext2D): undefined => {
-    const {x, y} = circle.position;
+    const { x, y } = circle.position;
     GfxTools.drawCircle(ctxt, x, y, circle.radius, { strokeStyle: 'white' });
-  }
+  },
 });
 
 defimpl(Transformer, Circle, {
@@ -51,23 +60,23 @@ defimpl(Transformer, Circle, {
   },
   toLocal: (_obj: Circle, _frame: Frame): Circle => {
     throw new Error('Function not implemented.');
-  }
+  },
 });
 
 defimpl(PointCaster, Circle, {
   contains: (circle: Circle, point: Vector2): boolean => {
     const dist: number = circle.position.sub(point).length();
     return dist <= circle.radius;
-  }
+  },
 });
 
 defimpl(Collider, Circle, {
-  overlap: (circle: Circle, shape: any): {depth: number, normal: Vector2} | null => CircleCollider.overlap(shape, circle),
-  collide: (circle: Circle, shape: any): Vector2[] => CircleCollider.collide(shape, circle)
+  overlap: (circle: Circle, shape: any): { depth: number; normal: Vector2 } | null => CircleCollider.overlap(shape, circle),
+  collide: (circle: Circle, shape: any): Vector2[] => CircleCollider.collide(shape, circle),
 });
 
 defimpl(CircleCollider, Circle, {
-  overlap: (a: Circle, b: Circle): {depth: number, normal: Vector2} | null => {
+  overlap: (a: Circle, b: Circle): { depth: number; normal: Vector2 } | null => {
     const a2b = b.position.sub(a.position);
     const a2bLength = a2b.length();
     const radii = a.radius + b.radius;
@@ -78,24 +87,24 @@ defimpl(CircleCollider, Circle, {
     const depth = radii - a2bLength;
     const normal = a2b.scale(1.0 / a2bLength);
 
-    return {depth, normal};
+    return { depth, normal };
   },
 
   collide: (a: Circle, b: Circle): Vector2[] => {
     const a2b = b.position.sub(a.position).normalizeSelf();
-    return [a.position.add(a2b.scale(a.radius))]
-  }
+    return [a.position.add(a2b.scale(a.radius))];
+  },
 });
 
 defimpl(PolygonCollider, Circle, {
-  overlap: (circle: Circle, polygon: Polygon): {depth: number, normal: Vector2} | null => CircleCollider.overlap(polygon, circle),
-  collide: (circle: Circle, polygon: Polygon): Vector2[] => CircleCollider.collide(polygon, circle)
+  overlap: (circle: Circle, polygon: Polygon): { depth: number; normal: Vector2 } | null => CircleCollider.overlap(polygon, circle),
+  collide: (circle: Circle, polygon: Polygon): Vector2[] => CircleCollider.collide(polygon, circle),
 });
 
 defimpl(Inertia, Circle, {
   compute: ({ radius }: Circle, mass: number) => {
-    return 1/2 * mass * radius * radius;
-  }
+    return (1 / 2) * mass * radius * radius;
+  },
 });
 
 defimpl(Aligner, Circle, {
@@ -105,9 +114,7 @@ defimpl(Aligner, Circle, {
     const topLeft = position.sub(delta);
     const bottomRight = position.add(delta);
     const aabbb = new AABB();
-    aabbb
-      .update(topLeft)
-      .update(bottomRight);
+    aabbb.update(topLeft).update(bottomRight);
     return aabbb;
-  }
+  },
 });
