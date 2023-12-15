@@ -24,7 +24,7 @@ export class StatsDisplay extends GameObject implements Renderable {
     renderer.fillText(`reclaimablesCount:             ${this.app.stats.reclaimablesCount}`, 0, 10);
     renderer.fillText(`reclaimabledInLastFrameCount:  ${this.app.stats.reclaimabledInLastFrameCount}`, 0, 30);
     renderer.fillText(`reclaimabledTotalCount:        ${this.app.stats.reclaimabledTotalCount}`, 0, 50);
-    renderer.fillText(`lastFrameDuration:             ${this.app.stats.lastFrameDuration}`, 0, 70);
+    renderer.fillText(`lastFrameDuration:             ${Math.ceil(this.app.stats.lastFrameDuration)}`, 0, 70);
     renderer.setTransform(1, 0, 0, 1, 0, 0);
   }
 }
