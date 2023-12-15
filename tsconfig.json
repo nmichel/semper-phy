@@ -3,7 +3,8 @@
     "noImplicitOverride": true,
     "target": "ES6",
     "strictNullChecks": true,
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": true,
+    "noEmit": true
   },
   "include": ["./**/*"]
 }
