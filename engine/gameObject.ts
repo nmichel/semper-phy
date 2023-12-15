@@ -5,12 +5,10 @@ export abstract class GameObject {
   constructor(app: GameApp) {
     this.#app = app;
 
-    app.register(this);
+    app.addGameObject(this);
   }
 
-  register(services: Services): void {
-    throw new Error('Method not implemented.');
-  }
+  abstract register(services: Services): void;
 
   isOffLimits(position: Vector2): boolean {
     return this.#app.isOffLimits(position);

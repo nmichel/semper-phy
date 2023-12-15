@@ -51,7 +51,8 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
    * From Service
    */
   run(): void {
-    this.#collectReclaimed();
+    this.#collectReclaimedObjects();
+    this.#injectPendingObjects();
   }
 
   /**
@@ -85,6 +86,10 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
     this.#reclaimables.push(obj);
   }
 
+  addGameObject(obj: GameObject): void {
+    this.#pendingObjects.push(obj);
+  }
+
   abstract isOffLimits(position: Vector2): boolean;
 
   get services(): Services {
@@ -98,7 +103,7 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
     };
   }
 
-  #collectReclaimed() {
+  #collectReclaimedObjects() {
     this.#stats.reclaimabledInLastFrameCount = this.#reclaimables.length;
     this.#stats.reclaimabledTotalCount += this.#reclaimables.length;
 
@@ -110,6 +115,13 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
     this.#reclaimables = [];
   }
 
+  #injectPendingObjects() {
+    this.#pendingObjects.forEach(obj => {
+      this.register(obj);
+    });
+    this.#pendingObjects = [];
+  }
+
   #dt: number = 0;
   #stats: any = {
     reclaimabledInLastFrameCount: 0,
@@ -118,6 +130,7 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
   };
   #services: Services;
   #reclaimables: GameObject[] = [];
+  #pendingObjects: GameObject[] = [];
 }
 
 export { GameApp, Services };
