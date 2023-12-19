@@ -5,11 +5,13 @@ import { Service } from './service.js';
 import { EventService } from './eventService.js';
 import { FrameInfoSource, UpdateService } from './updateService.js';
 import { RenderingService } from './renderingService.js';
+import { OutOfBoundService } from './outOfBoundService.js';
 
 type Services = {
   renderingService: RenderingService;
   updateService: UpdateService;
   eventService: EventService;
+  oobService: OutOfBoundService;
   [key: string]: any;
 };
 
@@ -21,6 +23,7 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
       updateService: new UpdateService(this),
       renderingService: new RenderingService(super.context as CanvasRenderingContext2D),
       eventService: new EventService(),
+      oobService: new OutOfBoundService(this.isOffLimits.bind(this)),
       self: this,
     };
   }
@@ -111,6 +114,7 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
       this.#services.renderingService.unregister(obj.id);
       this.#services.updateService.unregister(obj.id);
       this.#services.eventService.unregister(obj.id);
+      this.#services.oobService.unregister(obj.id);
     });
     this.#reclaimables = [];
   }

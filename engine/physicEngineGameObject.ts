@@ -1,7 +1,9 @@
 import { Render } from '../physic/protocols/protocols.js';
 import { Scene } from '../physic/scene.js';
-import { GameApp, Renderable, Updatable, Services } from './gameApp.js';
+import { GameApp, Services } from './gameApp.js';
 import { GameObject } from './gameObject.js';
+import { Renderable } from './renderingService.js';
+import { Updatable } from './updateService.js';
 
 export class PhysicEngineGameObject extends GameObject implements Updatable, Renderable {
   constructor(app: GameApp, engine: Scene) {

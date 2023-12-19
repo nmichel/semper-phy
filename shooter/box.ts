@@ -17,6 +17,7 @@ export class Box extends RigidBodyGameObject {
   }
 
   override register(services: Services): void {
+    super.register(services);
     services.renderingService.register(this);
   }
 

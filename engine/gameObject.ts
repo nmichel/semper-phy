@@ -10,10 +10,6 @@ export abstract class GameObject {
 
   abstract register(services: Services): void;
 
-  isOffLimits(position: Vector2): boolean {
-    return this.#app.isOffLimits(position);
-  }
-
   get id(): number {
     return this.#id;
   }

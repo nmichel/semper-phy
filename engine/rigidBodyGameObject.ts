@@ -1,7 +1,7 @@
 import { RigidBody } from '../physic/rigidbody.js';
 import { Scene } from '../physic/scene.js';
 import { Vector2 } from '../physic/math.js';
-import { GameApp } from './gameApp.js';
+import { GameApp, Services } from './gameApp.js';
 import { GameObject } from './gameObject.js';
 import { Renderable } from './renderingService.js';
 
@@ -18,6 +18,10 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
   /**
    * From GameObject
    */
+  override register(services: Services): void {
+    services.oobService.register(this);
+  }
+
   override reclaim(): void {
     this.#engine.removeBody(this.#body);
     super.reclaim();
@@ -44,10 +48,6 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
   #handleRigibodyEvent() {
     this.#position = this.#body.frame.position.clone();
     this.#rotation = this.#body.frame.rotation;
-
-    if (this.isOffLimits(this.#position)) {
-      this.reclaim();
-    }
   }
 
   #body: RigidBody;
