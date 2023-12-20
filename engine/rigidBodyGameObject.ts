@@ -45,6 +45,26 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
     return this.#body;
   }
 
+  get rotation(): number {
+    return this.#body.frame.rotation;
+  }
+
+  set rotation(angle: number) {
+    this.#body.frame.rotation = angle;
+  }
+
+  get position(): Vector2 {
+    return this.#body.frame.position.clone();
+  }
+
+  set position(position: Vector2) {
+    this.#body.frame.position = position.clone();
+  }
+
+  set velocity(velocity: Vector2) {
+    this.#body.linearVelocity = velocity.clone();
+  }
+
   #handleRigibodyEvent() {
     this.#position = this.#body.frame.position.clone();
     this.#rotation = this.#body.frame.rotation;

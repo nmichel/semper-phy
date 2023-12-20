@@ -12,8 +12,10 @@ import { Box } from './box.js';
 import { Wall } from './wall.js';
 import { EVENTS_NAMES, InputState } from '../engine/eventService.js';
 import { Player } from './player.js';
+import { Generator, SpawnFun } from './generator.js';
+import { GroundTower } from './groundTower.js';
 
-class Shooter extends GameApp {
+export class Shooter extends GameApp {
   constructor(divElement) {
     super(divElement);
 
@@ -26,28 +28,24 @@ class Shooter extends GameApp {
     new PhysicEngineGameObject(this, this.physicScene);
 
     new Wall(this, this.physicScene, new Vector2(410, 450), 800, 20);
-    new Wall(this, this.physicScene, new Vector2(20, 250), 20, 400);
-    new Wall(this, this.physicScene, new Vector2(800, 250), 20, 400);
+    // new Wall(this, this.physicScene, new Vector2(20, 350), 20, 200);
+    // new Wall(this, this.physicScene, new Vector2(800, 350), 20, 200);
 
-    new (class extends GameObject {
-      constructor(app: Shooter) {
-        super(app);
-      }
+    new Player(this);
 
-      override register(services: Services): void {
-        services.eventService.register(this, {
-          [EVENTS_NAMES.EVENT_KEY_DOWN]: this.handleKeyDown.bind(this),
-        });
-      }
+    const spawnFun: SpawnFun = (position: Vector2, app: GameApp) => {
+      const box = new Box(app, (app as Shooter).physicScene, position.clone(), 10 + Math.random() * 20);
+      box.velocity = new Vector2(-100 - Math.random() * 500, 0);
+      box.color = {
+        red: 50 + Math.random() * 150,
+        green: 50 + Math.random() * 150,
+        blue: 0,
+      };
+    };
 
-      handleKeyDown(state: InputState): void {
-        new Box(this.app, (this.app as Shooter).physicScene, state.mousePos.clone(), 10 + Math.random() * 20);
-        // // new Ball(this.app, (this.app as Shooter).physicScene, state.mousePos.clone(), 10 + Math.random() * 20);
-        (this.app as Shooter).scoreDisplay.addScore(1);
-      }
-    })(this);
-
-    new Player(this, this.physicScene);
+    new Generator(this, spawnFun).position = new Vector2(900, 100);
+    new Generator(this, spawnFun).position = new Vector2(900, 200);
+    new Generator(this, spawnFun).position = new Vector2(900, 300);
   }
 
   override onDblclick(_e): void {
@@ -56,7 +54,7 @@ class Shooter extends GameApp {
   }
 
   override isOffLimits(position: Vector2): boolean {
-    return position.y > 1000;
+    return position.y > 1000 || position.y < -1000 || position.x < -1000;
   }
 
   scoreDisplay: ScoreDisplay;

@@ -5,11 +5,13 @@ import { GameApp } from '../engine/gameApp';
 import { RigidBodyGameObject } from '../engine/rigidBodyGameObject';
 import { Updatable } from '../engine/updateService';
 import { Box } from '../physic/box';
+import { Box as GameObjectBox } from './box';
 import { EVENTS_NAMES, InputState } from '../engine/eventService.js';
+import { Shooter } from './shooter.js';
 
 export class Player extends RigidBodyGameObject implements Updatable {
-  constructor(app: GameApp, engine: Scene) {
-    super(app, new RigidBody(0, new Vector2(100, 100), new Box(100, 100), new Vector2(0, 0), 0, 1000), engine);
+  constructor(app: GameApp) {
+    super(app, new RigidBody(0, new Vector2(100, 100), new Box(100, 100), new Vector2(0, 0), 0, 1000), (app as Shooter).physicScene);
   }
 
   override register(services) {
@@ -19,6 +21,7 @@ export class Player extends RigidBodyGameObject implements Updatable {
       [EVENTS_NAMES.EVENT_MOUSE_DOWN]: this.handleMouseDown.bind(this),
       [EVENTS_NAMES.EVENT_MOUSE_UP]: this.handleMouseUp.bind(this),
       [EVENTS_NAMES.EVENT_MOUSE_MOVE]: this.handleMouseMove.bind(this),
+      [EVENTS_NAMES.EVENT_KEY_DOWN]: this.handleKeyDown.bind(this),
     });
   }
 
@@ -41,6 +44,18 @@ export class Player extends RigidBodyGameObject implements Updatable {
   }
 
   update(_dt: number): void {
+    const position = this.position;
+    if (position.x < 100) {
+      position.x = 100;
+    } else if (position.x > 700) {
+      position.x = 700;
+    }
+    if (position.y < 100) {
+      position.y = 100;
+    }
+
+    this.position = new Vector2(position.x, position.y);
+
     if (this.#direction) {
       this.rigidBody.addForce(this.#direction.clone());
     }
@@ -61,6 +76,17 @@ export class Player extends RigidBodyGameObject implements Updatable {
     if (this.#captured) {
       this.#direction = state.mousePos.sub(this.rigidBody.frame.position).normalize().scale(10000000);
     }
+  }
+
+  handleKeyDown(state: InputState): void {
+    new GameObjectBox(
+      this.app,
+      (this.app as Shooter).physicScene,
+      this.position.clone().addToSelf(new Vector2(80, 0)),
+      10 + Math.random() * 20
+    ).velocity = new Vector2(300, 0);
+    // // new Ball(this.app, (this.app as Shooter).physicScene, state.mousePos.clone(), 10 + Math.random() * 20);
+    (this.app as Shooter).scoreDisplay.addScore(1);
   }
 
   #captured: boolean = false;
