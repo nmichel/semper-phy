@@ -27,7 +27,7 @@ export class Shooter extends GameApp {
     new StatsDisplay(this);
     new PhysicEngineGameObject(this, this.physicScene);
 
-    new Wall(this, this.physicScene, new Vector2(410, 450), 800, 20);
+    new Wall(this, this.physicScene, new Vector2(400, 450), 800, 20);
     // new Wall(this, this.physicScene, new Vector2(20, 350), 20, 200);
     // new Wall(this, this.physicScene, new Vector2(800, 350), 20, 200);
 

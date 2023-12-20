@@ -20,6 +20,11 @@ body {
   padding-bottom: 1em;
 }
 
+.game-frame {
+  border: 1px solid white;
+  display: block;
+}
+
 .game {
   background: black;
   display: block;

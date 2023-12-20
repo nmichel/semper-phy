@@ -83,7 +83,7 @@ class BackgroundBlock implements Renderable {
     const sx = Math.max(0, -this.#offset);
     const sw = Math.min(clamp(this.#width + sx, 0, this.#width), clamp(this.#targetWidth - this.#offset, 0, this.#targetWidth));
     const dx = Math.max(0, this.#offset);
-    renderer.drawImage(this.#image, sx, 0, sw, this.#height, dx + 10, 450 - this.#height, sw, this.#height);
+    renderer.drawImage(this.#image, sx, 0, sw, this.#height, dx, 450 - this.#height, sw, this.#height);
   }
 
   #owner: BackgroundLayer;
