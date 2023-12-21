@@ -25,7 +25,7 @@ export class Generator extends GameObject implements Updatable {
     this.#time += dt;
     if (this.#time > this.#nextSpawn) {
       this.#time = 0;
-      this.#nextSpawn = 200 + Math.random() * 1000;
+      this.#nextSpawn = 50 + Math.random() * 100;
       this.#spawn();
     }
   }

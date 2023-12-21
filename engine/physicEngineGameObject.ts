@@ -6,16 +6,17 @@ import { Renderable } from './renderingService.js';
 import { Updatable } from './updateService.js';
 
 export class PhysicEngineGameObject extends GameObject implements Updatable, Renderable {
-  constructor(app: GameApp, engine: Scene) {
+  constructor(app: GameApp) {
     super(app);
 
-    this.#engine = engine;
     this.#debug = false;
   }
 
   override register(services: Services): void {
     services.updateService.register(this);
     services.renderingService.register(this);
+
+    this.#engine = services.physicService.engine
   }
 
   /**

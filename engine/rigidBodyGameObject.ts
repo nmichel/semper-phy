@@ -6,25 +6,18 @@ import { GameObject } from './gameObject.js';
 import { Renderable } from './renderingService.js';
 
 export abstract class RigidBodyGameObject extends GameObject implements Renderable {
-  constructor(app: GameApp, body: RigidBody, engine: Scene) {
+  constructor(app: GameApp) {
     super(app);
-    this.#body = body;
-    this.#engine = engine;
-
-    this.#engine.addBody(this.#body);
-    this.#body.addListener(this.#handleRigibodyEvent.bind(this));
   }
 
   /**
    * From GameObject
    */
   override register(services: Services): void {
-    services.oobService.register(this);
-  }
+    this.rigidBody.addListener(this.#handleRigibodyEvent.bind(this));
 
-  override reclaim(): void {
-    this.#engine.removeBody(this.#body);
-    super.reclaim();
+    services.oobService.register(this);
+    services.physicService.register(this);
   }
 
   /**
@@ -42,27 +35,34 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
   abstract localRender(_renderer: CanvasRenderingContext2D): void;
 
   get rigidBody(): RigidBody {
+    if (!this.#body) {
+      this.#body = this.buildRigidBody();
+    }
+
     return this.#body;
   }
 
+  abstract buildRigidBody(): RigidBody;
+
   get rotation(): number {
-    return this.#body.frame.rotation;
+    return this.rigidBody.frame.rotation;
   }
 
   set rotation(angle: number) {
-    this.#body.frame.rotation = angle;
+    this.rigidBody.frame.rotation = angle;
   }
 
   get position(): Vector2 {
-    return this.#body.frame.position.clone();
+    return this.rigidBody.frame.position.clone();
   }
 
   set position(position: Vector2) {
-    this.#body.frame.position = position.clone();
+    this.#position = position.clone();
+    this.rigidBody.frame.position = position.clone();
   }
 
   set velocity(velocity: Vector2) {
-    this.#body.linearVelocity = velocity.clone();
+    this.rigidBody.linearVelocity = velocity.clone();
   }
 
   #handleRigibodyEvent() {
@@ -71,7 +71,6 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
   }
 
   #body: RigidBody;
-  #engine: Scene;
-  #position: Vector2;
+  #position: Vector2 = new Vector2(0, 0);
   #rotation: number = 0;
 }

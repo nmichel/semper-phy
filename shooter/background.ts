@@ -156,6 +156,8 @@ export class Background extends GameObject {
       new BackgroundLayer(app, 800, 350, 150, 0.001 * 75, 'rgb(0, 0, 80)'),
       new BackgroundLayer(app, 800, 100, 100, 0.001 * 100, 'rgb(0, 0, 100)'),
     ];
+
+    this.#layers.forEach(layer => app.addGameObject(layer));
   }
 
   override register(services: Services): void {}

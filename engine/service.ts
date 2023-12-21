@@ -24,6 +24,10 @@ class Registry<T> {
     this.#registry.forEach(obj => fn(obj));
   }
 
+  get registry(): Registrable<T>[] {
+    return this.#registry;
+  }
+
   #registry: Registrable<T>[] = [];
 }
 

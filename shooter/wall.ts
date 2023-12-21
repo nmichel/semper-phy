@@ -6,8 +6,8 @@ import { GameApp, Services } from '../engine/gameApp.js';
 import { RigidBodyGameObject } from '../engine/rigidBodyGameObject.js';
 
 export class Wall extends RigidBodyGameObject {
-  constructor(app: GameApp, engine: Scene, position: Vector2, width: number, height: number) {
-    super(app, new RigidBody(0, position.clone(), new RBBox(width, height), new Vector2(0, 0), 0, 0), engine);
+  constructor(app: GameApp, width: number, height: number) {
+    super(app);
 
     this.#width = width;
     this.#height = height;
@@ -21,6 +21,10 @@ export class Wall extends RigidBodyGameObject {
   override localRender(renderer: CanvasRenderingContext2D): void {
     renderer.fillStyle = 'white';
     renderer.fillRect(-this.#width / 2, -this.#height / 2, this.#width, this.#height);
+  }
+
+  override buildRigidBody(): RigidBody {
+    return new RigidBody(0, new Vector2(0, 0), new RBBox(this.#width, this.#height), new Vector2(0, 0), 0, 0);
   }
 
   #width: number;

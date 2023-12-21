@@ -1,4 +1,5 @@
 import { Vector2 } from '../physic/math.js';
+import { Scene } from '../physic/scene.js';
 import { BrowserApp } from '../browser_app';
 import { GameObject } from './gameObject';
 import { Service } from './service.js';
@@ -6,12 +7,14 @@ import { EventService } from './eventService.js';
 import { FrameInfoSource, UpdateService } from './updateService.js';
 import { RenderingService } from './renderingService.js';
 import { OutOfBoundService } from './outOfBoundService.js';
+import { PhysicService } from './physicService.js';
 
 type Services = {
   renderingService: RenderingService;
   updateService: UpdateService;
   eventService: EventService;
   oobService: OutOfBoundService;
+  physicService: PhysicService;
   [key: string]: any;
 };
 
@@ -24,6 +27,7 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
       renderingService: new RenderingService(super.context as CanvasRenderingContext2D),
       eventService: new EventService(),
       oobService: new OutOfBoundService(this.isOffLimits.bind(this)),
+      physicService: new PhysicService(new Scene()),
       self: this,
     };
   }
@@ -115,6 +119,7 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
       this.#services.updateService.unregister(obj.id);
       this.#services.eventService.unregister(obj.id);
       this.#services.oobService.unregister(obj.id);
+      this.#services.physicService.unregister(obj.id);
     });
     this.#reclaimables = [];
   }

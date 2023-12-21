@@ -8,8 +8,6 @@ import { Box as RBBox } from './physic/box.js';
 import { RigidBody } from './physic/rigidbody.js';
 import { Scene } from './physic/scene.js';
 import { Vector2 } from './physic/math.js';
-import { GameApp, Renderable, Updatable, Services } from './engine/gameApp';
-import { GameObject } from './engine/gameObject.js';
 
 class MyApp extends BrowserApp {
   constructor(divElement) {

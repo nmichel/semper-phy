@@ -13,12 +13,8 @@ export type Color = {
 };
 
 export class Box extends RigidBodyGameObject {
-  constructor(app: GameApp, engine: Scene, position: Vector2, side: number) {
-    super(
-      app,
-      new RigidBody(0, position.clone(), new RBBox(side, side), new Vector2(0, Math.random() * 5 + 1), 0, side * side),
-      engine
-    );
+  constructor(app: GameApp, side: number) {
+    super(app);
 
     this.#side = side;
   }
@@ -48,6 +44,10 @@ export class Box extends RigidBodyGameObject {
     renderer.stroke();
 
     renderer.restore();
+  }
+
+  override buildRigidBody(): RigidBody {
+    return new RigidBody(0, new Vector2(0, 0), new RBBox(this.#side, this.#side), new Vector2(0, Math.random() * 5 + 1), 0, this.#side * this.#side);
   }
 
   #side: number;

@@ -4,8 +4,6 @@ import { GameApp, Services } from './gameApp';
 export abstract class GameObject {
   constructor(app: GameApp) {
     this.#app = app;
-
-    app.addGameObject(this);
   }
 
   abstract register(services: Services): void;

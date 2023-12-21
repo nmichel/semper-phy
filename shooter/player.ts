@@ -11,10 +11,12 @@ import { Shooter } from './shooter.js';
 
 export class Player extends RigidBodyGameObject implements Updatable {
   constructor(app: GameApp) {
-    super(app, new RigidBody(0, new Vector2(100, 100), new Box(100, 100), new Vector2(0, 0), 0, 1000), (app as Shooter).physicScene);
+    super(app);
   }
 
-  override register(services) {
+  override register(services): void {
+    super.register(services);
+
     services.renderingService.register(this);
     services.updateService.register(this);
     services.eventService.register(this, {
@@ -41,6 +43,10 @@ export class Player extends RigidBodyGameObject implements Updatable {
     renderer.stroke();
 
     renderer.restore();
+  }
+
+  override buildRigidBody(): RigidBody {
+    return new RigidBody(0, new Vector2(0, 0), new Box(100, 100), new Vector2(0, 0), 0, 1000);
   }
 
   update(_dt: number): void {
@@ -79,12 +85,12 @@ export class Player extends RigidBodyGameObject implements Updatable {
   }
 
   handleKeyDown(state: InputState): void {
-    new GameObjectBox(
-      this.app,
-      (this.app as Shooter).physicScene,
-      this.position.clone().addToSelf(new Vector2(80, 0)),
-      10 + Math.random() * 20
-    ).velocity = new Vector2(300, 0);
+    const shoot = new GameObjectBox(this.app, 10 + Math.random() * 20);
+    shoot.position = this.position.clone().addToSelf(new Vector2(80, 0));
+    shoot.velocity = new Vector2(300, 0);
+    this.app.addGameObject(shoot);
+
+    // this.app.addGameObject(shoot);
     // // new Ball(this.app, (this.app as Shooter).physicScene, state.mousePos.clone(), 10 + Math.random() * 20);
     (this.app as Shooter).scoreDisplay.addScore(1);
   }
