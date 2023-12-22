@@ -32,8 +32,8 @@ class RigidBody {
     this.forces.push(force.clone());
   }
 
-  addListener(listenerFn) {
-    this.listeners.push(listenerFn);
+  addListener(listenersDesc) {
+    this.listeners.push(listenersDesc);
   }
 
   updateFrame(deltaInS) {
@@ -55,8 +55,14 @@ class RigidBody {
     this.frame.setRotation((this.frame.rotation + this.angularVelocity * deltaInS + 360) % 360);
 
     this.aabb = Aligner.computeAABB(this.shape, this.frame);
+  }
 
-    this.listeners.forEach(listenerFn => listenerFn());
+  notifyFrameChangedListeners() {
+    this.listeners.forEach(({ handleFrameUpdated }) => handleFrameUpdated?.());
+  }
+
+  notifyCollisionsListeners(other, collisionInfo) {
+    this.listeners.forEach(({ handleCollision }) => handleCollision?.(this, other, collisionInfo));
   }
 
   applyImpulse(impulse, contactVector) {

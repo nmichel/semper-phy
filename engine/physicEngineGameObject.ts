@@ -16,7 +16,7 @@ export class PhysicEngineGameObject extends GameObject implements Updatable, Ren
     services.updateService.register(this);
     services.renderingService.register(this);
 
-    this.#engine = services.physicService.engine
+    this.#engine = services.physicService.engine;
   }
 
   /**

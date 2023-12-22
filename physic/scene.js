@@ -55,10 +55,17 @@ class Scene {
     const dt2 = dt / cycles;
 
     for (let i = 0; i < cycles; ++i) {
-      this.#updateFrames(dt2);
       const candidatePairs = this.#broadPhase();
       this.#narrowPhase(candidatePairs);
+      this.#updateFrames(dt2);
     }
+
+    this.collisions.forEach(({ a, b, collision }) => {
+      a.notifyCollisionsListeners(b, collision);
+      b.notifyCollisionsListeners(a, collision);
+    });
+
+    this.bodies.forEach(body => body.notifyFrameChangedListeners());
   }
 
   #updateFrames(dt) {

@@ -13,8 +13,7 @@ class PhysicService extends Registry<PhysicServiceObject> implements Service {
     this.#engine = engine;
   }
 
-  run(): void {
-  }
+  run(): void {}
 
   override register(obj: PhysicServiceObject): void {
     super.register(obj);

@@ -38,7 +38,7 @@ export class Shooter extends GameApp {
     const player = new Player(this);
     player.position = new Vector2(100, 100);
     this.addGameObject(player);
-  
+
     const spawnFun: SpawnFun = (position: Vector2, app: GameApp) => {
       const box = new Box(app, 10 + Math.random() * 20);
       box.position = position.clone();

@@ -49,6 +49,8 @@ export class Player extends RigidBodyGameObject implements Updatable {
     return new RigidBody(0, new Vector2(0, 0), new Box(100, 100), new Vector2(0, 0), 0, 1000);
   }
 
+  override handleRigibodyFrameCollision(me: RigidBody, other: RigidBody, collision: unknown) {}
+
   update(_dt: number): void {
     const position = this.position;
     if (position.x < 100) {
@@ -85,9 +87,13 @@ export class Player extends RigidBodyGameObject implements Updatable {
   }
 
   handleKeyDown(state: InputState): void {
+    const shootDispersion = Math.PI / 3;
+    const shootSpeed = 300;
+    const shootAngle = Math.random() * shootDispersion - shootDispersion / 2;
+    const shootDirection = new Vector2(Math.cos(shootAngle), Math.sin(shootAngle));
     const shoot = new GameObjectBox(this.app, 10 + Math.random() * 20);
     shoot.position = this.position.clone().addToSelf(new Vector2(80, 0));
-    shoot.velocity = new Vector2(300, 0);
+    shoot.velocity = shootDirection.scale(shootSpeed);
     this.app.addGameObject(shoot);
 
     // this.app.addGameObject(shoot);

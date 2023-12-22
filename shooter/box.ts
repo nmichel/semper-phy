@@ -47,7 +47,14 @@ export class Box extends RigidBodyGameObject {
   }
 
   override buildRigidBody(): RigidBody {
-    return new RigidBody(0, new Vector2(0, 0), new RBBox(this.#side, this.#side), new Vector2(0, Math.random() * 5 + 1), 0, this.#side * this.#side);
+    return new RigidBody(
+      0,
+      new Vector2(0, 0),
+      new RBBox(this.#side, this.#side),
+      new Vector2(0, Math.random() * 5 + 1),
+      0,
+      this.#side * this.#side
+    );
   }
 
   #side: number;
