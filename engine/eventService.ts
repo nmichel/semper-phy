@@ -22,6 +22,7 @@ const EVENTS = [
 type InputState = {
   mousePos: Vector2;
   buttonLeft: boolean;
+  keys: string[];
 } & { [key in (typeof EVENTS)[number]]: boolean };
 
 type EventHandler = (_inputState: InputState) => void;
@@ -41,6 +42,7 @@ class EventService implements Service {
       event_mouse_move: false,
       event_key_down: false,
       event_key_up: false,
+      keys: [],
     };
 
     this.#eventMaps = {
@@ -105,12 +107,18 @@ class EventService implements Service {
   }
 
   onKeydown(e) {
+    const key = e.key.toLowerCase();
     this.#inputState.event_key_down = true;
+    if (this.#inputState.keys.indexOf(key) === -1) {
+      this.#inputState.keys.push(key);
+    }
     this.#somethingHappend();
   }
 
   onKeyup(e) {
+    const key = e.key.toLowerCase();
     this.#inputState.event_key_up = true;
+    this.#inputState.keys.splice(this.#inputState.keys.indexOf(key), 1);
     this.#somethingHappend();
   }
 

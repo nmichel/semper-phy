@@ -16,15 +16,16 @@ class BrowserApp {
     this.#binEvents();
   }
 
-  onClick(e) {}
-  onDblclick(e) {}
-  onMousemove(e) {}
-  onMousedown(e) {}
-  onMouseup(e) {}
-  onMouseout(e) {
+  onClick(_e) {}
+  onDblclick(_e) {}
+  onMousemove(_e) {}
+  onMousedown(_e) {}
+  onMouseup(_e) {}
+  onMouseout(_e) {
     this.#isRunning = false;
   }
-  onKeydown(e) {}
+  onKeydown(_e) {}
+  onKeyup(_e) {}
 
   get isRunning() {
     return this.#isRunning;
@@ -69,6 +70,7 @@ class BrowserApp {
     this.#divElement.addEventListener('dblclick', this.onDblclick.bind(this));
     this.#divElement.addEventListener('mousemove', this.onMousemove.bind(this));
     this.#divElement.addEventListener('keydown', this.onKeydown.bind(this), true);
+    this.#divElement.addEventListener('keyup', this.onKeyup.bind(this), true);
 
     if (this.#isRunning) {
       this.#prevTs = performance.now();

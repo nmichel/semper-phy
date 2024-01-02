@@ -85,6 +85,10 @@ abstract class GameApp extends BrowserApp implements FrameInfoSource, Service {
     this.#services.eventService.onKeydown(e);
   }
 
+  override onKeyup(e) {
+    this.#services.eventService.onKeyup(e);
+  }
+
   register(obj: GameObject): void {
     obj.register(this.#services);
   }
