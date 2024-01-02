@@ -46,7 +46,9 @@ export class Player extends RigidBodyGameObject implements Updatable {
   }
 
   override buildRigidBody(): RigidBody {
-    return new RigidBody(0, new Vector2(0, 0), new Box(100, 100), new Vector2(0, 0), 0, 1000);
+    const body = new RigidBody(0, new Vector2(0, 0), new Box(100, 100), new Vector2(0, 0), 0, 100);
+    body.flags = RigidBody.FLAGS.LOCK_ROTATION;
+    return body;
   }
 
   override handleRigibodyFrameCollision(me: RigidBody, other: RigidBody, collision: unknown) {}

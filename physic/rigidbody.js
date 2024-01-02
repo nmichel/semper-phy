@@ -10,6 +10,12 @@ const APPLY_DAMPING = true;
 const DAMPING = 0.05;
 
 class RigidBody {
+
+  static FLAGS = {
+    LOCK_ROTATION: 1 << 0,
+    LOCK_TRANSLATION: 1 << 1,
+  };
+
   static idSeed = 0;
 
   constructor(rotation, position, shape, linearVelocity = new Vector2(0, 0), angularVelocity = 0.0, mass = 1, restitution = 0.9) {
@@ -26,6 +32,10 @@ class RigidBody {
     this.aabb = Aligner.computeAABB(this.shape, this.frame);
     this.forces = [];
     this.listeners = [];
+  }
+
+  set flags(flags) {
+    this.#flags = flags;
   }
 
   addForce(force) {
@@ -66,9 +76,15 @@ class RigidBody {
   }
 
   applyImpulse(impulse, contactVector) {
-    this.linearVelocity.addToSelf(impulse.scale(this.inverseMass));
-    this.angularVelocity += toDegres(contactVector.crossCoef(impulse) * this.inverseInertia);
+    if (! (this.#flags & RigidBody.FLAGS.LOCK_TRANSLATION)) {
+      this.linearVelocity.addToSelf(impulse.scale(this.inverseMass));
+    }
+    if (! (this.#flags & RigidBody.FLAGS.LOCK_ROTATION)) {
+      this.angularVelocity += toDegres(contactVector.crossCoef(impulse) * this.inverseInertia);
+    }
   }
+
+  #flags = 0;
 }
 
 export { RigidBody };
