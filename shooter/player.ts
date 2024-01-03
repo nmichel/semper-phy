@@ -8,6 +8,7 @@ import { Box } from '../physic/box';
 import { Box as GameObjectBox } from './box';
 import { EVENTS_NAMES, InputState } from '../engine/eventService.js';
 import { Shooter } from './shooter.js';
+import { RIGIDBODY_GROUPS } from './rigibBodyGroups.js';
 
 export class Player extends RigidBodyGameObject implements Updatable {
   constructor(app: GameApp) {
@@ -48,27 +49,16 @@ export class Player extends RigidBodyGameObject implements Updatable {
   override buildRigidBody(): RigidBody {
     const body = new RigidBody(0, new Vector2(0, 0), new Box(100, 100), new Vector2(0, 0), 0, 100);
     body.flags = RigidBody.FLAGS.LOCK_ROTATION;
+    body.collisionFlags = RIGIDBODY_GROUPS.PLAYER.group;
+    body.collisionMask = RIGIDBODY_GROUPS.PLAYER.mask;
     return body;
   }
 
   override handleRigibodyFrameCollision(me: RigidBody, other: RigidBody, collision: unknown) {}
 
   update(_dt: number): void {
-    const position = this.position;
-    if (position.x < 100) {
-      position.x = 100;
-    } else if (position.x > 700) {
-      position.x = 700;
-    }
-    if (position.y < 100) {
-      position.y = 100;
-    }
-
-    this.position = new Vector2(position.x, position.y);
-
-    if (this.#direction) {
-      this.rigidBody.addForce(this.#direction.clone());
-    }
+    this.rigidBody.addForce(this.#direction.clone());
+    this.#direction = new Vector2(0, 0);
   }
 
   handleMouseDown(state: InputState): void {
@@ -77,18 +67,33 @@ export class Player extends RigidBodyGameObject implements Updatable {
 
   handleMouseUp(state: InputState): void {
     this.#captured = state.buttonLeft;
-    if (!this.#captured) {
-      this.#direction = null;
-    }
   }
 
-  handleMouseMove(state: InputState): void {
-    if (this.#captured) {
-      this.#direction = state.mousePos.sub(this.rigidBody.frame.position).normalize().scale(10000000);
-    }
-  }
+  handleMouseMove(state: InputState): void {}
 
   handleKeyDown(state: InputState): void {
+    if (state.keys.indexOf(' ') !== -1) {
+      this.handleShoot(state);
+    }
+
+    if (state.keys.indexOf('arrowup') !== -1) {
+      this.handleArrowUp(state);
+    }
+
+    if (state.keys.indexOf('arrowdown') !== -1) {
+      this.handleArrowDown(state);
+    }
+
+    if (state.keys.indexOf('arrowleft') !== -1) {
+      this.handleArrowLeft(state);
+    }
+
+    if (state.keys.indexOf('arrowright') !== -1) {
+      this.handleArrowRight(state);
+    }
+  }
+
+  handleShoot(state: InputState): void {
     const shootDispersion = Math.PI / 3;
     const shootSpeed = 300;
     const shootAngle = Math.random() * shootDispersion - shootDispersion / 2;
@@ -96,6 +101,8 @@ export class Player extends RigidBodyGameObject implements Updatable {
     const shoot = new GameObjectBox(this.app, 10 + Math.random() * 20);
     shoot.position = this.position.clone().addToSelf(new Vector2(80, 0));
     shoot.velocity = shootDirection.scale(shootSpeed);
+    shoot.rigidBody.collisionFlags = RIGIDBODY_GROUPS.PLAYER_SHOOT.group;
+    shoot.rigidBody.collisionMask = RIGIDBODY_GROUPS.PLAYER_SHOOT.mask;
     this.app.addGameObject(shoot);
 
     // this.app.addGameObject(shoot);
@@ -103,6 +110,22 @@ export class Player extends RigidBodyGameObject implements Updatable {
     (this.app as Shooter).scoreDisplay.addScore(1);
   }
 
+  handleArrowUp(state: InputState): void {
+    this.#direction.addToSelf(new Vector2(0, -5000000));
+  }
+
+  handleArrowDown(state: InputState): void {
+    this.#direction.addToSelf(new Vector2(0, 5000000));
+  }
+
+  handleArrowLeft(state: InputState): void {
+    this.#direction.addToSelf(new Vector2(-5000000, 0));
+  }
+
+  handleArrowRight(state: InputState): void {
+    this.#direction.addToSelf(new Vector2(5000000, 0));
+  }
+
   #captured: boolean = false;
-  #direction: Vector2 = null;
+  #direction: Vector2 = new Vector2(0, 0);
 }

@@ -99,8 +99,10 @@ class Scene {
           // and MAY collide with it.
           // Store the pair in a hashmap indexed by the pair hash
           stack.forEach(b => {
-            hash.add(body, b);
-            pairs.push([body, b]);
+            if (b.collisionFlags & body.collisionMask && body.collisionFlags & b.collisionMask) {
+              hash.add(body, b);
+              pairs.push([body, b]);
+            }
           });
 
           // Stack the current body
@@ -137,7 +139,7 @@ class Scene {
           // We check if they are in the hashmap, to ensure that we only keep
           // pairs that MAY collide in both axis.
           stack.forEach(b => {
-            if (hash.exists(body, b)) {
+            if (b.collisionFlags & body.collisionMask && body.collisionFlags & b.collisionMask && hash.exists(body, b)) {
               pairs.push([body, b]);
             }
           });

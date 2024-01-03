@@ -29,14 +29,11 @@ class Explosion extends GameObject implements Renderable, Updatable {
 
     renderer.translate(this.#position.x, this.#position.y);
     renderer.rotate((ratio * Math.PI) / 2);
-    renderer.strokeStyle = `rgba(255, 0, 0, ${intensity})`;
+    renderer.strokeStyle = `rgba(255, ${Math.ceil(255 * intensity)}, 0, ${intensity})`;
     renderer.lineWidth = 2;
     renderer.beginPath();
-    // renderer.rect(-radius, -radius, 2*radius, 2*radius);
     renderer.arc(0, 0, radius, 0, 2 * Math.PI);
     renderer.stroke();
-    // renderer.fillStyle = `rgb(${Math.ceil(intensity * 255)}, ${Math.ceil(intensity * 127)}, 0)`;
-    // renderer.fillRect(-radius, -radius, 2*radius, 2*radius);
     renderer.setTransform(1, 0, 0, 1, 0, 0);
   }
 
@@ -47,7 +44,7 @@ class Explosion extends GameObject implements Renderable, Updatable {
   #position: Vector2 = new Vector2(0, 0);
   #ttl: number = Explosion.#MAX_TTL;
 
-  static readonly #MAX_TTL = 2000;
+  static readonly #MAX_TTL = 300;
 }
 
 export { Explosion };

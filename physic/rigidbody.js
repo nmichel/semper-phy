@@ -10,6 +10,25 @@ const APPLY_DAMPING = true;
 const DAMPING = 0.05;
 
 class RigidBody {
+  static COLLISION_GROUPS = {
+    COLLISION_GROUP_0: 1 << 0,
+    COLLISION_GROUP_1: 1 << 1,
+    COLLISION_GROUP_2: 1 << 2,
+    COLLISION_GROUP_3: 1 << 3,
+    COLLISION_GROUP_4: 1 << 4,
+    COLLISION_GROUP_5: 1 << 5,
+    COLLISION_GROUP_6: 1 << 6,
+    COLLISION_GROUP_7: 1 << 7,
+    COLLISION_GROUP_8: 1 << 8,
+    COLLISION_GROUP_9: 1 << 9,
+    COLLISION_GROUP_10: 1 << 10,
+    COLLISION_GROUP_11: 1 << 11,
+    COLLISION_GROUP_12: 1 << 12,
+    COLLISION_GROUP_13: 1 << 13,
+    COLLISION_GROUP_14: 1 << 14,
+    COLLISION_GROUP_15: 1 << 15,
+    ALL_GROUPS: 0xffff,
+  };
 
   static FLAGS = {
     LOCK_ROTATION: 1 << 0,
@@ -36,6 +55,22 @@ class RigidBody {
 
   set flags(flags) {
     this.#flags = flags;
+  }
+
+  get collisionFlags() {
+    return this.#collisionFlags;
+  }
+
+  set collisionFlags(flags) {
+    this.#collisionFlags = flags;
+  }
+
+  get collisionMask() {
+    return this.#collisionMask;
+  }
+
+  set collisionMask(flags) {
+    this.#collisionMask = flags;
   }
 
   addForce(force) {
@@ -76,15 +111,17 @@ class RigidBody {
   }
 
   applyImpulse(impulse, contactVector) {
-    if (! (this.#flags & RigidBody.FLAGS.LOCK_TRANSLATION)) {
+    if (!(this.#flags & RigidBody.FLAGS.LOCK_TRANSLATION)) {
       this.linearVelocity.addToSelf(impulse.scale(this.inverseMass));
     }
-    if (! (this.#flags & RigidBody.FLAGS.LOCK_ROTATION)) {
+    if (!(this.#flags & RigidBody.FLAGS.LOCK_ROTATION)) {
       this.angularVelocity += toDegres(contactVector.crossCoef(impulse) * this.inverseInertia);
     }
   }
 
   #flags = 0;
+  #collisionFlags = RigidBody.COLLISION_GROUPS.COLLISION_GROUP_0;
+  #collisionMask = RigidBody.COLLISION_GROUPS.ALL_GROUPS;
 }
 
 export { RigidBody };
