@@ -26,6 +26,9 @@ class BrowserApp {
   }
   onKeydown(_e) {}
   onKeyup(_e) {}
+  onContextMenu(e) {
+    e.preventDefault();
+  }
 
   get isRunning() {
     return this.#isRunning;
@@ -71,6 +74,7 @@ class BrowserApp {
     this.#divElement.addEventListener('mousemove', this.onMousemove.bind(this));
     this.#divElement.addEventListener('keydown', this.onKeydown.bind(this), true);
     this.#divElement.addEventListener('keyup', this.onKeyup.bind(this), true);
+    this.#divElement.addEventListener('contextmenu', this.onContextMenu.bind(this));
 
     if (this.#isRunning) {
       this.#prevTs = performance.now();
