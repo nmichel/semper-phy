@@ -8,7 +8,7 @@ import { Box } from '../physic/box';
 import { Box as GameObjectBox } from './box';
 import { EVENTS_NAMES, InputState } from '../engine/eventService.js';
 import { Shooter } from './shooter.js';
-import { RIGIDBODY_GROUPS } from './rigibBodyGroups.js';
+import { RIGIDBODY_GROUPS } from './rigidBodyGroups.js';
 
 export class Player extends RigidBodyGameObject implements Updatable {
   constructor(app: GameApp) {

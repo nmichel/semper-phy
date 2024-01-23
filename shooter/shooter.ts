@@ -12,7 +12,7 @@ import { Wall } from './wall.js';
 import { Player } from './player.js';
 import { Generator, SpawnFun } from './generator.js';
 import { GroundTower } from './groundTower.js';
-import { RIGIDBODY_GROUPS } from './rigibBodyGroups.js';
+import { RIGIDBODY_GROUPS } from './rigidBodyGroups.js';
 
 export class Shooter extends GameApp {
   constructor(divElement) {
