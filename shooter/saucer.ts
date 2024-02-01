@@ -1,30 +1,26 @@
-import { Box as RBBox } from '../physic/box.js';
 import { RigidBody } from '../physic/rigidbody.js';
+import { Box } from '../physic/box.js';
 import { Vector2 } from '../physic/math.js';
-import { GameApp, Services } from '../engine/gameApp.js';
+import { GameApp } from '../engine/gameApp';
+import { Updatable } from '../engine/updateService';
+import { Color } from './box';
 import { Agent } from './agent.js';
+import { SAUCER_METADATA } from './agentData.js';
 
-export type Color = {
-  red: number;
-  green: number;
-  blue: number;
-  alpha?: number;
-};
-
-export class Box extends Agent {
-  constructor(app: GameApp, side: number) {
+export class Saucer extends Agent implements Updatable {
+  constructor(app: GameApp) {
     super(app);
 
-    this.#side = side;
+    this.group = SAUCER_METADATA.group;
+    this.life = SAUCER_METADATA.life;
+    this.power = SAUCER_METADATA.power;
   }
 
-  set color(color: Color) {
-    this.#color = { ...color };
-  }
-
-  override register(services: Services): void {
+  override register(services): void {
     super.register(services);
+
     services.renderingService.register(this);
+    services.updateService.register(this);
   }
 
   override localRender(renderer: CanvasRenderingContext2D): void {
@@ -32,7 +28,7 @@ export class Box extends Agent {
     renderer.globalCompositeOperation = 'lighter';
 
     renderer.beginPath();
-    renderer.rect(-this.#side * 10 / 2, -this.#side * 10 / 2, this.#side * 10, this.#side * 10);
+    renderer.rect((-this.#width * 10) / 2, (-this.#height * 10) / 2, this.#width * 10, this.#height * 10);
 
     renderer.shadowBlur = 5;
     renderer.shadowColor = `rgb(${this.#color.red}, ${this.#color.green}, ${this.#color.blue})`;
@@ -46,9 +42,14 @@ export class Box extends Agent {
   }
 
   override buildRigidBody(): RigidBody {
-    return new RigidBody(0, new Vector2(0, 0), new RBBox(this.#side, this.#side), new Vector2(0, Math.random() * 5 + 1), 0, 0.2);
+    return new RigidBody(0, new Vector2(0, 0), new Box(this.#width, this.#height), new Vector2(0, 0), 0, 0.1);
   }
 
-  #side: number;
+  update(_dt: number): void {
+    // this.rigidBody.addForce(new Vector2(0, -10));
+  }
+
+  #width: number = 4;
+  #height: number = 2;
   #color: Color = { red: 255, green: 255, blue: 255 };
 }

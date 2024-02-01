@@ -98,7 +98,7 @@ class RigidBody {
       this.linearVelocity.scaleSelf(1.0 - DAMPING * deltaInS);
       this.angularVelocity *= 1.0 - DAMPING * deltaInS;
     }
-  
+
     this.frame.setPosition(this.frame.position.add(this.linearVelocity.scale(deltaInS)));
     this.frame.setRotation((this.frame.rotation + this.angularVelocity * deltaInS + 360) % 360);
 

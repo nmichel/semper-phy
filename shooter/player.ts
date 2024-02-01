@@ -9,10 +9,21 @@ import { Box as GameObjectBox } from './box';
 import { EVENTS_NAMES, InputState } from '../engine/eventService.js';
 import { Shooter } from './shooter.js';
 import { RIGIDBODY_GROUPS } from './rigidBodyGroups.js';
+import { PLAYER_METADATA } from './agentData.js';
+import { Agent } from './agent.js';
 
-export class Player extends RigidBodyGameObject implements Updatable {
+const WIDTH: number = 4;
+const HEIGHT: number = 2;
+const HALF_WIDTH: number = WIDTH / 2;
+const HALF_HEIGHT: number = HEIGHT / 2;
+
+export class Player extends Agent implements Updatable {
   constructor(app: GameApp) {
     super(app);
+
+    this.group = PLAYER_METADATA.group;
+    this.life = PLAYER_METADATA.life;
+    this.power = PLAYER_METADATA.power;
   }
 
   override register(services): void {
@@ -25,6 +36,7 @@ export class Player extends RigidBodyGameObject implements Updatable {
       [EVENTS_NAMES.EVENT_MOUSE_UP]: this.handleMouseUp.bind(this),
       [EVENTS_NAMES.EVENT_MOUSE_MOVE]: this.handleMouseMove.bind(this),
       [EVENTS_NAMES.EVENT_KEY_DOWN]: this.handleKeyDown.bind(this),
+      [EVENTS_NAMES.EVENT_KEY_UP]: this.handleKeyUp.bind(this),
     });
   }
 
@@ -33,7 +45,7 @@ export class Player extends RigidBodyGameObject implements Updatable {
     renderer.globalCompositeOperation = 'lighter';
 
     renderer.beginPath();
-    renderer.roundRect(-50, -50, 100, 100, 10);
+    renderer.roundRect(-HALF_WIDTH * 10, -HALF_HEIGHT * 10, WIDTH * 10, HEIGHT * 10, 5);
 
     renderer.shadowBlur = 7;
     renderer.shadowColor = 'yellow';
@@ -47,7 +59,7 @@ export class Player extends RigidBodyGameObject implements Updatable {
   }
 
   override buildRigidBody(): RigidBody {
-    const body = new RigidBody(0, new Vector2(0, 0), new Box(100, 100), new Vector2(0, 0), 0, 100);
+    const body = new RigidBody(0, new Vector2(0, 0), new Box(WIDTH, HEIGHT), new Vector2(0, 0), 0, 0.1);
     body.flags = RigidBody.FLAGS.LOCK_ROTATION;
     body.collisionFlags = RIGIDBODY_GROUPS.PLAYER.group;
     body.collisionMask = RIGIDBODY_GROUPS.PLAYER.mask;
@@ -57,8 +69,9 @@ export class Player extends RigidBodyGameObject implements Updatable {
   override handleRigibodyFrameCollision(me: RigidBody, other: RigidBody, collision: unknown) {}
 
   update(_dt: number): void {
-    this.rigidBody.addForce(this.#direction.clone());
-    this.#direction = new Vector2(0, 0);
+    if (this.#direction.length() > 0) {
+      this.rigidBody.addForce(this.#direction.clone());
+    }
   }
 
   handleMouseDown(state: InputState): void {
@@ -72,25 +85,11 @@ export class Player extends RigidBodyGameObject implements Updatable {
   handleMouseMove(state: InputState): void {}
 
   handleKeyDown(state: InputState): void {
-    if (state.keys.indexOf(' ') !== -1) {
-      this.handleShoot(state);
-    }
+    this.updateLocalStateFromInput(state);
+  }
 
-    if (state.keys.indexOf('arrowup') !== -1) {
-      this.handleArrowUp(state);
-    }
-
-    if (state.keys.indexOf('arrowdown') !== -1) {
-      this.handleArrowDown(state);
-    }
-
-    if (state.keys.indexOf('arrowleft') !== -1) {
-      this.handleArrowLeft(state);
-    }
-
-    if (state.keys.indexOf('arrowright') !== -1) {
-      this.handleArrowRight(state);
-    }
+  handleKeyUp(state: InputState): void {
+    this.updateLocalStateFromInput(state);
   }
 
   handleShoot(state: InputState): void {
@@ -111,21 +110,46 @@ export class Player extends RigidBodyGameObject implements Updatable {
   }
 
   handleArrowUp(state: InputState): void {
-    this.#direction.addToSelf(new Vector2(0, -5000000));
+    this.#direction.addToSelf(new Vector2(0, -this.#thrustInN));
   }
 
   handleArrowDown(state: InputState): void {
-    this.#direction.addToSelf(new Vector2(0, 5000000));
+    this.#direction.addToSelf(new Vector2(0, this.#thrustInN));
   }
 
   handleArrowLeft(state: InputState): void {
-    this.#direction.addToSelf(new Vector2(-5000000, 0));
+    this.#direction.addToSelf(new Vector2(-this.#thrustInN, 0));
   }
 
   handleArrowRight(state: InputState): void {
-    this.#direction.addToSelf(new Vector2(5000000, 0));
+    this.#direction.addToSelf(new Vector2(this.#thrustInN, 0));
+  }
+
+  updateLocalStateFromInput(state: InputState): void {
+    if (state.keys.indexOf(' ') !== -1) {
+      this.handleShoot(state);
+    }
+
+    this.#direction = new Vector2(0, 0);
+
+    if (state.keys.indexOf('arrowup') !== -1) {
+      this.handleArrowUp(state);
+    }
+
+    if (state.keys.indexOf('arrowdown') !== -1) {
+      this.handleArrowDown(state);
+    }
+
+    if (state.keys.indexOf('arrowleft') !== -1) {
+      this.handleArrowLeft(state);
+    }
+
+    if (state.keys.indexOf('arrowright') !== -1) {
+      this.handleArrowRight(state);
+    }
   }
 
   #captured: boolean = false;
   #direction: Vector2 = new Vector2(0, 0);
+  #thrustInN: number = 20;
 }

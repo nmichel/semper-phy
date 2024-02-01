@@ -17,6 +17,7 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
     this.rigidBody.addListener({
       handleFrameUpdated: this.handleRigibodyFrameUpdated.bind(this),
       handleCollision: this.handleRigibodyFrameCollision.bind(this),
+      metadata: this.buildMetadata(),
     });
 
     services.oobService.register(this);
@@ -27,7 +28,7 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
    * From Renderable
    */
   render(renderer: CanvasRenderingContext2D): void {
-    renderer.translate(this.#position.x, this.#position.y);
+    renderer.translate(this.#position.x * 10, this.#position.y * 10);
     renderer.rotate((this.#rotation * Math.PI) / 180);
 
     this.localRender(renderer);
@@ -46,6 +47,8 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
   }
 
   abstract buildRigidBody(): RigidBody;
+
+  abstract buildMetadata(): unknown;
 
   get rotation(): number {
     return this.rigidBody.frame.rotation;
@@ -74,9 +77,9 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
   }
 
   handleRigibodyFrameCollision(me: RigidBody, other: RigidBody, collision: unknown) {
-    if (me.inverseMass > 0 && this.#collisionCount++ > 10) {
+    if (me.inverseMass > 0 && this.#collisionCount++ > 100000) {
       const explosion = new Explosion(this.app);
-      explosion.position = this.position;
+      explosion.position = this.position.scale(10);
       this.app.addGameObject(explosion);
 
       this.reclaim();

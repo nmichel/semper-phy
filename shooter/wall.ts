@@ -3,9 +3,9 @@ import { RigidBody } from '../physic/rigidbody.js';
 import { Scene } from '../physic/scene.js';
 import { Vector2 } from '../physic/math.js';
 import { GameApp, Services } from '../engine/gameApp.js';
-import { RigidBodyGameObject } from '../engine/rigidBodyGameObject.js';
+import { Agent } from './agent.js';
 
-export class Wall extends RigidBodyGameObject {
+export class Wall extends Agent {
   constructor(app: GameApp, width: number, height: number) {
     super(app);
 
@@ -20,7 +20,7 @@ export class Wall extends RigidBodyGameObject {
 
   override localRender(renderer: CanvasRenderingContext2D): void {
     renderer.fillStyle = 'white';
-    renderer.fillRect(-this.#width / 2, -this.#height / 2, this.#width, this.#height);
+    renderer.fillRect((-this.#width * 10) / 2, (-this.#height * 10) / 2, this.#width * 10, this.#height * 10);
   }
 
   override buildRigidBody(): RigidBody {
