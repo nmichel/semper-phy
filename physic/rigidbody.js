@@ -77,25 +77,28 @@ class RigidBody {
     this.forces.push(force.clone());
   }
 
+  clearForces() {
+    this.forces = [];
+  }
+
   addListener(listenersDesc) {
     this.listeners.push(listenersDesc);
   }
 
   updateFrame(deltaInS) {
     if (APPLY_GRAVITY && this.inverseMass > 0) {
-      this.linearVelocity.addToSelf(GRAVITY.scale(10 * deltaInS));
+      this.linearVelocity.addToSelf(GRAVITY.scale(deltaInS));
     }
 
     if (this.inverseMass > 0) {
       this.forces.forEach(force => this.linearVelocity.addToSelf(force.scale(deltaInS * this.inverseMass)));
-      this.forces = [];
     }
 
     if (APPLY_DAMPING) {
       this.linearVelocity.scaleSelf(1.0 - DAMPING * deltaInS);
       this.angularVelocity *= 1.0 - DAMPING * deltaInS;
     }
-
+  
     this.frame.setPosition(this.frame.position.add(this.linearVelocity.scale(deltaInS)));
     this.frame.setRotation((this.frame.rotation + this.angularVelocity * deltaInS + 360) % 360);
 

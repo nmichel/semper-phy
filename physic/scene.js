@@ -51,7 +51,7 @@ class Scene {
 
   step(dt) {
     this.collisions = [];
-    const cycles = 10;
+    const cycles = 1;
     const dt2 = dt / cycles;
 
     for (let i = 0; i < cycles; ++i) {
@@ -59,6 +59,8 @@ class Scene {
       this.#narrowPhase(candidatePairs);
       this.#updateFrames(dt2);
     }
+
+    this.bodies.forEach(body => body.clearForces());
 
     this.collisions.forEach(({ a, b, collision }) => {
       a.notifyCollisionsListeners(b, collision);
