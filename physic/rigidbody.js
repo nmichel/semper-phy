@@ -53,6 +53,22 @@ class RigidBody {
     this.listeners = [];
   }
 
+  get position() {
+    return this.frame.position;
+  }
+
+  set position(position) {
+    this.frame.position = position.clone();
+  }
+
+  get rotation() {
+    return this.frame.rotation;
+  }
+
+  set rotation(rotation) {
+    this.frame.rotation = rotation;
+  }
+
   set flags(flags) {
     this.#flags = flags;
   }
@@ -99,8 +115,8 @@ class RigidBody {
       this.angularVelocity *= 1.0 - DAMPING * deltaInS;
     }
 
-    this.frame.setPosition(this.frame.position.add(this.linearVelocity.scale(deltaInS)));
-    this.frame.setRotation((this.frame.rotation + this.angularVelocity * deltaInS + 360) % 360);
+    this.frame.position = this.frame.position.add(this.linearVelocity.scale(deltaInS));
+    this.frame.rotation = (this.frame.rotation + this.angularVelocity * deltaInS + 360) % 360;
 
     this.aabb = Aligner.computeAABB(this.shape, this.frame);
   }
