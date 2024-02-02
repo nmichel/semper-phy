@@ -59,7 +59,7 @@ export class Player extends Agent implements Updatable {
   }
 
   override buildRigidBody(): RigidBody {
-    const body = new RigidBody(0, new Vector2(0, 0), new Box(WIDTH, HEIGHT), new Vector2(0, 0), 0, 0.1);
+    const body = new RigidBody(new Box(WIDTH, HEIGHT), new Vector2(0, 0), 0, 0.1);
     body.flags = RigidBody.FLAGS.LOCK_ROTATION;
     body.collisionFlags = RIGIDBODY_GROUPS.PLAYER.group;
     body.collisionMask = RIGIDBODY_GROUPS.PLAYER.mask;

@@ -37,9 +37,9 @@ class RigidBody {
 
   static idSeed = 0;
 
-  constructor(rotation, position, shape, linearVelocity = new Vector2(0, 0), angularVelocity = 0.0, mass = 1, restitution = 0.9) {
+  constructor(shape, linearVelocity = new Vector2(0, 0), angularVelocity = 0.0, mass = 1, restitution = 0.9) {
     this.id = ++RigidBody.idSeed;
-    this.frame = new Frame(rotation, position);
+    this.frame = new Frame();
     this.shape = shape;
     this.linearVelocity = linearVelocity;
     this.angularVelocity = angularVelocity;

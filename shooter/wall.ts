@@ -24,7 +24,7 @@ export class Wall extends Agent {
   }
 
   override buildRigidBody(): RigidBody {
-    return new RigidBody(0, new Vector2(0, 0), new RBBox(this.#width, this.#height), new Vector2(0, 0), 0, 0);
+    return new RigidBody(new RBBox(this.#width, this.#height), new Vector2(0, 0), 0, 0);
   }
 
   #width: number;

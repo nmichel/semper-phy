@@ -42,7 +42,7 @@ export class Saucer extends Agent implements Updatable {
   }
 
   override buildRigidBody(): RigidBody {
-    return new RigidBody(0, new Vector2(0, 0), new Box(this.#width, this.#height), new Vector2(0, 0), 0, 0.1);
+    return new RigidBody(new Box(this.#width, this.#height), new Vector2(0, 0), 0, 0.1);
   }
 
   update(_dt: number): void {
