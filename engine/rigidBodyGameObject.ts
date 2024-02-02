@@ -51,20 +51,20 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
   abstract buildMetadata(): unknown;
 
   get rotation(): number {
-    return this.rigidBody.frame.rotation;
+    return this.rigidBody.rotation;
   }
 
   set rotation(angle: number) {
-    this.rigidBody.frame.rotation = angle;
+    this.rigidBody.rotation = angle;
   }
 
   get position(): Vector2 {
-    return this.rigidBody.frame.position.clone();
+    return this.rigidBody.position;
   }
 
   set position(position: Vector2) {
     this.#position = position.clone();
-    this.rigidBody.frame.position = position.clone();
+    this.rigidBody.position = position.clone();
   }
 
   set velocity(velocity: Vector2) {
@@ -72,8 +72,8 @@ export abstract class RigidBodyGameObject extends GameObject implements Renderab
   }
 
   handleRigibodyFrameUpdated() {
-    this.#position = this.#body.frame.position.clone();
-    this.#rotation = this.#body.frame.rotation;
+    this.#position = this.#body.position.clone();
+    this.#rotation = this.#body.rotation;
   }
 
   handleRigibodyFrameCollision(me: RigidBody, other: RigidBody, collision: unknown) {
