@@ -46,7 +46,9 @@ export class Box extends Agent {
   }
 
   override buildRigidBody(): RigidBody {
-    return new RigidBody(new RBBox(this.#side, this.#side), new Vector2(0, Math.random() * 5 + 1), 0, 0.2);
+    const body: RigidBody = new RigidBody(new RBBox(this.#side, this.#side), 0.2);
+    body.linearVelocity = new Vector2(0, Math.random() * 5 + 1);
+    return body;
   }
 
   #side: number;

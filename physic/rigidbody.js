@@ -37,12 +37,10 @@ class RigidBody {
 
   static idSeed = 0;
 
-  constructor(shape, linearVelocity = new Vector2(0, 0), angularVelocity = 0.0, mass = 1, restitution = 0.9) {
+  constructor(shape, mass = 1, restitution = 0.9) {
     this.id = ++RigidBody.idSeed;
     this.frame = new Frame();
     this.shape = shape;
-    this.linearVelocity = linearVelocity;
-    this.angularVelocity = angularVelocity;
     this.mass = mass;
     this.inertia = mass == 0 ? 0 : Inertia.compute(shape, mass);
     this.restitution = restitution;
@@ -67,6 +65,22 @@ class RigidBody {
 
   set rotation(rotation) {
     this.frame.rotation = rotation;
+  }
+
+  get linearVelocity() {
+    return this.#linearVelocity.clone();
+  }
+
+  set linearVelocity(velocity) {
+    this.#linearVelocity = velocity.clone();
+  }
+
+  get angularVelocity() {
+    return this.#angularVelocity;
+  }
+
+  set angularVelocity(velocity) {
+    this.#angularVelocity = velocity;
   }
 
   set flags(flags) {
@@ -103,20 +117,20 @@ class RigidBody {
 
   updateFrame(deltaInS) {
     if (APPLY_GRAVITY && this.inverseMass > 0) {
-      this.linearVelocity.addToSelf(GRAVITY.scale(deltaInS));
+      this.#linearVelocity.addToSelf(GRAVITY.scale(deltaInS));
     }
 
     if (this.inverseMass > 0) {
-      this.forces.forEach(force => this.linearVelocity.addToSelf(force.scale(deltaInS * this.inverseMass)));
+      this.forces.forEach(force => this.#linearVelocity.addToSelf(force.scale(deltaInS * this.inverseMass)));
     }
 
     if (APPLY_DAMPING) {
-      this.linearVelocity.scaleSelf(1.0 - DAMPING * deltaInS);
-      this.angularVelocity *= 1.0 - DAMPING * deltaInS;
+      this.#linearVelocity.scaleSelf(1.0 - DAMPING * deltaInS);
+      this.#angularVelocity *= 1.0 - DAMPING * deltaInS;
     }
 
-    this.frame.position = this.frame.position.add(this.linearVelocity.scale(deltaInS));
-    this.frame.rotation = (this.frame.rotation + this.angularVelocity * deltaInS + 360) % 360;
+    this.frame.position = this.frame.position.add(this.#linearVelocity.scale(deltaInS));
+    this.frame.rotation = (this.frame.rotation + this.#angularVelocity * deltaInS + 360) % 360;
 
     this.aabb = Aligner.computeAABB(this.shape, this.frame);
   }
@@ -131,14 +145,16 @@ class RigidBody {
 
   applyImpulse(impulse, contactVector) {
     if (!(this.#flags & RigidBody.FLAGS.LOCK_TRANSLATION)) {
-      this.linearVelocity.addToSelf(impulse.scale(this.inverseMass));
+      this.#linearVelocity.addToSelf(impulse.scale(this.inverseMass));
     }
     if (!(this.#flags & RigidBody.FLAGS.LOCK_ROTATION)) {
-      this.angularVelocity += toDegres(contactVector.crossCoef(impulse) * this.inverseInertia);
+      this.#angularVelocity += toDegres(contactVector.crossCoef(impulse) * this.inverseInertia);
     }
   }
 
   #flags = 0;
+  #linearVelocity = new Vector2(0, 0);
+  #angularVelocity = 0;
   #collisionFlags = RigidBody.COLLISION_GROUPS.COLLISION_GROUP_0;
   #collisionMask = RigidBody.COLLISION_GROUPS.ALL_GROUPS;
 }

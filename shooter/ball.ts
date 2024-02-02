@@ -34,7 +34,9 @@ export class Ball extends Agent {
    * From RigidbodyGameObject
    */
   override buildRigidBody(): RigidBody {
-    return new RigidBody(new Circle(this.#radius), new Vector2(0, Math.random() * 5 + 1), 0, 0.2);
+    const body: RigidBody = new RigidBody(new Circle(this.#radius), 0.2);
+    body.linearVelocity = new Vector2(0, Math.random() * 5 + 1);
+    return body;
   }
 
   #radius: number;
