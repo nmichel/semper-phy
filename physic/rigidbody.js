@@ -37,13 +37,12 @@ class RigidBody {
 
   static idSeed = 0;
 
-  constructor(shape, mass = 1, restitution = 0.9) {
+  constructor(shape, mass = 1) {
     this.id = ++RigidBody.idSeed;
     this.frame = new Frame();
     this.shape = shape;
     this.mass = mass;
     this.inertia = mass == 0 ? 0 : Inertia.compute(shape, mass);
-    this.restitution = restitution;
     this.inverseMass = mass > 0 ? 1.0 / mass : 0.0;
     this.inverseInertia = this.inertia > 0 ? 1.0 / this.inertia : 0.0;
     this.aabb = Aligner.computeAABB(this.shape, this.frame);
@@ -81,6 +80,22 @@ class RigidBody {
 
   set angularVelocity(velocity) {
     this.#angularVelocity = velocity;
+  }
+
+  get restitution() {
+    return this.#restitution;
+  }
+
+  set restitution(restitution) {
+    this.#restitution = restitution;
+  }
+
+  get friction() {
+    return this.#friction;
+  }
+
+  set friction(friction) {
+    this.#friction = friction;
   }
 
   set flags(flags) {
@@ -152,9 +167,11 @@ class RigidBody {
     }
   }
 
-  #flags = 0;
   #linearVelocity = new Vector2(0, 0);
   #angularVelocity = 0;
+  #restitution = 0.9;
+  #friction = 0.1;
+  #flags = 0;
   #collisionFlags = RigidBody.COLLISION_GROUPS.COLLISION_GROUP_0;
   #collisionMask = RigidBody.COLLISION_GROUPS.ALL_GROUPS;
 }

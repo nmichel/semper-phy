@@ -213,37 +213,49 @@ class Scene {
 
     const rap = point.sub(a.frame.position);
     const rbp = point.sub(b.frame.position);
-    // console.log('rap rbp', rap, rbp)
+
     const rapPerp = rap.tangential();
     const rbpPerp = rbp.tangential();
-    // console.log('rapPerp rbpPerp', rapPerp, rbpPerp)
+
     const tangentialSpeedVectorA = rapPerp.scale(toRadians(a.angularVelocity));
     const tangentialSpeedVectorB = rbpPerp.scale(toRadians(b.angularVelocity));
-    // console.log('tangentialSpeedVectorA', tangentialSpeedVectorA)
-    // console.log('tangentialSpeedVectorB', tangentialSpeedVectorB)
-    const relativeVelocity = b.linearVelocity.add(tangentialSpeedVectorB).sub(a.linearVelocity.add(tangentialSpeedVectorA));
-    // console.log('relativeVelocity', relativeVelocity)
+
+    const relativeVelocityA = a.linearVelocity.add(tangentialSpeedVectorA);
+    const relativeVelocityB = b.linearVelocity.add(tangentialSpeedVectorB);
+    const relativeVelocity = relativeVelocityB.sub(relativeVelocityA);
 
     const relativeVelocityOnNormal = relativeVelocity.dot(normal);
     if (relativeVelocityOnNormal > 0) {
       return null;
     }
 
-    // console.log('relativeVelocityOnNormal', relativeVelocityOnNormal)
+    const CoefApCrossNormal = rapPerp.dot(normal);
+    const CoefBpCrossNormal = rbpPerp.dot(normal);
+    const crossNormalSum =
+      CoefApCrossNormal * CoefApCrossNormal * a.inverseInertia + CoefBpCrossNormal * CoefBpCrossNormal * b.inverseInertia;
 
-    const CoefApCrossN = rapPerp.dot(normal);
-    const CoefBpCrossN = rbpPerp.dot(normal);
-    // console.log("CoefApCrossN CoefBpCrossN ", CoefApCrossN, CoefBpCrossN)
     const e = Math.min(a.restitution, b.restitution);
-    const numerator = -(1 + e) * relativeVelocityOnNormal;
-    // console.log("numerator", numerator)
-    const denominator = invMassSum + CoefApCrossN * CoefApCrossN * a.inverseInertia + CoefBpCrossN * CoefBpCrossN * b.inverseInertia;
-    // console.log("denominator", denominator)
-    const j = numerator / denominator;
-    const impulse = normal.scale(j);
+    let normalInpulse = -(1 + e) * relativeVelocityOnNormal;
+    normalInpulse /= invMassSum + crossNormalSum;
+    const normalImpulseVector = normal.scale(normalInpulse);
 
-    // console.log('impulse', impulse)
+    let tangent = relativeVelocity.sub(normal.scale(relativeVelocityOnNormal));
+    tangent.scaleSelf(-1);
 
+    const CoefApCrossTangent = rapPerp.dot(tangent);
+    const CoefBpCrossTangent = rbpPerp.dot(tangent);
+    const crossTangentSum =
+      CoefApCrossTangent * CoefApCrossTangent * a.inverseInertia + CoefBpCrossTangent * CoefBpCrossTangent * b.inverseInertia;
+
+    const minFriction = Math.min(a.friction, b.friction);
+    let tangentialImpulse = -(1 + e) * relativeVelocity.dot(tangent) * minFriction;
+    tangentialImpulse /= invMassSum + crossTangentSum;
+    if (tangentialImpulse > normalInpulse) {
+      tangentialImpulse = normalInpulse;
+    }
+    const tangentialImpulseVector = tangent.scale(tangentialImpulse);
+
+    const impulse = normalImpulseVector.add(tangentialImpulseVector);
     return { a, b, rap, rbp, impulse };
   }
 
