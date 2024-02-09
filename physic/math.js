@@ -91,11 +91,11 @@ class Vector2 {
   }
 
   // rotateAround(Vector2, Number, Vector2) -> Vector2
-  rotateAround(angleInDeg, center) {
+  rotateAround(angleInRad, center) {
     const { x, y } = this.sub(center);
 
-    const cos = Math.cos(toRadians(angleInDeg));
-    const sin = Math.sin(toRadians(angleInDeg));
+    const cos = Math.cos(angleInRad);
+    const sin = Math.sin(angleInRad);
 
     const rX = x * cos - y * sin;
     const rY = x * sin + y * cos;
@@ -113,8 +113,8 @@ class Vector2 {
 }
 
 class Matrix3 {
-  static newRotation(angleDeg) {
-    const angleRad = toRadians(angleDeg);
+  static newRotation(angleInRad) {
+    const angleRad = angleInRad;
     return new Matrix3([
       [Math.cos(angleRad), -Math.sin(angleRad), 0],
       [Math.sin(angleRad), Math.cos(angleRad), 0],

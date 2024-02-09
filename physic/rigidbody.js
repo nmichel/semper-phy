@@ -1,6 +1,6 @@
 import { Inertia } from './protocols/inertia';
 import { Aligner } from './protocols/aligner.ts';
-import { toDegres, Vector2 } from './math.js';
+import { Vector2 } from './math.js';
 import { Frame } from './frame';
 
 const APPLY_GRAVITY = true;
@@ -145,7 +145,7 @@ class RigidBody {
     }
 
     this.frame.position = this.frame.position.add(this.#linearVelocity.scale(deltaInS));
-    this.frame.rotation = (this.frame.rotation + this.#angularVelocity * deltaInS + 360) % 360;
+    this.frame.rotation = (this.frame.rotation + this.#angularVelocity * deltaInS + 2.0 * Math.PI) % (2.0 * Math.PI);
 
     this.aabb = Aligner.computeAABB(this.shape, this.frame);
   }
@@ -163,14 +163,14 @@ class RigidBody {
       this.#linearVelocity.addToSelf(impulse.scale(this.inverseMass));
     }
     if (!(this.#flags & RigidBody.FLAGS.LOCK_ROTATION)) {
-      this.#angularVelocity += toDegres(contactVector.crossCoef(impulse) * this.inverseInertia);
+      this.#angularVelocity += contactVector.crossCoef(impulse) * this.inverseInertia;
     }
   }
 
   #linearVelocity = new Vector2(0, 0);
   #angularVelocity = 0;
   #restitution = 0.9;
-  #friction = 0.1;
+  #friction = 0.2;
   #flags = 0;
   #collisionFlags = RigidBody.COLLISION_GROUPS.COLLISION_GROUP_0;
   #collisionMask = RigidBody.COLLISION_GROUPS.ALL_GROUPS;

@@ -1,5 +1,4 @@
 import { CollisionInfo, Collider, Transformer } from './protocols/protocols.js';
-import { toRadians } from './math.js';
 
 class RigidBodySweepHash {
   add(bodyA, bodyB) {
@@ -217,8 +216,8 @@ class Scene {
     const rapPerp = rap.tangential();
     const rbpPerp = rbp.tangential();
 
-    const tangentialSpeedVectorA = rapPerp.scale(toRadians(a.angularVelocity));
-    const tangentialSpeedVectorB = rbpPerp.scale(toRadians(b.angularVelocity));
+    const tangentialSpeedVectorA = rapPerp.scale(a.angularVelocity);
+    const tangentialSpeedVectorB = rbpPerp.scale(b.angularVelocity);
 
     const relativeVelocityA = a.linearVelocity.add(tangentialSpeedVectorA);
     const relativeVelocityB = b.linearVelocity.add(tangentialSpeedVectorB);
