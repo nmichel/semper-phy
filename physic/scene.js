@@ -3,7 +3,7 @@ import { HashAndSweep } from './acceleration_structures/HashAndSweep';
 
 class Scene {
   constructor() {
-    this.#accelerationStructure = new HashAndSweep()
+    this.#accelerationStructure = new HashAndSweep();
   }
 
   addBody(body) {

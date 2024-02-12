@@ -1,19 +1,19 @@
-import { AccelerationStructure, RigidBody, pair } from "./AccelerationStructure";
+import { AccelerationStructure, RigidBody, pair } from './AccelerationStructure';
 
 class RigidBodySweepHash {
-  reset() : void {
+  reset(): void {
     this.#hash = {};
   }
 
-  add(bodyA : RigidBody, bodyB: RigidBody) : void {
+  add(bodyA: RigidBody, bodyB: RigidBody): void {
     this.#hash[this.#hashKey(bodyA, bodyB)] = true;
   }
 
-  exists(bodyA: RigidBody, bodyB: RigidBody) : boolean {
+  exists(bodyA: RigidBody, bodyB: RigidBody): boolean {
     return this.#hash[this.#hashKey(bodyA, bodyB)];
   }
 
-  #hashKey(bodyA: RigidBody, bodyB: RigidBody) : number {
+  #hashKey(bodyA: RigidBody, bodyB: RigidBody): number {
     const aId = Math.min(bodyA.id, bodyB.id);
     const bId = Math.max(bodyA.id, bodyB.id);
     const hash = this.#pairing(aId, bId);
@@ -27,7 +27,7 @@ class RigidBodySweepHash {
   // When used with pair of bodies, ensure that
   // - the smallest body id is always the first argument
   // - ids are always different
-  #pairing(idA: RigidBody, idB: RigidBody) : number {
+  #pairing(idA: RigidBody, idB: RigidBody): number {
     // /!\ Not needed as we require that a < b
     //
     // if (idA >= idB) {
@@ -37,7 +37,7 @@ class RigidBodySweepHash {
     return idB * idB + idA;
   }
 
-  #hash : {[key: number]: boolean} = {};
+  #hash: { [key: number]: boolean } = {};
 }
 
 export class HashAndSweep implements AccelerationStructure {
@@ -49,7 +49,7 @@ export class HashAndSweep implements AccelerationStructure {
     this.#hash.reset();
   }
 
-  findPairs(bodies : RigidBody) : pair[] {
+  findPairs(bodies: RigidBody): pair[] {
     // Sort the bodies by their x position
     bodies.sort((a, b) => a.aabb.min.x - b.aabb.min.x);
 
@@ -130,5 +130,5 @@ export class HashAndSweep implements AccelerationStructure {
     return pairs;
   }
 
-  #hash : RigidBodySweepHash;
-};
+  #hash: RigidBodySweepHash;
+}
