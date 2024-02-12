@@ -1,5 +1,5 @@
-import { Box as RBBox } from '../physic/Box.js';
-import { RigidBody } from '../physic/rigidbody.js';
+import { Box as RBBox } from '../physic/shapes/Box.js';
+import { RigidBody } from '../physic/Rigidbody.js';
 import { Scene } from '../physic/scene.js';
 import { Vector2 } from '../physic/Math.js';
 import { GameApp, Services } from '../engine/gameApp.js';

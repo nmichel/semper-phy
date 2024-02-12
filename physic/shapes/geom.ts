@@ -1,4 +1,4 @@
-import { Span, Vector2 } from './Math.js';
+import { Span, Vector2 } from '../Math.js';
 
 type Vertex = Vector2;
 const Vertex = Vector2;

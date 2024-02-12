@@ -1,5 +1,5 @@
 import { defimpl } from './functional';
-import { Frame } from './frame';
+import { Frame } from './Frame';
 import { Render } from './protocols/protocols';
 import * as GfxTools from './gfx';
 import { Vector2 } from './Math';

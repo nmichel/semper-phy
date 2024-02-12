@@ -1,7 +1,7 @@
-import { Inertia } from './protocols/inertia';
+import { Inertia } from './protocols/inertia.ts';
 import { Aligner } from './protocols/aligner.ts';
 import { Vector2 } from './Math.js';
-import { Frame } from './Frame';
+import { Frame } from './Frame.ts';
 
 const APPLY_GRAVITY = true;
 const GRAVITY = new Vector2(0, 9.81);
@@ -169,8 +169,8 @@ class RigidBody {
 
   #linearVelocity = new Vector2(0, 0);
   #angularVelocity = 0;
-  #restitution = 0.9;
-  #friction = 0.2;
+  #restitution = 0.3;
+  #friction = 0.1;
   #flags = 0;
   #collisionFlags = RigidBody.COLLISION_GROUPS.COLLISION_GROUP_0;
   #collisionMask = RigidBody.COLLISION_GROUPS.ALL_GROUPS;

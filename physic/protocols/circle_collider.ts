@@ -1,4 +1,4 @@
-import { Circle } from '../Circle.js';
+import { Circle } from '../shapes/Circle.js';
 import { defprotocol, NotImplementedError } from '../functional.js';
 import { Vector2 } from '../Math.js';
 

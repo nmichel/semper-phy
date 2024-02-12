@@ -1,10 +1,10 @@
-import { RigidBody } from '../physic/rigidbody.js';
+import { RigidBody } from '../physic/Rigidbody.js';
 import { Scene } from '../physic/scene.js';
 import { Vector2 } from '../physic/Math.js';
 import { GameApp } from '../engine/gameApp';
 import { RigidBodyGameObject } from '../engine/rigidBodyGameObject';
 import { Updatable } from '../engine/updateService';
-import { Box } from '../physic/Box.js';
+import { Box } from '../physic/shapes/Box.js';
 import { Box as GameObjectBox } from './box';
 import { EVENTS_NAMES, InputState } from '../engine/eventService.js';
 import { Shooter } from './shooter.js';

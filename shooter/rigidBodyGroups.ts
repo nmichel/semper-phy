@@ -1,4 +1,4 @@
-import { RigidBody } from '../physic/rigidBody.js';
+import { RigidBody } from '../physic/Rigidbody.js';
 
 const PLAYER_GROUP = RigidBody.COLLISION_GROUPS.COLLISION_GROUP_1;
 const PLAYER_MASK = RigidBody.COLLISION_GROUPS.ALL_GROUPS ^ (RigidBody.COLLISION_GROUPS.COLLISION_GROUP_2 | PLAYER_GROUP);

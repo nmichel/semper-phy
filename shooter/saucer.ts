@@ -1,5 +1,5 @@
-import { RigidBody } from '../physic/rigidbody.js';
-import { Box } from '../physic/Box.js';
+import { RigidBody } from '../physic/Rigidbody.js';
+import { Box } from '../physic/shapes/Box.js';
 import { Vector2 } from '../physic/Math.js';
 import { GameApp } from '../engine/gameApp';
 import { Updatable } from '../engine/updateService';

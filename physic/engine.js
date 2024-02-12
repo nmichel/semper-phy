@@ -1,7 +1,7 @@
 import './AABB_protocols';
-import './Box_protocols.ts';
-import './Circle_protocols';
-import './geom_protocols';
+import './shapes/Box_protocols.ts';
+import './shapes/Circle_protocols.ts';
+import './shapes/geom_protocols.ts';
 import './Frame_protocols.ts';
 import './Ray_protocols.ts';
 import './Scene_protocols.ts';

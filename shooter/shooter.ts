@@ -1,6 +1,6 @@
 import '../physic/engine.js';
 import { Vector2 } from '../physic/Math.js';
-import { RigidBody } from '../physic/rigidbody.js';
+import { RigidBody } from '../physic/Rigidbody.js';
 import { GameApp } from '../engine/gameApp';
 import { PhysicEngineGameObject } from '../engine/physicEngineGameObject.js';
 import { StatsDisplay } from './statsDisplay.js';

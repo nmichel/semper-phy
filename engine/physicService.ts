@@ -1,5 +1,5 @@
 import { Vector2 } from '../physic/Math';
-import { RigidBody } from '../physic/rigidBody';
+import { RigidBody } from '../physic/Rigidbody';
 import { Scene } from '../physic/scene';
 import { GameObject } from './gameObject';
 import { Registry, Service } from './service';

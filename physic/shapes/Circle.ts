@@ -1,4 +1,4 @@
-import { Span, Vector2 } from './Math';
+import { Span, Vector2 } from '../Math';
 
 class Circle {
   constructor(radius: number, position: Vector2 = new Vector2(0, 0)) {

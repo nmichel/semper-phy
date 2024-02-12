@@ -1,8 +1,8 @@
-import { Inertia } from './protocols/inertia';
-import { defimpl } from './functional';
+import { Inertia } from '../protocols/inertia';
+import { defimpl } from '../functional';
 import { Edge, Polygon, Vertex } from './geom';
-import { Ray, RayIntersection } from './ray';
-import { CollisionInfo } from './protocols/protocols';
+import { Ray, RayIntersection } from '../ray';
+import { CollisionInfo } from '../protocols/protocols';
 import {
   Aligner,
   CircleCollider,
@@ -13,11 +13,11 @@ import {
   RayCaster,
   Render,
   Transformer,
-} from './protocols/protocols';
-import { segmentIntersection, Vector2 } from './Math';
-import { AABB } from './AABB';
-import * as GfxTools from './gfx';
-import { Frame } from './Frame';
+} from '../protocols/protocols';
+import { segmentIntersection, Vector2 } from '../Math';
+import { AABB } from '../AABB';
+import * as GfxTools from '../gfx';
+import { Frame } from '../Frame';
 import { Circle } from './Circle';
 
 defimpl(Render, Vertex, {

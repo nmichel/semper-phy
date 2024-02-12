@@ -1,14 +1,14 @@
 import { defimpl } from './functional.js';
 import { PointCaster, RayCaster, Render, Transformer } from './protocols/protocols.js';
 import { RayIntersection } from './ray.js';
-import { RigidBody } from './rigidbody.js';
+import { RigidBody } from './Rigidbody.js';
 
 defimpl(Render, RigidBody, {
   render: (rigidbody: RigidBody, ctxt, opts): undefined => {
     const worldShape = Transformer.toWorld(rigidbody.shape, rigidbody.frame);
     Render.render(worldShape, ctxt, opts);
     Render.render(rigidbody.frame, ctxt, opts);
-    Render.render(rigidbody.aabb, ctxt, opts);
+    // Render.render(rigidbody.aabb, ctxt, opts);
   },
 });
 
