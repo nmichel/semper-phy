@@ -11,6 +11,15 @@ body {
   gap: 0.5em;
 }
 
+
+@media (width <= 1250px) {
+  .sandbox {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
 .description {
   border: 1px solid #ccc;
   display: block;
