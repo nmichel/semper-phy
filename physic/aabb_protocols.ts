@@ -1,6 +1,6 @@
 import { defimpl } from './functional.js';
-import { AABB } from './aabb.js';
-import { Render } from './protocols/render';
+import { AABB } from './AABB.js';
+import { Render } from './protocols/render.js';
 
 defimpl(Render, AABB, {
   render: (aabb: AABB, ctxt: CanvasRenderingContext2D): undefined => {

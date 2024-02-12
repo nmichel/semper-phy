@@ -1,4 +1,4 @@
-import { Vector2 } from '../physic/math';
+import { Vector2 } from '../physic/Math';
 import { GameApp, Services } from '../engine/gameApp';
 import { GameObject } from '../engine/gameObject';
 import { Renderable } from '../engine/renderingService';

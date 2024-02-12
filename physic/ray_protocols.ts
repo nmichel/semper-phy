@@ -1,10 +1,9 @@
 import { defimpl } from './functional.js';
-import { Ray, RayIntersection } from './ray';
-import { Cloner, Render, Transformer } from './protocols/protocols';
-import * as GfxTools from './gfx';
-import { Vector2 } from './math';
-import { Frame } from './frame.js';
-import { CollisionInfo } from './protocols/collider.js';
+import { Ray, RayIntersection } from './Ray';
+import { Cloner, Render, Transformer } from './protocols/protocols.js';
+import * as GfxTools from './gfx.js';
+import { Vector2 } from './Math.js';
+import { Frame } from './Frame';
 
 defimpl(Render, Ray, {
   render: (ray: Ray, ctxt): undefined => {

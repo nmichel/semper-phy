@@ -1,5 +1,5 @@
 import { NotImplementedError, defprotocol } from '../functional.js';
-import { Vector2 } from '../math.js';
+import { Vector2 } from '../Math.js';
 
 const Collider = defprotocol('Collider', {
   overlap: (_shape: any): { depth: number; normal: Vector2 } | null => {

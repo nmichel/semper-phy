@@ -3,11 +3,11 @@ import { buildCircleContainedPolygon } from './physic/geom.js';
 
 import { BrowserApp } from './browser_app.js';
 import { Render } from './physic/protocols/protocols.js';
-import { Circle } from './physic/circle.js';
-import { Box as RBBox } from './physic/box.js';
-import { RigidBody } from './physic/rigidbody.js';
-import { Scene } from './physic/scene.js';
-import { Vector2 } from './physic/math.js';
+import { Circle } from './physic/Circle.js';
+import { Box } from './physic/Box.js';
+import { RigidBody } from './physic/Rigidbody.js';
+import { Scene } from './physic/Scene.js';
+import { Vector2 } from './physic/Math.js';
 
 class MyApp extends BrowserApp {
   constructor(divElement) {

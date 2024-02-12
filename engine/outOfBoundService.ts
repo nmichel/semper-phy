@@ -1,4 +1,4 @@
-import { Vector2 } from '../physic/math';
+import { Vector2 } from '../physic/Math';
 import { GameObject } from './gameObject';
 import { Registry, Service } from './service';
 

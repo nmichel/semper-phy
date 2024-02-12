@@ -1,4 +1,4 @@
-import { Vector2 } from '../physic/math.js';
+import { Vector2 } from '../physic/Math.js';
 import { Scene } from '../physic/scene.js';
 import { BrowserApp } from '../browser_app';
 import { GameObject } from './gameObject';

@@ -1,8 +1,8 @@
-import './aabb_protocols';
-import './box_protocols.ts';
-import './circle_protocols';
+import './AABB_protocols';
+import './Box_protocols.ts';
+import './Circle_protocols';
 import './geom_protocols';
-import './frame_protocols';
-import './ray_protocols';
-import './scene_protocols';
-import './rigidbody_protocols';
+import './Frame_protocols.ts';
+import './Ray_protocols.ts';
+import './Scene_protocols.ts';
+import './Rigidbody_protocols.ts';

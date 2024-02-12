@@ -1,4 +1,4 @@
-import { Frame } from '../frame.js';
+import { Frame } from '../Frame';
 import { NotImplementedError, defprotocol } from '../functional.js';
 
 const Transformer = defprotocol('Transformer', {

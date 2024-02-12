@@ -1,6 +1,6 @@
 import { defprotocol, NotImplementedError } from '../functional.js';
-import { AABB } from '../aabb.js';
-import { Frame } from '../frame.js';
+import { AABB } from '../AABB.js';
+import { Frame } from '../Frame';
 
 const Aligner = defprotocol('Aligner', {
   computeAABB: (frame: Frame): AABB => {

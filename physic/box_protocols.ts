@@ -1,12 +1,12 @@
 import { Inertia } from './protocols/inertia.js';
 import { defimpl } from './functional.js';
-import { Box } from './box.js';
+import { Box } from './Box.js';
 import { Polygon } from './geom.js';
 import { Aligner, PointCaster, RayCaster, Transformer } from './protocols/protocols.js';
-import { Ray, RayIntersection } from './ray.js';
-import { Vector2 } from './math.js';
-import { AABB } from './aabb.js';
-import { Frame } from './frame.js';
+import { Ray, RayIntersection } from './Ray.js';
+import { Vector2 } from './Math.js';
+import { AABB } from './AABB';
+import { Frame } from './Frame';
 
 defimpl(RayCaster, Box, {
   cast: (box: Box, ray: Ray): RayIntersection[] => {

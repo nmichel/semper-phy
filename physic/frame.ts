@@ -1,4 +1,4 @@
-import { Matrix3, Vector2 } from './math';
+import { Matrix3, Vector2 } from './Math';
 
 class Frame {
   constructor(rotation: number = 0.0, position: Vector2 = new Vector2()) {

@@ -2,7 +2,7 @@ import { defimpl } from './functional';
 import { Frame } from './frame';
 import { Render } from './protocols/protocols';
 import * as GfxTools from './gfx';
-import { Vector2 } from './math';
+import { Vector2 } from './Math';
 
 defimpl(Render, Frame, {
   render: (frame: Frame, ctxt: CanvasRenderingContext2D): undefined => {

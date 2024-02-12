@@ -9,13 +9,13 @@ import {
   Transformer,
 } from './protocols/protocols';
 import { Inertia } from './protocols/inertia';
-import { Ray, RayIntersection } from './ray';
-import { Circle } from './circle';
+import { Ray, RayIntersection } from './Ray';
+import { Circle } from './Circle';
 import { defimpl } from './functional';
 import * as GfxTools from './gfx';
-import { Vector2 } from './math';
-import { AABB } from './aabb';
-import { Frame } from './frame';
+import { Vector2 } from './Math';
+import { AABB } from './AABB';
+import { Frame } from './Frame';
 import { Polygon } from './geom';
 
 defimpl(RayCaster, Circle, {

@@ -1,4 +1,4 @@
-import { Vector2 } from '../physic/math';
+import { Vector2 } from '../physic/Math';
 import { RigidBody } from '../physic/rigidBody';
 import { Scene } from '../physic/scene';
 import { GameObject } from './gameObject';

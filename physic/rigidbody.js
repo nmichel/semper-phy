@@ -1,7 +1,7 @@
 import { Inertia } from './protocols/inertia';
 import { Aligner } from './protocols/aligner.ts';
-import { Vector2 } from './math.js';
-import { Frame } from './frame';
+import { Vector2 } from './Math.js';
+import { Frame } from './Frame';
 
 const APPLY_GRAVITY = true;
 const GRAVITY = new Vector2(0, 9.81);

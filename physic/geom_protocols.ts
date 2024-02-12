@@ -14,11 +14,11 @@ import {
   Render,
   Transformer,
 } from './protocols/protocols';
-import { segmentIntersection, Vector2 } from './math';
-import { AABB } from './aabb';
+import { segmentIntersection, Vector2 } from './Math';
+import { AABB } from './AABB';
 import * as GfxTools from './gfx';
-import { Frame } from './frame';
-import { Circle } from './circle';
+import { Frame } from './Frame';
+import { Circle } from './Circle';
 
 defimpl(Render, Vertex, {
   render: (vertex: Vertex, ctxt: CanvasRenderingContext2D): undefined => {

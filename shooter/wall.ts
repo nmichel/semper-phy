@@ -1,7 +1,7 @@
-import { Box as RBBox } from '../physic/box.js';
+import { Box as RBBox } from '../physic/Box.js';
 import { RigidBody } from '../physic/rigidbody.js';
 import { Scene } from '../physic/scene.js';
-import { Vector2 } from '../physic/math.js';
+import { Vector2 } from '../physic/Math.js';
 import { GameApp, Services } from '../engine/gameApp.js';
 import { Agent } from './agent.js';
 

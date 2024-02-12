@@ -1,4 +1,4 @@
-import { Vector2 } from './math';
+import { Vector2 } from './Math';
 
 class AABB {
   min: Vector2 = new Vector2(Number.MAX_VALUE, Number.MAX_VALUE);

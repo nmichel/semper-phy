@@ -1,6 +1,6 @@
-import { Circle } from '../circle.js';
+import { Circle } from '../Circle.js';
 import { defprotocol, NotImplementedError } from '../functional.js';
-import { Vector2 } from '../math.js';
+import { Vector2 } from '../Math.js';
 
 const CircleCollider = defprotocol('CircleCollider', {
   overlap: (_shape: Circle): { depth: number; normal: Vector2 } | null => {

@@ -1,4 +1,4 @@
-import { Vector2 } from '../physic/math.js';
+import { Vector2 } from '../physic/Math.js';
 import { HasId, Service } from './service';
 
 const EVENTS_NAMES = {
