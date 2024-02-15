@@ -1,6 +1,6 @@
 import { Inertia } from './protocols/inertia.ts';
 import { Aligner } from './protocols/aligner.ts';
-import { Vector2 } from './Math.js';
+import { Vector2 } from './Math';
 import { Frame } from './Frame.ts';
 
 const APPLY_GRAVITY = true;

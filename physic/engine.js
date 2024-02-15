@@ -5,4 +5,4 @@ import './shapes/geom_protocols.ts';
 import './Frame_protocols.ts';
 import './Ray_protocols.ts';
 import './Scene_protocols.ts';
-import './Rigidbody_protocols.ts';
+import './RigidBody_protocols.ts';
