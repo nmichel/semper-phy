@@ -1,4 +1,4 @@
-import { RayCaster } from './protocols/protocols.js';
+import { RayCaster } from './protocols/protocols';
 
 class Ray {
   // buildRayFromPoints(Vector2, Vector2) -> Ray

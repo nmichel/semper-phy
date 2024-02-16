@@ -1,6 +1,6 @@
 import { defimpl } from './functional.js';
-import { Ray, RayIntersection } from './Ray';
 import { Cloner, Render, Transformer } from './protocols/protocols.js';
+import { Ray, RayIntersection } from './Ray';
 import * as GfxTools from './gfx.js';
 import { Vector2 } from './Math.js';
 import { Frame } from './Frame';

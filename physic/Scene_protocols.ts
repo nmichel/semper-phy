@@ -1,5 +1,5 @@
 import { defimpl } from './functional.js';
-import { Render } from './protocols/protocols.js';
+import { Render } from './protocols/protocols';
 import { Scene } from './scene.js';
 
 class CollisionTrail {

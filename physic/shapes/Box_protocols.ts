@@ -1,8 +1,7 @@
-import { Inertia } from '../protocols/inertia.js';
 import { defimpl } from '../functional.js';
+import { Aligner, Inertia, PointCaster, RayCaster, Transformer } from '../protocols/protocols';
 import { Box } from './Box.js';
 import { Polygon } from './geom.js';
-import { Aligner, PointCaster, RayCaster, Transformer } from '../protocols/protocols.js';
 import { Ray, RayIntersection } from '../Ray.js';
 import { Vector2 } from '../Math.js';
 import { AABB } from '../AABB.js';

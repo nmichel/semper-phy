@@ -1,5 +1,4 @@
-import { Inertia } from './protocols/inertia.ts';
-import { Aligner } from './protocols/aligner.ts';
+import { Aligner, Inertia } from './protocols/protocols';
 import { Vector2 } from './Math';
 import { Frame } from './Frame.ts';
 

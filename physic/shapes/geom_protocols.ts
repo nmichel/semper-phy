@@ -1,19 +1,19 @@
-import { Inertia } from '../protocols/inertia';
-import { defimpl } from '../functional';
-import { Edge, Polygon, Vertex } from './geom';
-import { Ray, RayIntersection } from '../ray';
-import { CollisionInfo } from '../protocols/protocols';
 import {
   Aligner,
   CircleCollider,
   Cloner,
   Collider,
+  Inertia,
   PointCaster,
   PolygonCollider,
   RayCaster,
   Render,
   Transformer,
 } from '../protocols/protocols';
+import { defimpl } from '../functional';
+import { Edge, Polygon, Vertex } from './geom';
+import { Ray, RayIntersection } from '../ray';
+import { CollisionInfo } from '../protocols/protocols';
 import { segmentIntersection, Vector2 } from '../Math';
 import { AABB } from '../AABB';
 import * as GfxTools from '../gfx';

@@ -1,5 +1,5 @@
 import { groupBy } from './functional.js';
-import { clamp, Vector2 } from './math.js';
+import { clamp, Vector2 } from './Math';
 import * as GfxTools from './gfx.js';
 
 const Control = {

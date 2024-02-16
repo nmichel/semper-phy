@@ -1,17 +1,17 @@
+import { defimpl } from '../functional';
 import {
   Aligner,
   CircleCollider,
   Collider,
+  Inertia,
   PointCaster,
   PolygonCollider,
   RayCaster,
   Render,
   Transformer,
 } from '../protocols/protocols';
-import { Inertia } from '../protocols/inertia';
 import { Ray, RayIntersection } from '../Ray';
 import { Circle } from './Circle';
-import { defimpl } from '../functional';
 import * as GfxTools from '../gfx';
 import { Vector2 } from '../Math';
 import { AABB } from '../AABB';

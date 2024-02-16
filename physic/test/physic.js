@@ -1,7 +1,7 @@
 import '../../../physic/engine.js';
-import { Ray } from '../ray.js';
+import { Ray } from '../Ray';
 import { Render } from '../protocols/protocols.js';
-import { Vector2 } from '../math.js';
+import { Vector2 } from '../Math';
 import * as GfxTools from '../gfx.js';
 // import buildScene from './scenes/random_grid.js';
 import buildScene from './scenes/spinning_squares.js';
