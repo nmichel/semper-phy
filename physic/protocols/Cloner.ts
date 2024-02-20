@@ -1,4 +1,4 @@
-import { NotImplementedError, defprotocol } from '../functional.js';
+import { NotImplementedError, defprotocol } from '../Protocol';
 
 const Cloner = defprotocol('Cloner', {
   clone: <T>(): T => {

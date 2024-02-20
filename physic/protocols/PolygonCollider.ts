@@ -1,4 +1,4 @@
-import { NotImplementedError, defprotocol } from '../functional.js';
+import { NotImplementedError, defprotocol } from '../Protocol';
 import { Polygon } from '../shapes/geom.js';
 import { Vector2 } from '../Math.js';
 

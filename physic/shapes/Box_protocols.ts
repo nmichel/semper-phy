@@ -1,4 +1,4 @@
-import { defimpl } from '../functional.js';
+import { defimpl } from '../Protocol';
 import { Aligner, Inertia, PointCaster, RayCaster, Transformer } from '../protocols/protocols';
 import { Box } from './Box.js';
 import { Polygon } from './geom.js';

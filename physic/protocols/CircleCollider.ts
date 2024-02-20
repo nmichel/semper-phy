@@ -1,5 +1,5 @@
 import { Circle } from '../shapes/Circle.js';
-import { defprotocol, NotImplementedError } from '../functional.js';
+import { defprotocol, NotImplementedError } from '../Protocol';
 import { Vector2 } from '../Math.js';
 
 const CircleCollider = defprotocol('CircleCollider', {

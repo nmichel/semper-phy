@@ -1,4 +1,4 @@
-import { NotImplementedError, defprotocol } from '../functional.js';
+import { NotImplementedError, defprotocol } from '../Protocol';
 
 const Render = defprotocol('Render', {
   render: (_ctxt: CanvasRenderingContext2D, opts?: any): undefined => {

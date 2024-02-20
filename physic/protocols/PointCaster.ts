@@ -1,4 +1,4 @@
-import { NotImplementedError, defprotocol } from '../functional.js';
+import { NotImplementedError, defprotocol } from '../Protocol';
 import { Vector2 } from '../Math.js';
 
 const PointCaster = defprotocol('PointCaster', {

@@ -2,7 +2,7 @@ import './physic/engine.js';
 import { buildCircleContainedPolygon } from './physic/shapes/geom.js';
 
 import { BrowserApp } from './browser_app.js';
-import { Render } from './physic/protocols/protocols.js';
+import { Render } from './physic/protocols/protocols';
 import { Circle } from './physic/shapes/Circle.js';
 import { Box } from './physic/shapes/Box.js';
 import { RigidBody } from './physic/Rigidbody.js';

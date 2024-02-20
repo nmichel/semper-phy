@@ -10,7 +10,7 @@ import {
   Render,
   Transformer,
 } from '../protocols/protocols';
-import { defimpl } from '../functional';
+import { defimpl } from '../Protocol';
 import { Edge, Polygon, Vertex } from './geom';
 import { Ray, RayIntersection } from '../ray';
 import { CollisionInfo } from '../protocols/protocols';

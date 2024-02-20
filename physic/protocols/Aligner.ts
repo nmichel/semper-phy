@@ -1,4 +1,4 @@
-import { defprotocol, NotImplementedError } from '../functional.js';
+import { defprotocol, NotImplementedError } from '../Protocol';
 import { AABB } from '../AABB.js';
 import { Frame } from '../Frame';
 

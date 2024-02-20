@@ -1,4 +1,4 @@
-import { defimpl } from './functional.js';
+import { defimpl } from './Protocol';
 import { Render } from './protocols/protocols';
 import { Scene } from './scene.js';
 

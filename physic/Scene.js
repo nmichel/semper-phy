@@ -1,4 +1,4 @@
-import { CollisionInfo, Collider, Transformer } from './protocols/protocols.js';
+import { CollisionInfo, Collider, Transformer } from './protocols/protocols';
 import { HashAndSweep } from './acceleration_structures/HashAndSweep';
 
 class Scene {

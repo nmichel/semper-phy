@@ -1,4 +1,4 @@
-import { defimpl } from '../functional';
+import { defimpl } from '../Protocol';
 import {
   Aligner,
   CircleCollider,

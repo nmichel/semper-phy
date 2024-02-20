@@ -1,4 +1,4 @@
-import { NotImplementedError, defprotocol } from '../functional.js';
+import { NotImplementedError, defprotocol } from '../Protocol';
 
 const Inertia = defprotocol('Inertia', {
   compute: (_mass: number): number => {

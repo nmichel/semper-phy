@@ -1,4 +1,4 @@
-import { defimpl } from './functional.js';
+import { defimpl } from './Protocol';
 import { PointCaster, RayCaster, Render, Transformer } from './protocols/protocols.js';
 import { RayIntersection } from './ray.js';
 import { RigidBody } from './Rigidbody.js';

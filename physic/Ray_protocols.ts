@@ -1,4 +1,4 @@
-import { defimpl } from './functional.js';
+import { defimpl } from './Protocol';
 import { Cloner, Render, Transformer } from './protocols/protocols.js';
 import { Ray, RayIntersection } from './Ray';
 import * as GfxTools from './gfx.js';
