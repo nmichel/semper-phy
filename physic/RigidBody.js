@@ -44,9 +44,13 @@ class RigidBody {
     this.inertia = mass == 0 ? 0 : Inertia.compute(shape, mass);
     this.inverseMass = mass > 0 ? 1.0 / mass : 0.0;
     this.inverseInertia = this.inertia > 0 ? 1.0 / this.inertia : 0.0;
-    this.aabb = Aligner.computeAABB(this.shape, this.frame);
     this.forces = [];
     this.listeners = [];
+  }
+
+  updateAABB() {
+    this.aabb = Aligner.computeAABB(this.shape, this.frame);
+    return this;
   }
 
   get position() {
@@ -145,8 +149,6 @@ class RigidBody {
 
     this.frame.position = this.frame.position.add(this.#linearVelocity.scale(deltaInS));
     this.frame.rotation = (this.frame.rotation + this.#angularVelocity * deltaInS + 2.0 * Math.PI) % (2.0 * Math.PI);
-
-    this.aabb = Aligner.computeAABB(this.shape, this.frame);
   }
 
   notifyFrameChangedListeners() {

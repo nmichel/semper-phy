@@ -22,6 +22,10 @@ class Scene {
     const cycles = 1;
     const dt2 = dt / cycles;
 
+    this.bodies.forEach(body => {
+      body.updateAABB()
+    });
+
     for (let i = 0; i < cycles; ++i) {
       const candidatePairs = this.#broadPhase();
       this.#narrowPhase(candidatePairs);
