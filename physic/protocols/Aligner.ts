@@ -3,7 +3,7 @@ import { AABB } from '../AABB.js';
 import { Frame } from '../Frame';
 
 const Aligner = defprotocol('Aligner', {
-  computeAABB: (frame: Frame): AABB => {
+  computeAABB: (frame: Frame | null): AABB => {
     throw new NotImplementedError();
   },
 });

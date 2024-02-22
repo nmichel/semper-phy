@@ -259,10 +259,17 @@ defimpl(Inertia, Polygon, {
 });
 
 defimpl(Aligner, Polygon, {
-  computeAABB: (polygon: Polygon, frame: Frame): AABB => {
-    return polygon.vertices.reduce((aabb, v) => {
-      return aabb.update(frame.positionToWorld(v));
-    }, new AABB());
+  computeAABB: (polygon: Polygon, frame: Frame | null): AABB => {
+    if (frame) {
+      return polygon.vertices.reduce((aabb, v) => {
+        return aabb.update(frame.positionToWorld(v));
+      }, new AABB());
+    }
+    else {
+      return polygon.vertices.reduce((aabb, v) => {
+        return aabb.update(v);
+      }, new AABB());
+    }
   },
 });
 

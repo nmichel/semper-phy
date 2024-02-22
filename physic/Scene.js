@@ -22,11 +22,8 @@ class Scene {
     const cycles = 1;
     const dt2 = dt / cycles;
 
-    this.bodies.forEach(body => {
-      body.updateAABB()
-    });
-
     for (let i = 0; i < cycles; ++i) {
+      this.#prepareForNextStep();
       const candidatePairs = this.#broadPhase();
       this.#narrowPhase(candidatePairs);
       this.#updateFrames(dt2);
@@ -42,6 +39,12 @@ class Scene {
     this.bodies.forEach(body => body.notifyFrameChangedListeners());
   }
 
+  #prepareForNextStep() {
+    this.bodies.forEach(body => {
+      body.prepareForNextStep();
+    });
+  }
+
   #updateFrames(dt) {
     this.bodies.forEach(body => body.updateFrame(dt / 1000));
   }
@@ -55,41 +58,67 @@ class Scene {
     // Find all pairs of bodies that DO collide
     candidatePairs.forEach(([a, b]) => {
       const collisions = [];
-      const worldShapeA = Transformer.toWorld(a.shape, a.frame);
-      const worldShapeB = Transformer.toWorld(b.shape, b.frame);
+      const worldShapeA = a.cachedShape;
+      const worldShapeB = b.cachedShape;
 
       const overlap = Collider.overlap(worldShapeA, worldShapeB);
-      if (overlap) {
-        const { depth, normal } = overlap;
-
-        const direction = b.frame.position.sub(a.frame.position);
-        if (direction.dot(normal) < 0) {
-          normal.scaleSelf(-1);
-        }
-
-        const correction = normal.scale(depth);
-        const totalMass = a.mass + b.mass;
-        if (a.inverseMass > 0.0) {
-          a.frame.position.subToSelf(correction.scale(a.mass / totalMass));
-        }
-        if (b.inverseMass > 0.0) {
-          b.frame.position.addToSelf(correction.scale(b.mass / totalMass));
-        }
-
-        const contactPoints = Collider.collide(worldShapeA, worldShapeB);
-        contactPoints.forEach(point => {
-          const collInfo = new CollisionInfo(point, normal);
-          const collision = { collision: collInfo, a, b };
-          collisions.push(collision);
-          this.collisions.push(collision);
-        });
-
-        const impulses = collisions.map(({ a, b, collision }) => this.#computeImpulse(a, b, collision));
-        impulses.forEach(i => {
-          if (i) this.#applyImpulse(i, impulses.length);
-        });
+      if (!overlap) {
+        return;
       }
+
+      const { depth, normal } = overlap;
+
+      const direction = b.frame.position.sub(a.frame.position);
+      if (direction.dot(normal) < 0) {
+        normal.scaleSelf(-1);
+      }
+
+      const contactPoints = Collider.collide(worldShapeA, worldShapeB);
+      contactPoints.forEach(point => {
+        const collInfo = new CollisionInfo(point, normal);
+        const collision = { collision: collInfo, a, b };
+        collisions.push(collision);
+        this.collisions.push(collision);
+      });
+
+      const impulses = collisions.map(({ a, b, collision }) => this.#computeImpulse(a, b, collision)).filter(i => i !== null);
+      impulses.forEach(i => {
+        this.#applyImpulse(i, impulses.length);
+      });
+
+      this.#seperate(a, b, depth, normal);
     });
+  }
+
+  /*
+  #seperate(a, b, depth, normal) {
+    const correction = normal.scale(depth);
+    const totalMass = a.mass + b.mass;
+    if (a.inverseMass > 0.0) {
+      a.frame.position.subToSelf(correction.scale(a.mass / totalMass));
+    }
+    if (b.inverseMass > 0.0) {
+      b.frame.position.addToSelf(correction.scale(b.mass / totalMass));
+    }
+  }
+  */
+
+  #seperate(a, b, depth, normal) {
+    const invMassSum = a.inverseMass + b.inverseMass;
+    if (invMassSum == 0.0) {
+      return;
+    }
+    const correctionRate = 0.9;
+    const correctionLength = (depth / invMassSum) * correctionRate;
+    const correctionVector = normal.scale(correctionLength);
+
+    if (a.inverseMass > 0.0) {
+      a.frame.position.subToSelf(correctionVector.scale(a.inverseMass));
+    }
+
+    if (b.inverseMass > 0.0) {
+      b.frame.position.addToSelf(correctionVector.scale(b.inverseMass));
+    }
   }
 
   #applyImpulse({ a, b, rap, rbp, impulse }, count) {

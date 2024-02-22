@@ -108,8 +108,8 @@ defimpl(Inertia, Circle, {
 });
 
 defimpl(Aligner, Circle, {
-  computeAABB: ({ radius }: Circle, frame: Frame): AABB => {
-    const position = frame.positionToWorld(Vector2.zero);
+  computeAABB: ({ radius, position: pos }: Circle, frame: Frame | null): AABB => {
+    const position = frame ? frame.positionToWorld(Vector2.zero) : pos;
     const delta = new Vector2(radius, radius);
     const topLeft = position.sub(delta);
     const bottomRight = position.add(delta);

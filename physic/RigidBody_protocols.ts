@@ -5,9 +5,8 @@ import { RigidBody } from './Rigidbody.js';
 
 defimpl(Render, RigidBody, {
   render: (rigidbody: RigidBody, ctxt, opts): undefined => {
-    const worldShape = Transformer.toWorld(rigidbody.shape, rigidbody.frame);
-    Render.render(worldShape, ctxt, opts);
-    Render.render(rigidbody.frame, ctxt, opts);
+    Render.render(rigidbody.cachedShape, ctxt, opts);
+    // Render.render(rigidbody.frame, ctxt, opts);
     // Render.render(rigidbody.aabb, ctxt, opts);
   },
 });

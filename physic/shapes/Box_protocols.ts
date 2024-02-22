@@ -83,10 +83,18 @@ defimpl(Inertia, Box, {
 });
 
 defimpl(Aligner, Box, {
-  computeAABB: (box: Box, frame: Frame): AABB => {
-    const shape = Transformer.toWorld(box, frame);
-    return shape.vertices.reduce((aabb, v) => {
-      return aabb.update(v);
-    }, new AABB());
+  computeAABB: (box: Box, frame: Frame | null): AABB => {
+    if (frame) {
+      const shape = Transformer.toWorld(box, frame);
+      return shape.vertices.reduce((aabb, v) => {
+        return aabb.update(v);
+      }, new AABB());
+    }
+    else {
+      const aabb = new AABB();
+      aabb.min = box.halfSize.scale(-1);
+      aabb.max = box.halfSize.clone();
+      return aabb;
+    }
   },
 });

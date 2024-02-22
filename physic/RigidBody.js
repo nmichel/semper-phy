@@ -1,4 +1,4 @@
-import { Aligner, Inertia } from './protocols/protocols';
+import { Aligner, Inertia, Transformer } from './protocols/protocols';
 import { Vector2 } from './Math';
 import { Frame } from './Frame.ts';
 
@@ -48,9 +48,9 @@ class RigidBody {
     this.listeners = [];
   }
 
-  updateAABB() {
-    this.aabb = Aligner.computeAABB(this.shape, this.frame);
-    return this;
+  prepareForNextStep() {
+    this.#cachedShape = Transformer.toWorld(this.shape, this.frame);
+    this.aabb = Aligner.computeAABB(this.#cachedShape);
   }
 
   get position() {
@@ -121,6 +121,10 @@ class RigidBody {
     this.#collisionMask = flags;
   }
 
+  get cachedShape() {
+    return this.#cachedShape;
+  }
+
   addForce(force) {
     this.forces.push(force.clone());
   }
@@ -175,6 +179,7 @@ class RigidBody {
   #flags = 0;
   #collisionFlags = RigidBody.COLLISION_GROUPS.COLLISION_GROUP_0;
   #collisionMask = RigidBody.COLLISION_GROUPS.ALL_GROUPS;
+  #cachedShape = null;
 }
 
 export { RigidBody };
