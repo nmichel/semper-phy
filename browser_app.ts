@@ -48,6 +48,10 @@ class BrowserApp {
     return this.#context;
   }
 
+  get container() {
+    return this.#divElement;
+  }
+
   render(deltaMs) {
     throw new Error('not implemented');
   }

@@ -11,17 +11,45 @@
         <div class="description__title">Titre</div>
         description
       </div>
-      <div class="game" id="app"></div>
-    </div>
-
-    <div class="sandbox">
-      <div class="description">
-        <div class="description__title">Titre</div>
-        description
+      <div class="game" id="app" />
+      <div class="controls">
+        <label>
+          Run
+          <input class="run" type="checkbox" checked />
+        </label>
+        <br />
+        <label>
+          Enable debug
+          <input class="debug" type="checkbox" />
+        </label>
+        <br />
+        <label>
+          Show Vertices
+          <input class="show_vertices" type="checkbox" />
+        </label>
+        <label>
+          Show Edges
+          <input class="show_edges" type="checkbox" />
+        </label>
+        <label>
+          Show Normals
+          <input class="show_normals" type="checkbox" />
+        </label>
+        <label>
+          Show Frames
+          <input class="show_frames" type="checkbox" />
+        </label>
+        <label>
+          Show AABB
+          <input class="show_aabb" type="checkbox" />
+        </label>
+        <label>
+          Show Collision Trail
+          <input class="show_trail" type="checkbox" />
+        </label>
       </div>
-      <div class="game" id="app2"></div>
     </div>
 
-    <script type="module" src="/sandbox.ts"></script>
+    <script type="module" src="./sandbox.ts"></script>
   </body>
 </html>
