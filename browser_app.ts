@@ -1,13 +1,16 @@
 class BrowserApp {
   constructor(divElement) {
-    this.#divElement = divElement;
-    this.#divElement.setAttribute('tabindex', '0');
+    const canvasContainerElt = document.createElement('div');
+    canvasContainerElt.setAttribute('tabindex', '0');
     this.#canvasElement = document.createElement('canvas');
     this.#canvasElement.setAttribute('tabindex', '0');
-    this.#divElement.appendChild(this.#canvasElement);
+    canvasContainerElt.appendChild(this.#canvasElement);
+    divElement.appendChild(canvasContainerElt);
     this.#context = this.#canvasElement.getContext('2d', { alpha: false });
-    this.#canvasElement.width = this.#divElement.clientWidth;
-    this.#canvasElement.height = this.#divElement.clientHeight;
+    this.#canvasElement.width = divElement.clientWidth;
+    this.#canvasElement.height = divElement.clientHeight;
+    this.#divElement = divElement;
+    this.#canvasContainerElt = canvasContainerElt;
   }
 
   start() {
@@ -70,15 +73,15 @@ class BrowserApp {
   }
 
   #binEvents() {
-    this.#divElement.addEventListener('mousedown', this.onMousedown.bind(this));
-    this.#divElement.addEventListener('mouseup', this.onMouseup.bind(this));
-    this.#divElement.addEventListener('mouseout', this.onMouseout.bind(this));
-    this.#divElement.addEventListener('click', this.onClick.bind(this));
-    this.#divElement.addEventListener('dblclick', this.onDblclick.bind(this));
-    this.#divElement.addEventListener('mousemove', this.onMousemove.bind(this));
-    this.#divElement.addEventListener('keydown', this.onKeydown.bind(this), true);
-    this.#divElement.addEventListener('keyup', this.onKeyup.bind(this), true);
-    this.#divElement.addEventListener('contextmenu', this.onContextMenu.bind(this));
+    this.#canvasContainerElt.addEventListener('mousedown', this.onMousedown.bind(this));
+    this.#canvasContainerElt.addEventListener('mouseup', this.onMouseup.bind(this));
+    this.#canvasContainerElt.addEventListener('mouseout', this.onMouseout.bind(this));
+    this.#canvasContainerElt.addEventListener('click', this.onClick.bind(this));
+    this.#canvasContainerElt.addEventListener('dblclick', this.onDblclick.bind(this));
+    this.#canvasContainerElt.addEventListener('mousemove', this.onMousemove.bind(this));
+    this.#canvasContainerElt.addEventListener('keydown', this.onKeydown.bind(this), true);
+    this.#canvasContainerElt.addEventListener('keyup', this.onKeyup.bind(this), true);
+    this.#canvasContainerElt.addEventListener('contextmenu', this.onContextMenu.bind(this));
 
     if (this.#isRunning) {
       this.#prevTs = performance.now();
@@ -87,6 +90,7 @@ class BrowserApp {
   }
 
   #divElement;
+  #canvasContainerElt;
   #canvasElement;
   #context;
   #prevTs;
