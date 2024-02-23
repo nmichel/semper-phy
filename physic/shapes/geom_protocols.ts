@@ -28,25 +28,29 @@ defimpl(Render, Vertex, {
 });
 
 defimpl(Render, Edge, {
-  render: (edge: Edge, ctxt: CanvasRenderingContext2D): undefined => {
+  render: (edge: Edge, ctxt: CanvasRenderingContext2D, opts): undefined => {
     const { a, b, normal } = edge;
     const d = b.sub(a);
     const m = d.scale(0.5).add(a);
     const offset = normal.scale(20.0);
 
-    GfxTools.drawVector(ctxt, m, m.add(normal.scale(15.0)), { strokeStyle: 'red' });
+    if (opts?.debug?.showNormals === true) {
+      GfxTools.drawVector(ctxt, m, m.add(normal.scale(15.0)), { strokeStyle: 'red' });
+    }
     GfxTools.drawVector(ctxt, m.sub(d.scale(0.4)).add(offset), m.add(d.scale(0.4)).add(offset), { strokeStyle: 'yellow' });
   },
 });
 
 defimpl(Render, Polygon, {
   render: (polygon: Polygon, ctxt: CanvasRenderingContext2D, opts: any): undefined => {
-    const { debug = false, color = 'white' } = opts;
-
-    GfxTools.drawPolygon(ctxt, polygon.vertices, { strokeStyle: color });
-    if (debug) {
-      polygon.vertices.forEach(v => Render.render(v, ctxt));
-      polygon.edges.forEach(e => Render.render(e, ctxt));
+    GfxTools.drawPolygon(ctxt, polygon.vertices, { strokeStyle: 'white' });
+    if (opts?.debug?.enabled === true) {
+      if (opts?.debug?.showVertices === true) {
+        polygon.vertices.forEach(v => Render.render(v, ctxt, opts));
+      }
+      if (opts?.debug?.showEdges === true) {
+        polygon.edges.forEach(e => Render.render(e, ctxt, opts));
+      }
     }
   },
 });
@@ -264,8 +268,7 @@ defimpl(Aligner, Polygon, {
       return polygon.vertices.reduce((aabb, v) => {
         return aabb.update(frame.positionToWorld(v));
       }, new AABB());
-    }
-    else {
+    } else {
       return polygon.vertices.reduce((aabb, v) => {
         return aabb.update(v);
       }, new AABB());

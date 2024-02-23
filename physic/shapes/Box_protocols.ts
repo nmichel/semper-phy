@@ -89,8 +89,7 @@ defimpl(Aligner, Box, {
       return shape.vertices.reduce((aabb, v) => {
         return aabb.update(v);
       }, new AABB());
-    }
-    else {
+    } else {
       const aabb = new AABB();
       aabb.min = box.halfSize.scale(-1);
       aabb.max = box.halfSize.clone();

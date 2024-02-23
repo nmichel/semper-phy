@@ -25,16 +25,18 @@ class CollisionTrail {
 const trail = new CollisionTrail();
 
 defimpl(Render, CollisionTrail, {
-  render: (collisionTrail, ctxt): undefined => {
-    collisionTrail.collisions.forEach(p => Render.render(p.collision, ctxt));
+  render: (collisionTrail, ctxt, opts): undefined => {
+    collisionTrail.collisions.forEach(p => Render.render(p.collision, ctxt, opts));
   },
 });
 
 defimpl(Render, Scene, {
-  render: (scene: Scene, ctxt): undefined => {
-    scene.collisions.forEach(p => trail.add(p.collision));
-    scene.bodies.forEach(body => Render.render(body, ctxt, { debug: false }));
-    // Render.render(trail, ctxt);
+  render: (scene: Scene, ctxt, opts): undefined => {
+    scene.bodies.forEach(body => Render.render(body, ctxt, opts));
+    if (opts?.debug?.enabled === true && opts?.debug?.showTrail === true) {
+      scene.collisions.forEach(p => trail.add(p.collision));
+      Render.render(trail, ctxt, opts);
+    }
     trail.update();
   },
 });
