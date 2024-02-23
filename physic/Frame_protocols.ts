@@ -1,7 +1,7 @@
 import { defimpl } from './Protocol';
 import { Render } from './protocols/protocols';
 import { Frame } from './Frame';
-import * as GfxTools from './gfx';
+import * as GfxTools from './GfxUtils';
 import { Vector2 } from './Math';
 
 defimpl(Render, Frame, {

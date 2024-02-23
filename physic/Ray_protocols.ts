@@ -1,7 +1,7 @@
 import { defimpl } from './Protocol';
 import { Cloner, Render, Transformer } from './protocols/protocols.js';
 import { Ray, RayIntersection } from './Ray';
-import * as GfxTools from './gfx.js';
+import * as GfxTools from './GfxUtils';
 import { Vector2 } from './Math.js';
 import { Frame } from './Frame';
 

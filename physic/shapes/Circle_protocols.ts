@@ -12,7 +12,7 @@ import {
 } from '../protocols/protocols';
 import { Ray, RayIntersection } from '../Ray';
 import { Circle } from './Circle';
-import * as GfxTools from '../gfx';
+import * as GfxTools from '../GfxUtils';
 import { Vector2 } from '../Math';
 import { AABB } from '../AABB';
 import { Frame } from '../Frame';

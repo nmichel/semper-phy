@@ -16,7 +16,7 @@ import { Ray, RayIntersection } from '../ray';
 import { CollisionInfo } from '../protocols/protocols';
 import { segmentIntersection, Vector2 } from '../Math';
 import { AABB } from '../AABB';
-import * as GfxTools from '../gfx';
+import * as GfxTools from '../GfxUtils';
 import { Frame } from '../Frame';
 import { Circle } from './Circle';
 

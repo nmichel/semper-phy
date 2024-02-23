@@ -2,7 +2,7 @@ import '../../../physic/engine.js';
 import { Ray } from '../Ray';
 import { Render } from '../protocols/protocols.js';
 import { Vector2 } from '../Math';
-import * as GfxTools from '../gfx.js';
+import * as GfxTools from '../GfxUtils';
 // import buildScene from './scenes/random_grid.js';
 import buildScene from './scenes/spinning_squares.js';
 // import buildScene from './scenes/just_a_bar.js';
