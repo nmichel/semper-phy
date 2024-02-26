@@ -1,4 +1,4 @@
-import { CollisionInfo, Collider, Transformer } from './protocols/protocols';
+import { CollisionInfo, Collider, PointCaster } from './protocols/protocols';
 import { HashAndSweep } from './acceleration_structures/HashAndSweep';
 
 class Scene {
@@ -15,6 +15,10 @@ class Scene {
     if (index > -1) {
       this.bodies.splice(index, 1);
     }
+  }
+
+  findBodyAtPoint(point) {
+    return this.bodies.find(body => PointCaster.contains(body.cachedShape, point));
   }
 
   step(dt) {

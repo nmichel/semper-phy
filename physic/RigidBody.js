@@ -1,6 +1,7 @@
 import { Aligner, Inertia, Transformer } from './protocols/protocols';
 import { Vector2 } from './Math';
 import { Frame } from './Frame.ts';
+import { Anchor } from './Anchor.ts';
 
 const APPLY_GRAVITY = true;
 const GRAVITY = new Vector2(0, 9.81);
@@ -125,6 +126,23 @@ class RigidBody {
     return this.#cachedShape;
   }
 
+  createAnchor(anchorPos) {
+    const anchor = new Anchor(anchorPos);
+    this.#anchors.push(anchor);
+    return anchor;
+  }
+
+  removeAnchor(anchor) {
+    const idx = this.#anchors.findIndex(a => a.id === anchor.id);
+    if (idx >= 0) {
+      this.#anchors.splice(idx, 1);
+    }
+  }
+
+  get anchors() {
+    return this.#anchors;
+  }
+
   addForce(force) {
     this.forces.push(force.clone());
   }
@@ -172,6 +190,7 @@ class RigidBody {
     }
   }
 
+  #anchors = [];
   #linearVelocity = new Vector2(0, 0);
   #angularVelocity = 0;
   #restitution = 0.3;
