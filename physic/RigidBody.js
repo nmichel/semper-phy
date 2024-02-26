@@ -45,7 +45,6 @@ class RigidBody {
     this.inertia = mass == 0 ? 0 : Inertia.compute(shape, mass);
     this.inverseMass = mass > 0 ? 1.0 / mass : 0.0;
     this.inverseInertia = this.inertia > 0 ? 1.0 / this.inertia : 0.0;
-    this.forces = [];
     this.listeners = [];
   }
 
@@ -144,11 +143,19 @@ class RigidBody {
   }
 
   addForce(force) {
-    this.forces.push(force.clone());
+    this.#forceAccumulator.addToSelf(force);
+  }
+
+  addForceAtPoint(point, force) {
+    this.#forceAccumulator.addToSelf(force);
+    const direction = point.sub(this.frame.position);
+    const torque = direction.crossCoef(force);
+    this.#torqueAccumulator += torque;
   }
 
   clearForces() {
-    this.forces = [];
+    this.#forceAccumulator = new Vector2(0, 0);
+    this.#torqueAccumulator = 0;
   }
 
   addListener(listenersDesc) {
@@ -161,7 +168,9 @@ class RigidBody {
     }
 
     if (this.inverseMass > 0) {
-      this.forces.forEach(force => this.#linearVelocity.addToSelf(force.scale(deltaInS * this.inverseMass)));
+      this.#linearVelocity.addToSelf(this.#forceAccumulator.scale(deltaInS * this.inverseMass));
+      const rotationalAcceleration = this.#torqueAccumulator * this.inverseInertia;
+      this.#angularVelocity += rotationalAcceleration * deltaInS;
     }
 
     if (APPLY_DAMPING) {
@@ -191,6 +200,8 @@ class RigidBody {
   }
 
   #anchors = [];
+  #forceAccumulator = new Vector2(0, 0);
+  #torqueAccumulator = 0;
   #linearVelocity = new Vector2(0, 0);
   #angularVelocity = 0;
   #restitution = 0.3;
