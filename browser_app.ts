@@ -55,6 +55,10 @@ class BrowserApp {
     return this.#divElement;
   }
 
+  get canvas() {
+    return this.#canvasElement;
+  }
+
   render(deltaMs) {
     throw new Error('not implemented');
   }

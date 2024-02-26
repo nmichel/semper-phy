@@ -2,13 +2,15 @@ import './physic/engine.js';
 import { buildCircleContainedPolygon } from './physic/shapes/geom.js';
 
 import { BrowserApp } from './browser_app.js';
-import { Render } from './physic/protocols/protocols';
+import { Render, Transformer } from './physic/protocols/protocols';
 import { Circle } from './physic/shapes/Circle.js';
 import { Box } from './physic/shapes/Box.js';
 import { RigidBody } from './physic/Rigidbody.js';
 import { Scene } from './physic/Scene.js';
 import { Vector2 } from './physic/Math.js';
 import { Options } from './physic/protocols/Render.js';
+import * as GfxUtils from './physic/GfxUtils';
+import { Anchor } from './physic/Anchor.js';
 
 class MyApp extends BrowserApp {
   constructor(divElement) {
@@ -19,14 +21,39 @@ class MyApp extends BrowserApp {
     this.#initializeControls();
   }
 
-  override onClick(e): void {
-    if (super.isRunning) {
-      this.#addBody();
+  override onMouseup(e): void {
+    if (this.#mouseIsLocked) {
+      if (this.#lockedAnchor && this.#lockedBody) {
+        this.#lockedBody.removeAnchor(this.#lockedAnchor);
+      }
     }
+    this.#lockedAnchor = null;
+    this.#lockedBody = null;
+    this.#mouseIsLocked = false;
+  }
+
+  override onMousedown(e: MouseEvent): void {
+    const body: RigidBody = this.#scene.findBodyAtPoint(this.#mousePos);
+    if (!body) {
+      return;
+    }
+
+    const anchor: Anchor = body.createAnchor(body.frame.positionToLocal(this.#mousePos));
+    if (!anchor) {
+      return;
+    }
+
+    this.#mouseIsLocked = true;
+    this.#lockedAnchor = anchor;
+    this.#lockedBody = body;
   }
 
   override onMousemove(e) {
     this.#mousePos = new Vector2(e.offsetX, e.offsetY);
+    if (this.#mouseIsLocked && this.#lockedBody && this.#lockedAnchor) {
+      const anchorPosInWorld: Vector2 = this.#lockedBody.frame.positionToWorld(this.#lockedAnchor.position);
+      this.#lockedBody.addForceAtPoint(anchorPosInWorld, this.#mousePos.sub(anchorPosInWorld).scaleSelf(100));
+    }
   }
 
   override onMouseout(_e) {}
@@ -176,6 +203,9 @@ class MyApp extends BrowserApp {
     );
   }
 
+  #lockedAnchor: Anchor | null = null;
+  #lockedBody: RigidBody | null = null;
+  #mouseIsLocked: boolean = false;
   #scene;
   #mousePos;
   #opts: Options = {
