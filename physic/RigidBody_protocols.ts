@@ -6,6 +6,12 @@ import { RigidBody } from './Rigidbody.js';
 defimpl(Render, RigidBody, {
   render: (rigidbody: RigidBody, ctxt, opts): undefined => {
     Render.render(rigidbody.cachedShape, ctxt, opts);
+
+    rigidbody.anchors.forEach(anchor => {
+      const transformedAnchor = Transformer.toWorld(anchor, rigidbody.frame);
+      Render.render(transformedAnchor, ctxt, opts);
+    });
+
     if (opts?.debug?.enabled === true) {
       if (opts?.debug?.showFrame === true) {
         Render.render(rigidbody.frame, ctxt, opts);
