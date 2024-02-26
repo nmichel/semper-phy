@@ -2,15 +2,15 @@ import { AccelerationStructure, RigidBody, pair } from './AccelerationStructure'
 
 class RigidBodySweepHash {
   reset(): void {
-    this.#hash = {};
+    this.#hash = new Map();
   }
 
   add(bodyA: RigidBody, bodyB: RigidBody): void {
-    this.#hash[this.#hashKey(bodyA, bodyB)] = true;
+    this.#hash.set(this.#hashKey(bodyA, bodyB), true);
   }
 
   exists(bodyA: RigidBody, bodyB: RigidBody): boolean {
-    return this.#hash[this.#hashKey(bodyA, bodyB)];
+    return this.#hash.has(this.#hashKey(bodyA, bodyB));
   }
 
   #hashKey(bodyA: RigidBody, bodyB: RigidBody): number {
@@ -37,7 +37,7 @@ class RigidBodySweepHash {
     return idB * idB + idA;
   }
 
-  #hash: { [key: number]: boolean } = {};
+  #hash: Map<number, boolean> = new Map();
 }
 
 export class HashAndSweep implements AccelerationStructure {
