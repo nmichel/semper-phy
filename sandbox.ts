@@ -11,6 +11,7 @@ import { Vector2 } from './physic/Math.js';
 import { Options } from './physic/protocols/Render.js';
 import { Anchor } from './physic/Anchor';
 import { AttractorJoint } from './physic/joints/AttractorJoint.js';
+import { RepulsorJoint } from './physic/joints/RepulsorJoint.js';
 import { SpringJoint } from './physic/joints/SpringJoint.js';
 
 class MyApp extends BrowserApp {
@@ -133,7 +134,7 @@ class MyApp extends BrowserApp {
     smallBall.position = new Vector2(350, 150);
     scene.addBody(smallBall);
 
-    // 3 corps
+    // 3 corps en attraction
     const anchorBlock = scene.createAnchor(block, new Vector2(30.0, 0), true);
     const anchorBigBall = scene.createAnchor(bigBall, new Vector2(15, 0), true);
     const anchorSmallBall = scene.createAnchor(smallBall, new Vector2(-7.0, 0), true);
@@ -168,6 +169,54 @@ class MyApp extends BrowserApp {
     const anchorHangingBall3 = scene.createAnchor(hangingBall3, new Vector2(15, 0), true);
 
     scene.addJoint(new SpringJoint(anchorPlateform3, anchorHangingBall3, 200));
+
+    // 3 corps en répulsion
+    let block1 = new RigidBody(new Box(70, 30), 1);
+    block1.position = new Vector2(200, 300);
+    scene.addBody(block1);
+
+    let block2 = new RigidBody(new Box(70, 30), 1);
+    block2.position = new Vector2(300, 300);
+    scene.addBody(block2);
+
+    let block3 = new RigidBody(new Box(70, 30), 1);
+    block3.position = new Vector2(400, 300);
+    scene.addBody(block3);
+
+    const anchorAblock1 = scene.createAnchor(block1, new Vector2(-30.0, 0), true);
+    const anchorBblock1 = scene.createAnchor(block1, new Vector2(30.0, 0), true);
+
+    const anchorAblock2 = scene.createAnchor(block2, new Vector2(-30.0, 0), true);
+    const anchorBblock2 = scene.createAnchor(block2, new Vector2(30.0, 0), true);
+
+    const anchorAblock3 = scene.createAnchor(block3, new Vector2(-30.0, 0), true);
+    const anchorBblock3 = scene.createAnchor(block3, new Vector2(30.0, 0), true);
+
+    scene.addJoint(new RepulsorJoint(anchorAblock1, anchorAblock2, 200));
+    scene.addJoint(new RepulsorJoint(anchorBblock1, anchorBblock3, 200));
+    scene.addJoint(new RepulsorJoint(anchorBblock2, anchorAblock3, 200));
+
+    // Stable circles
+
+    let circle1 = new RigidBody(new Circle(30), 1);
+    circle1.position = new Vector2(200, 400);
+    scene.addBody(circle1);
+
+    let circle2 = new RigidBody(new Circle(30), 1);
+    circle2.position = new Vector2(300, 400);
+    scene.addBody(circle2);
+
+    let circle3 = new RigidBody(new Circle(30), 1);
+    circle3.position = new Vector2(400, 400);
+    scene.addBody(circle3);
+
+    const anchorCircle1 = scene.createAnchor(circle1, new Vector2(), true);
+    const anchorCircle2 = scene.createAnchor(circle2, new Vector2(), true);
+    const anchorCircle3 = scene.createAnchor(circle3, new Vector2(), true);
+
+    scene.addJoint(new SpringJoint(anchorCircle1, anchorCircle2, 200, 10));
+    scene.addJoint(new SpringJoint(anchorCircle1, anchorCircle3, 200, 10));
+    scene.addJoint(new SpringJoint(anchorCircle2, anchorCircle3, 200, 10));
 
     // Block
     /*
