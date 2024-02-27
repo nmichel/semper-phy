@@ -1,5 +1,6 @@
 import './AABB_protocols';
 import './Anchor_protocols.ts';
+import './joints/AttractorJoint_protocols.ts';
 import './shapes/Box_protocols.ts';
 import './shapes/Circle_protocols.ts';
 import './shapes/geom_protocols.ts';

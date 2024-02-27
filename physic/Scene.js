@@ -11,6 +11,10 @@ class Scene {
     return this.#anchors;
   }
 
+  get joints() {
+    return this.#joints;
+  }
+
   addBody(body) {
     this.bodies.push(body);
   }
@@ -26,8 +30,9 @@ class Scene {
     return this.bodies.find(body => PointCaster.contains(body.cachedShape, point));
   }
 
-  createAnchor(body, anchorPos) {
-    const anchor = new Anchor(body, body.frame.positionToLocal(anchorPos));
+  createAnchor(body, position, isLocalPosition = false) {
+    const positionInWorld = isLocalPosition ? position : body.frame.positionToLocal(position);
+    const anchor = new Anchor(body, positionInWorld);
     this.#anchors.push(anchor);
     return anchor;
   }
@@ -39,6 +44,10 @@ class Scene {
     }
   }
 
+  addJoint(joint) {
+    this.#joints.push(joint);
+  }
+
   step(dt) {
     this.collisions = [];
     const cycles = 1;
@@ -46,6 +55,7 @@ class Scene {
 
     for (let i = 0; i < cycles; ++i) {
       this.#prepareForNextStep();
+      this.#updateJoints();
       const candidatePairs = this.#broadPhase();
       this.#narrowPhase(candidatePairs);
       this.#updateFrames(dt2);
@@ -65,6 +75,10 @@ class Scene {
     this.bodies.forEach(body => {
       body.prepareForNextStep();
     });
+  }
+
+  #updateJoints() {
+    this.#joints.forEach(joint => joint.update());
   }
 
   #updateFrames(dt) {
@@ -205,6 +219,7 @@ class Scene {
   }
 
   #anchors = [];
+  #joints = [];
   bodies = [];
   collisions = [];
   #accelerationStructure;

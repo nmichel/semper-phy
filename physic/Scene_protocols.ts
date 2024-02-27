@@ -39,6 +39,10 @@ defimpl(Render, Scene, {
       Render.render(transformedAnchor, ctxt, opts);
     });
 
+    scene.joints.forEach(joint => {
+      Render.render(joint, ctxt, opts);
+    });
+
     if (opts?.debug?.enabled === true && opts?.debug?.showTrail === true) {
       scene.collisions.forEach(p => trail.add(p.collision));
       Render.render(trail, ctxt, opts);

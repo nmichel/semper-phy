@@ -9,8 +9,8 @@ import { RigidBody } from './physic/Rigidbody.js';
 import { Scene } from './physic/Scene.js';
 import { Vector2 } from './physic/Math.js';
 import { Options } from './physic/protocols/Render.js';
-import * as GfxUtils from './physic/GfxUtils';
-import { Anchor } from './physic/Anchor.js';
+import { Anchor } from './physic/Anchor';
+import { AttractorJoint } from './physic/joints/AttractorJoint.js';
 
 class MyApp extends BrowserApp {
   constructor(divElement) {
@@ -115,27 +115,61 @@ class MyApp extends BrowserApp {
     rampRight.position = new Vector2(350, 250);
     rampRight.rotation = 0.39;
     scene.addBody(rampRight);
-    /*
-    let body: RigidBody = new RigidBody(new Box(100, 50), 1);
-    body.position = new Vector2(200, 0);
-    scene.addBody(body);
 
-    {
-      const radius = 30.0;
-      const ball = new RigidBody(new Circle(radius), 1);
-      ball.position = new Vector2(250, 150);
-      scene.addBody(ball);
-    }
+    const platform = new RigidBody(new Box(250, 25), 0);
+    platform.position = new Vector2(650, 50);
+    scene.addBody(platform);
 
-    {
-      const radius = 15.0;
-      const ball = new RigidBody(new Circle(radius), 1);
-      ball.position = new Vector2(300, 150);
-      scene.addBody(ball);
-    }
-    */
+    let block = new RigidBody(new Box(100, 50), 1);
+    block.position = new Vector2(200, 0);
+    scene.addBody(block);
+
+    const bigBall = new RigidBody(new Circle(30.0), 1);
+    bigBall.position = new Vector2(250, 150);
+    scene.addBody(bigBall);
+
+    const smallBall = new RigidBody(new Circle(15.0), 1);
+    smallBall.position = new Vector2(350, 150);
+    scene.addBody(smallBall);
+
+    // 3 corps
+    const anchorBlock = scene.createAnchor(block, new Vector2(30.0, 0), true);
+    const anchorBigBall = scene.createAnchor(bigBall, new Vector2(15, 0), true);
+    const anchorSmallBall = scene.createAnchor(smallBall, new Vector2(-7.0, 0), true);
+
+    scene.addJoint(new AttractorJoint(anchorBlock, anchorBigBall));
+    scene.addJoint(new AttractorJoint(anchorBigBall, anchorSmallBall, 10));
+
+    // Hanging bodies
+    const hangingBall1 = new RigidBody(new Circle(30.0), 1);
+    hangingBall1.position = new Vector2(550, 150);
+    scene.addBody(hangingBall1);
+
+    const anchorPlateform1 = scene.createAnchor(platform, new Vector2(-100.0, 0), true);
+    const anchorHangingBall1 = scene.createAnchor(hangingBall1, new Vector2(15, 0), true);
+
+    scene.addJoint(new AttractorJoint(anchorPlateform1, anchorHangingBall1));
+
+    const hangingBall2 = new RigidBody(new Circle(30.0), 1);
+    hangingBall2.position = new Vector2(650, 150);
+    scene.addBody(hangingBall2);
+
+    const anchorPlateform2 = scene.createAnchor(platform, new Vector2(0.0, 0), true);
+    const anchorHangingBall2 = scene.createAnchor(hangingBall2, new Vector2(15, 0), true);
+
+    scene.addJoint(new AttractorJoint(anchorPlateform2, anchorHangingBall2));
+
+    const hangingBall3 = new RigidBody(new Circle(30.0), 1);
+    hangingBall3.position = new Vector2(750, 150);
+    scene.addBody(hangingBall3);
+
+    const anchorPlateform3 = scene.createAnchor(platform, new Vector2(100.0, 0), true);
+    const anchorHangingBall3 = scene.createAnchor(hangingBall3, new Vector2(15, 0), true);
+
+    scene.addJoint(new AttractorJoint(anchorPlateform3, anchorHangingBall3));
 
     // Block
+    /*
     const box = 5.0;
     const radius = 4.0;
     const yBase = 0;
@@ -154,6 +188,7 @@ class MyApp extends BrowserApp {
         scene.addBody(body);
       }
     }
+    */
 
     // Pyramid
     /*
