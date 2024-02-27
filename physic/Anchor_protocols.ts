@@ -12,10 +12,10 @@ defimpl(Render, Anchor, {
 
 defimpl(Transformer, Anchor, {
   toLocal: (anchor: Anchor, frame: Frame): Anchor => {
-    return new Anchor(frame.positionToLocal(anchor.position));
+    return new Anchor(anchor.rigidbody, frame.positionToLocal(anchor.position));
   },
 
   toWorld: (anchor: Anchor, frame: Frame): Anchor => {
-    return new Anchor(frame.positionToWorld(anchor.position));
+    return new Anchor(anchor.rigidbody, frame.positionToWorld(anchor.position));
   },
 });

@@ -24,7 +24,7 @@ class MyApp extends BrowserApp {
   override onMouseup(e): void {
     if (this.#mouseIsLocked) {
       if (this.#lockedAnchor && this.#lockedBody) {
-        this.#lockedBody.removeAnchor(this.#lockedAnchor);
+        this.#scene.removeAnchor(this.#lockedAnchor);
       }
     }
     this.#lockedAnchor = null;
@@ -38,7 +38,7 @@ class MyApp extends BrowserApp {
       return;
     }
 
-    const anchor: Anchor = body.createAnchor(body.frame.positionToLocal(this.#mousePos));
+    const anchor: Anchor = this.#scene.createAnchor(body, this.#mousePos);
     if (!anchor) {
       return;
     }

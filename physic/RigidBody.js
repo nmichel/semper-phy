@@ -125,23 +125,6 @@ class RigidBody {
     return this.#cachedShape;
   }
 
-  createAnchor(anchorPos) {
-    const anchor = new Anchor(anchorPos);
-    this.#anchors.push(anchor);
-    return anchor;
-  }
-
-  removeAnchor(anchor) {
-    const idx = this.#anchors.findIndex(a => a.id === anchor.id);
-    if (idx >= 0) {
-      this.#anchors.splice(idx, 1);
-    }
-  }
-
-  get anchors() {
-    return this.#anchors;
-  }
-
   addForce(force) {
     this.#forceAccumulator.addToSelf(force);
   }
@@ -199,7 +182,6 @@ class RigidBody {
     }
   }
 
-  #anchors = [];
   #forceAccumulator = new Vector2(0, 0);
   #torqueAccumulator = 0;
   #linearVelocity = new Vector2(0, 0);

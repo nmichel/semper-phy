@@ -1,9 +1,14 @@
 import { CollisionInfo, Collider, PointCaster } from './protocols/protocols';
 import { HashAndSweep } from './acceleration_structures/HashAndSweep';
+import { Anchor } from './Anchor';
 
 class Scene {
   constructor() {
     this.#accelerationStructure = new HashAndSweep();
+  }
+
+  get anchors() {
+    return this.#anchors;
   }
 
   addBody(body) {
@@ -19,6 +24,19 @@ class Scene {
 
   findBodyAtPoint(point) {
     return this.bodies.find(body => PointCaster.contains(body.cachedShape, point));
+  }
+
+  createAnchor(body, anchorPos) {
+    const anchor = new Anchor(body, body.frame.positionToLocal(anchorPos));
+    this.#anchors.push(anchor);
+    return anchor;
+  }
+
+  removeAnchor(anchor) {
+    const idx = this.#anchors.findIndex(a => a.id === anchor.id);
+    if (idx >= 0) {
+      this.#anchors.splice(idx, 1);
+    }
   }
 
   step(dt) {
@@ -186,6 +204,7 @@ class Scene {
     return { a, b, rap, rbp, impulse };
   }
 
+  #anchors = [];
   bodies = [];
   collisions = [];
   #accelerationStructure;

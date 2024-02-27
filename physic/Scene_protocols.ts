@@ -1,5 +1,5 @@
 import { defimpl } from './Protocol';
-import { Render } from './protocols/protocols';
+import { Render, Transformer } from './protocols/protocols';
 import { Scene } from './scene.js';
 
 class CollisionTrail {
@@ -33,6 +33,12 @@ defimpl(Render, CollisionTrail, {
 defimpl(Render, Scene, {
   render: (scene: Scene, ctxt, opts): undefined => {
     scene.bodies.forEach(body => Render.render(body, ctxt, opts));
+
+    scene.anchors.forEach(anchor => {
+      const transformedAnchor = Transformer.toWorld(anchor, anchor.rigidbody.frame);
+      Render.render(transformedAnchor, ctxt, opts);
+    });
+
     if (opts?.debug?.enabled === true && opts?.debug?.showTrail === true) {
       scene.collisions.forEach(p => trail.add(p.collision));
       Render.render(trail, ctxt, opts);
