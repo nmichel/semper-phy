@@ -2,7 +2,7 @@ import './physic/engine.js';
 import { buildCircleContainedPolygon } from './physic/shapes/geom.js';
 
 import { BrowserApp } from './browser_app.js';
-import { Render, Transformer } from './physic/protocols/protocols';
+import { Render } from './physic/protocols/protocols';
 import { Circle } from './physic/shapes/Circle.js';
 import { Box } from './physic/shapes/Box.js';
 import { RigidBody } from './physic/Rigidbody.js';
@@ -11,6 +11,7 @@ import { Vector2 } from './physic/Math.js';
 import { Options } from './physic/protocols/Render.js';
 import { Anchor } from './physic/Anchor';
 import { AttractorJoint } from './physic/joints/AttractorJoint.js';
+import { SpringJoint } from './physic/joints/SpringJoint.js';
 
 class MyApp extends BrowserApp {
   constructor(divElement) {
@@ -148,7 +149,7 @@ class MyApp extends BrowserApp {
     const anchorPlateform1 = scene.createAnchor(platform, new Vector2(-100.0, 0), true);
     const anchorHangingBall1 = scene.createAnchor(hangingBall1, new Vector2(15, 0), true);
 
-    scene.addJoint(new AttractorJoint(anchorPlateform1, anchorHangingBall1));
+    scene.addJoint(new SpringJoint(anchorPlateform1, anchorHangingBall1, 100));
 
     const hangingBall2 = new RigidBody(new Circle(30.0), 1);
     hangingBall2.position = new Vector2(650, 150);
@@ -157,7 +158,7 @@ class MyApp extends BrowserApp {
     const anchorPlateform2 = scene.createAnchor(platform, new Vector2(0.0, 0), true);
     const anchorHangingBall2 = scene.createAnchor(hangingBall2, new Vector2(15, 0), true);
 
-    scene.addJoint(new AttractorJoint(anchorPlateform2, anchorHangingBall2));
+    scene.addJoint(new SpringJoint(anchorPlateform2, anchorHangingBall2, 150));
 
     const hangingBall3 = new RigidBody(new Circle(30.0), 1);
     hangingBall3.position = new Vector2(750, 150);
@@ -166,7 +167,7 @@ class MyApp extends BrowserApp {
     const anchorPlateform3 = scene.createAnchor(platform, new Vector2(100.0, 0), true);
     const anchorHangingBall3 = scene.createAnchor(hangingBall3, new Vector2(15, 0), true);
 
-    scene.addJoint(new AttractorJoint(anchorPlateform3, anchorHangingBall3));
+    scene.addJoint(new SpringJoint(anchorPlateform3, anchorHangingBall3, 200));
 
     // Block
     /*
