@@ -57,10 +57,7 @@ defimpl(Render, Polygon, {
 
 defimpl(Transformer, Polygon, {
   toWorld: (polygon: Polygon, frame: Frame): Polygon => {
-    return new Polygon(
-      polygon.vertices.map(v => frame.positionToWorld(v)),
-      polygon.radius
-    );
+    return new Polygon(polygon.vertices.map(v => frame.positionToWorld(v)));
   },
   toLocal: function (obj: Polygon, _frame: Frame): Polygon {
     throw new Error('Function not implemented.');
@@ -257,8 +254,26 @@ defimpl(CircleCollider, Polygon, {
 });
 
 defimpl(Inertia, Polygon, {
-  compute: ({ radius, sidesCount }: Polygon, mass: number): number => {
-    return (1 / 6) * mass * radius * radius * (2 + Math.cos((2 * Math.PI) / sidesCount));
+  compute: ({ vertices }: Polygon, mass: number): number => {
+    // source : https://math.stackexchange.com/questions/59470/calculating-moment-of-inertia-in-2d-planar-polygon
+
+    let inertia = 0;
+    let totalCrossProducts = 0;
+
+    for (let i = 0; i < vertices.length; i++) {
+      const j = (i + 1) % vertices.length;
+      const v1 = vertices[i];
+      const v2 = vertices[j];
+      const crossProduct = v1.crossCoef(v2);
+      const dotProduct = v1.dot(v2);
+
+      inertia += (v1.squaredLength() + dotProduct + v2.squaredLength()) * crossProduct;
+      totalCrossProducts += crossProduct;
+    }
+
+    inertia *= mass / (6 * totalCrossProducts);
+
+    return inertia;
   },
 });
 

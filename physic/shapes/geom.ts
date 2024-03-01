@@ -38,9 +38,8 @@ class Edge {
 }
 
 class Polygon {
-  constructor(vertices: Vertex[], radius: number) {
+  constructor(vertices: Vertex[]) {
     this.vertices = vertices;
-    this.radius = radius;
     this.sidesCount = vertices.length;
 
     const lastVert = this.vertices[this.vertices.length - 1];
@@ -55,30 +54,28 @@ class Polygon {
     this.edges = edges;
   }
 
-  // computeProjectionSpan(Polygon, Vector2) -> Span
-  computeProjectionSpan(normal) {
+  computeProjectionSpan(normal: Vector2): Span {
     return this.vertices.reduce((span, v) => span.update(v.dot(normal)), new Span(Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY));
   }
 
   vertices: Vertex[];
-  radius: number;
   sidesCount: number;
   edges: Edge[];
 }
 
-const buildVertexFromAngleAndRadius = (angle, radius) => {
+const buildVertexFromAngleAndRadius = (angle: number, radius: number): Vector2 => {
   return new Vector2(Math.cos(angle) * radius, Math.sin(angle) * radius);
 };
 
-const buildCircleContainedPolygon = (center, radius, vertexCount) => {
+const buildCircleContainedPolygon = (radius: number, vertexCount: number): Polygon => {
   const alpha = 0;
-  const vertices = [buildVertexFromAngleAndRadius(alpha, radius).addToSelf(center)];
+  const vertices = [buildVertexFromAngleAndRadius(alpha, radius)];
   const offset = (2.0 * Math.PI) / vertexCount;
   for (let i = 1; i < vertexCount; ++i) {
-    vertices.push(buildVertexFromAngleAndRadius(alpha + i * offset, radius).addToSelf(center));
+    vertices.push(buildVertexFromAngleAndRadius(alpha + i * offset, radius));
   }
 
-  return new Polygon(vertices, radius);
+  return new Polygon(vertices);
 };
 
 export { Edge, Polygon, Vertex, buildCircleContainedPolygon };
