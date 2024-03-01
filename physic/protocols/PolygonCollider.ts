@@ -1,5 +1,5 @@
 import { NotImplementedError, defprotocol } from '../Protocol';
-import { Polygon } from '../shapes/geom.js';
+import { Polygon } from '../shapes/Polygon.js';
 import { Vector2 } from '../Math.js';
 
 const PolygonCollider = defprotocol('PolygonCollider', {

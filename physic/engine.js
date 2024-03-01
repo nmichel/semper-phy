@@ -5,7 +5,7 @@ import './joints/RepulsorJoint_protocols.ts';
 import './joints/SpringJoint_protocols.ts';
 import './shapes/Box_protocols.ts';
 import './shapes/Circle_protocols.ts';
-import './shapes/geom_protocols.ts';
+import './shapes/Polygon_protocols.ts';
 import './Frame_protocols.ts';
 import './Ray_protocols.ts';
 import './Scene_protocols.ts';

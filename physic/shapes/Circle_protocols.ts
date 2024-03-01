@@ -16,7 +16,7 @@ import * as GfxTools from '../GfxUtils';
 import { Vector2 } from '../Math';
 import { AABB } from '../AABB';
 import { Frame } from '../Frame';
-import { Polygon } from './geom';
+import { Polygon } from './Polygon';
 
 defimpl(RayCaster, Circle, {
   cast: (circle: Circle, ray: Ray): RayIntersection[] => {

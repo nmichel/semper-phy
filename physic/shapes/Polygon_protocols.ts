@@ -11,7 +11,7 @@ import {
   Transformer,
 } from '../protocols/protocols';
 import { defimpl } from '../Protocol';
-import { Edge, Polygon, Vertex } from './geom';
+import { Edge, Polygon, Vertex } from './Polygon';
 import { Ray, RayIntersection } from '../ray';
 import { CollisionInfo } from '../protocols/protocols';
 import { segmentIntersection, Vector2 } from '../Math';
